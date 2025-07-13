@@ -1,0 +1,175 @@
+{
+  "carbon_factors": {
+    "iceland": {
+      "factor": 0.01,
+      "country": "Islandia",
+      "energy_mix": "Geotérmica (70%) + Hidroeléctrica (30%)",
+      "renewable_percentage": 100,
+      "source": "Iceland Energy Authority 2024"
+    },
+    "france": {
+      "factor": 0.06,
+      "country": "Francia",
+      "energy_mix": "Nuclear (70%) + Renovables (20%) + Gas (10%)",
+      "renewable_percentage": 90,
+      "source": "RTE France 2024"
+    },
+    "sweden": {
+      "factor": 0.20,
+      "country": "Suecia",
+      "energy_mix": "Hidroeléctrica (45%) + Nuclear (35%) + Eólica (15%)",
+      "renewable_percentage": 80,
+      "source": "Svenska Kraftnät 2024"
+    },
+    "europe": {
+      "factor": 0.30,
+      "country": "Europa (Promedio)",
+      "energy_mix": "Renovables (42%) + Gas (20%) + Nuclear (25%) + Carbón (13%)",
+      "renewable_percentage": 67,
+      "source": "European Environment Agency 2024"
+    },
+    "brazil": {
+      "factor": 0.40,
+      "country": "Brasil",
+      "energy_mix": "Hidroeléctrica (65%) + Eólica (15%) + Gas (8%) + Biomasa (7%)",
+      "renewable_percentage": 87,
+      "source": "ONS Brazil 2024"
+    },
+    "usa": {
+      "factor": 0.50,
+      "country": "Estados Unidos",
+      "energy_mix": "Gas Natural (38%) + Carbón (22%) + Nuclear (20%) + Renovables (20%)",
+      "renewable_percentage": 40,
+      "source": "US Energy Information Administration 2024"
+    },
+    "uk": {
+      "factor": 0.60,
+      "country": "Reino Unido",
+      "energy_mix": "Gas Natural (43%) + Renovables (35%) + Nuclear (15%) + Carbón (7%)",
+      "renewable_percentage": 50,
+      "source": "National Grid ESO 2024"
+    },
+    "china": {
+      "factor": 0.70,
+      "country": "China",
+      "energy_mix": "Carbón (60%) + Hidroeléctrica (15%) + Gas (10%) + Nuclear (8%) + Eólica (7%)",
+      "renewable_percentage": 32,
+      "source": "China Electricity Council 2024"
+    },
+    "india": {
+      "factor": 0.80,
+      "country": "India",
+      "energy_mix": "Carbón (70%) + Hidroeléctrica (12%) + Gas (5%) + Nuclear (3%) + Renovables (10%)",
+      "renewable_percentage": 25,
+      "source": "Central Electricity Authority India 2024"
+    },
+    "australia": {
+      "factor": 0.90,
+      "country": "Australia",
+      "energy_mix": "Carbón (65%) + Gas (20%) + Renovables (15%)",
+      "renewable_percentage": 15,
+      "source": "Australian Energy Market Operator 2024"
+    }
+  },
+  "gpu_specifications": {
+    "v100": {
+      "name": "NVIDIA V100",
+      "power_watts": 300,
+      "power_kw": 0.3,
+      "memory_gb": 32,
+      "architecture": "Volta",
+      "launch_year": 2017,
+      "typical_use": "Training large models"
+    },
+    "a100": {
+      "name": "NVIDIA A100",
+      "power_watts": 400,
+      "power_kw": 0.4,
+      "memory_gb": 80,
+      "architecture": "Ampere",
+      "launch_year": 2020,
+      "typical_use": "Modern AI training"
+    },
+    "h100": {
+      "name": "NVIDIA H100",
+      "power_watts": 700,
+      "power_kw": 0.7,
+      "memory_gb": 80,
+      "architecture": "Hopper",
+      "launch_year": 2022,
+      "typical_use": "Latest generation training"
+    },
+    "rtx4090": {
+      "name": "NVIDIA RTX 4090",
+      "power_watts": 450,
+      "power_kw": 0.45,
+      "memory_gb": 24,
+      "architecture": "Ada Lovelace",
+      "launch_year": 2022,
+      "typical_use": "Consumer/prosumer AI"
+    },
+    "rtx3090": {
+      "name": "NVIDIA RTX 3090",
+      "power_watts": 350,
+      "power_kw": 0.35,
+      "memory_gb": 24,
+      "architecture": "Ampere",
+      "launch_year": 2020,
+      "typical_use": "High-end consumer"
+    }
+  },
+  "pue_values": {
+    "google": {
+      "pue": 1.1,
+      "description": "Google Cloud - Muy eficiente",
+      "cooling_method": "Evaporative cooling + AI optimization"
+    },
+    "aws_azure": {
+      "pue": 1.4,
+      "description": "AWS/Azure - Eficiente",
+      "cooling_method": "Traditional cooling with optimization"
+    },
+    "industry_average": {
+      "pue": 1.6,
+      "description": "Promedio de la industria",
+      "cooling_method": "Standard data center cooling"
+    },
+    "inefficient": {
+      "pue": 2.0,
+      "description": "Centros de datos ineficientes",
+      "cooling_method": "Legacy cooling systems"
+    }
+  },
+  "equivalences": {
+    "car_emissions_kg_per_year": 4600,
+    "flight_transatlantic_kg": 920,
+    "home_electricity_kg_per_month": 350,
+    "tree_absorption_kg_per_year": 25,
+    "gasoline_per_liter_kg": 2.3,
+    "coal_per_kg": 2.4
+  },
+  "methodology": {
+    "formula": "CO2 Emissions (kg) = GPU Count × Power per GPU (kW) × Training Hours × PUE × Carbon Factor (kg CO2/kWh)",
+    "assumptions": [
+      "Training time includes only compute time, not data preparation",
+      "PUE includes cooling and infrastructure overhead",
+      "Carbon factors are grid averages, not marginal emissions",
+      "GPU utilization assumed at 90% average"
+    ],
+    "limitations": [
+      "Does not include manufacturing emissions of hardware",
+      "Does not account for model serving/inference emissions",
+      "Regional variations within countries not considered",
+      "Time-of-day emissions variations not included"
+    ]
+  },
+  "sources": [
+    "Strubell et al. 2019 - Energy and Policy Considerations for Deep Learning in NLP",
+    "Patterson et al. 2021 - Carbon Emissions and Large Neural Network Training",
+    "Luccioni et al. 2022 - Estimating the Carbon Footprint of BLOOM",
+    "OpenAI GPT-3 Paper 2020",
+    "Google LaMDA Paper 2022",
+    "International Energy Agency - Electricity Information 2024"
+  ],
+  "last_updated": "2025-01-12T00:00:00Z"
+}
