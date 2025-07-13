@@ -4,11 +4,11 @@ Una herramienta interactiva innovadora que permite calcular y analizar el impact
 
 ## 📱 Imágenes de la Aplicación 📱
 
-![Calculadora de Huella de Carbono - Interfaz Principal](assets/images/screenshot-calculadora.png)
+![Calculadora de Huella de Carbono - Interfaz Principal](assets/images/screenshot-calculadora.svg)
 
 *Interfaz principal de la calculadora mostrando los controles de entrada y resultados en tiempo real.*
 
-![Análisis Comparativo - Gráficos Interactivos](assets/images/screenshot-graficos.png)
+![Análisis Comparativo - Gráficos Interactivos](assets/images/screenshot-graficos.svg)
 
 *Visualización de datos comparativos entre diferentes modelos de IA populares.*
 
