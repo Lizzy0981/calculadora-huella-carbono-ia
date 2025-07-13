@@ -118,7 +118,7 @@ Factor Emisión: kg CO2 por kWh según la matriz energética del país
 | Australia | 0.90 | Carbón |
 
 ## 🗂️ Estructura del proyecto
-`
+```
 calculadora-huella-carbono-ia/
 │
 ├── index.html                     ✅ Calculadora principal
@@ -140,7 +140,7 @@ calculadora-huella-carbono-ia/
 └── docs/
     ├── methodology.md             ✅ Metodología científica
     └── references.md              ✅ Referencias académicas
-    `
+```
 ## 🔍 Insights Destacados
 
 ### 💥 **Diferencias Impactantes**
