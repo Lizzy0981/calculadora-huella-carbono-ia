@@ -119,7 +119,10 @@ Factor Emisión: kg CO2 por kWh según la matriz energética del país
 
 ## 🗂️ Estructura del proyecto
 ```
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d509a2c0b406be29b2229b9bb7635e6957a40ab
 calculadora-huella-carbono-ia/
 │
 ├── index.html                     ✅ Calculadora principal
@@ -142,7 +145,10 @@ calculadora-huella-carbono-ia/
     ├── methodology.md             ✅ Metodología científica
     └── references.md              ✅ Referencias académicas
 ```
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d509a2c0b406be29b2229b9bb7635e6957a40ab
 ## 🔍 Insights Destacados
 
 ### 💥 **Diferencias Impactantes**
