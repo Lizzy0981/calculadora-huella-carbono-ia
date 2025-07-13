@@ -238,4 +238,3 @@ Este proyecto está licenciado bajo la **Licencia MIT** - ver el archivo [LICENS
 - 🤝 **Colaboraciones de investigación** en sostenibilidad
 
 **¡Contribuciones y feedback siempre bienvenidos!** 🚀
->>>>>>> 89add969cbfd450c5eddc687f0406f657f414158
