@@ -34,7 +34,7 @@
   <!-- Author Credit -->
   <rect x="200" y="170" width="800" height="50" rx="10" fill="url(#bgGradient)"/>
   <text x="600" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="white" font-weight="bold">
-    📊 Desarrollado por Elizabeth Diaz Familia - Analista de IA Sostenible
+    📊 Desarrollado por Elizabeth Díaz Familia - Científica de IA Sostenible
   </text>
   <text x="600" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">
     🔗 LinkedIn | 📧 lizzyfamilia@gmail.com
@@ -165,9 +165,4 @@
   
   <circle cx="690" cy="357" r="8" fill="#3498db"/>
   <text x="690" y="361" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">?</text>
-<<<<<<< HEAD
 </svg>
-=======
->>>>>>> 89add969cbfd450c5eddc687f0406f657f414158
-</svg>
->>>>>>> 3d509a2c0b406be29b2229b9bb7635e6957a40ab
