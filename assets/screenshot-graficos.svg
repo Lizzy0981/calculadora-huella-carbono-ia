@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#030a06"/>
+      <stop offset="100%" style="stop-color:#060f09"/>
+    </linearGradient>
+    <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   style="stop-color:#f87171"/>
+      <stop offset="16%"  style="stop-color:#fb923c"/>
+      <stop offset="32%"  style="stop-color:#facc15"/>
+      <stop offset="48%"  style="stop-color:#00e87a"/>
+      <stop offset="64%"  style="stop-color:#38bdf8"/>
+      <stop offset="80%"  style="stop-color:#818cf8"/>
+      <stop offset="100%" style="stop-color:#e879f9"/>
+    </linearGradient>
+    <linearGradient id="bargreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00e87a"/>
+      <stop offset="100%" style="stop-color:#2ec97a" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="barblue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#38bdf8"/>
+      <stop offset="100%" style="stop-color:#38bdf8" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="barpurple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#a78bfa"/>
+      <stop offset="100%" style="stop-color:#a78bfa" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="barorange" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#f59e0b" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="barred" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ef4444"/>
+      <stop offset="100%" style="stop-color:#ef4444" stop-opacity="0.4"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid -->
+  <pattern id="dots" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+    <circle cx="15" cy="15" r="0.8" fill="#00e87a" opacity="0.06"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+
+  <!-- Ambient glow -->
+  <ellipse cx="300" cy="400" rx="300" ry="150" fill="#00e87a" opacity="0.02"/>
+  <ellipse cx="900" cy="300" rx="250" ry="150" fill="#38bdf8" opacity="0.02"/>
+
+  <!-- Rainbow bar -->
+  <rect x="0" y="0" width="1200" height="3" fill="url(#rainbow)"/>
+
+  <!-- ── HEADER ── -->
+  <rect x="0" y="3" width="1200" height="56" fill="#060f09" opacity="0.95"/>
+  <rect x="0" y="59" width="1200" height="1" fill="#00e87a" opacity="0.07"/>
+  <text x="40" y="38" font-family="monospace" font-size="11" fill="#00e87a" opacity="0.5">●</text>
+  <text x="56" y="38" font-family="monospace" font-size="12" fill="#2ec97a" font-weight="700">ANÁLISIS COMPARATIVO · 5 DIMENSIONES DE IMPACTO</text>
+  <text x="900" y="38" font-family="monospace" font-size="10" fill="#7db896" opacity="0.6">50 modelos · Metodología Díaz Familia (2026)</text>
+
+  <!-- ── LEFT: CO2 HORIZONTAL BARS ── -->
+  <rect x="30" y="75" width="540" height="510" rx="12" fill="#060f09" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.12"/>
+  <rect x="30" y="75" width="540" height="3" rx="1" fill="#00e87a" opacity="0.5"/>
+  <text x="50" y="103" font-family="monospace" font-size="10" fill="#00e87a" letter-spacing="2" opacity="0.8">CO₂ EMISIONES POR MODELO (kg)</text>
+
+  <!-- Y axis labels + bars -->
+  <!-- GPT-4 -->
+  <text x="50" y="135" font-family="monospace" font-size="10" fill="#00e87a" font-weight="700">GPT-4</text>
+  <rect x="170" y="120" width="340" height="22" rx="3" fill="url(#bargreen)" opacity="0.9"/>
+  <text x="518" y="136" font-family="monospace" font-size="9" fill="#00e87a">1,820,000</text>
+
+  <!-- GPT-3 -->
+  <text x="50" y="169" font-family="monospace" font-size="10" fill="#7db896">GPT-3</text>
+  <rect x="170" y="154" width="323" height="20" rx="3" fill="url(#bargreen)" opacity="0.6"/>
+  <text x="500" y="169" font-family="monospace" font-size="9" fill="#7db896">1,713,600</text>
+
+  <!-- Gemini Ultra -->
+  <text x="50" y="203" font-family="monospace" font-size="10" fill="#7db896">Gemini Ultra</text>
+  <rect x="170" y="188" width="170" height="20" rx="3" fill="url(#bargreen)" opacity="0.5"/>
+  <text x="348" y="203" font-family="monospace" font-size="9" fill="#7db896">910,000</text>
+
+  <!-- GPT-4o -->
+  <text x="50" y="237" font-family="monospace" font-size="10" fill="#7db896">GPT-4o</text>
+  <rect x="170" y="222" width="136" height="20" rx="3" fill="url(#bargreen)" opacity="0.45"/>
+  <text x="314" y="237" font-family="monospace" font-size="9" fill="#7db896">728,000</text>
+
+  <!-- Grok-2 -->
+  <text x="50" y="271" font-family="monospace" font-size="10" fill="#7db896">Grok-2</text>
+  <rect x="170" y="256" width="136" height="20" rx="3" fill="url(#bargreen)" opacity="0.4"/>
+  <text x="314" y="271" font-family="monospace" font-size="9" fill="#7db896">728,000</text>
+
+  <!-- Falcon 180B -->
+  <text x="50" y="305" font-family="monospace" font-size="10" fill="#7db896">Falcon 180B</text>
+  <rect x="170" y="290" width="42" height="20" rx="3" fill="url(#bargreen)" opacity="0.4"/>
+  <text x="220" y="305" font-family="monospace" font-size="9" fill="#7db896">227,500</text>
+
+  <!-- DeepSeek-R1 -->
+  <text x="50" y="339" font-family="monospace" font-size="10" fill="#7db896">DeepSeek-R1</text>
+  <rect x="170" y="324" width="14" height="20" rx="3" fill="url(#bargreen)" opacity="0.4"/>
+  <text x="192" y="339" font-family="monospace" font-size="9" fill="#7db896">72,800</text>
+
+  <!-- LLaMA 3 70B -->
+  <text x="50" y="373" font-family="monospace" font-size="10" fill="#7db896">LLaMA 3 70B</text>
+  <rect x="170" y="358" width="10" height="20" rx="3" fill="url(#bargreen)" opacity="0.4"/>
+  <text x="188" y="373" font-family="monospace" font-size="9" fill="#7db896">54,600</text>
+
+  <!-- Claude 3 Opus -->
+  <text x="50" y="407" font-family="monospace" font-size="10" fill="#7db896">Claude 3 Opus</text>
+  <rect x="170" y="392" width="10" height="20" rx="3" fill="url(#bargreen)" opacity="0.35"/>
+  <text x="188" y="407" font-family="monospace" font-size="9" fill="#7db896">182,000</text>
+
+  <!-- Claude Sonnet -->
+  <text x="50" y="441" font-family="monospace" font-size="10" fill="#7db896">Claude Sonnet</text>
+  <rect x="170" y="426" width="3" height="20" rx="3" fill="url(#bargreen)" opacity="0.4"/>
+  <text x="180" y="441" font-family="monospace" font-size="9" fill="#7db896">18,200</text>
+
+  <!-- Mistral 7B -->
+  <text x="50" y="475" font-family="monospace" font-size="10" fill="#7db896">Mistral 7B</text>
+  <rect x="170" y="460" width="2" height="20" rx="3" fill="url(#bargreen)" opacity="0.4"/>
+  <text x="180" y="475" font-family="monospace" font-size="9" fill="#7db896">3,185</text>
+
+  <!-- BERT -->
+  <text x="50" y="509" font-family="monospace" font-size="10" fill="#7db896">BERT-Large</text>
+  <rect x="170" y="494" width="1" height="20" rx="3" fill="url(#bargreen)" opacity="0.4"/>
+  <text x="180" y="509" font-family="monospace" font-size="9" fill="#7db896">7,741</text>
+
+  <!-- Insight -->
+  <rect x="50" y="530" width="500" height="40" rx="6" fill="#0a1f12" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.2"/>
+  <text x="65" y="548" font-family="monospace" font-size="9" fill="#00e87a" opacity="0.8">💡 GPT-4 contamina 100× más que Claude Sonnet</text>
+  <text x="65" y="562" font-family="monospace" font-size="9" fill="#7db896" opacity="0.6">    (1,820,000 kg vs 18,200 kg CO₂)</text>
+
+  <!-- ── RIGHT: MULTI-DIMENSION TABLE ── -->
+  <rect x="594" y="75" width="576" height="510" rx="12" fill="#060f09" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.12"/>
+  <rect x="594" y="75" width="576" height="3" rx="1" fill="#00e87a" opacity="0.3"/>
+  <text x="614" y="103" font-family="monospace" font-size="10" fill="#00e87a" letter-spacing="2" opacity="0.8">TABLA COMPARATIVA · 5 DIMENSIONES</text>
+
+  <!-- Table header -->
+  <rect x="614" y="112" width="536" height="24" rx="4" fill="#0d2318"/>
+  <text x="622" y="128" font-family="monospace" font-size="8" fill="#7db896" font-weight="700">MODELO</text>
+  <text x="762" y="128" font-family="monospace" font-size="8" fill="#00e87a" font-weight="700">CO₂ (kg)</text>
+  <text x="852" y="128" font-family="monospace" font-size="8" fill="#38bdf8" font-weight="700">AGUA (L)</text>
+  <text x="940" y="128" font-family="monospace" font-size="8" fill="#f59e0b" font-weight="700">E-WASTE</text>
+  <text x="1030" y="128" font-family="monospace" font-size="8" fill="#a78bfa" font-weight="700">MINERALES</text>
+  <text x="1110" y="128" font-family="monospace" font-size="8" fill="#d4edde" font-weight="700">RATING</text>
+
+  <!-- Table rows -->
+  <!-- Row helper: alternating bg -->
+  <rect x="614" y="140" width="536" height="22" rx="2" fill="#0a1a10" opacity="0.5"/>
+  <text x="622" y="155" font-family="monospace" font-size="9" fill="#00e87a" font-weight="700">GPT-4</text>
+  <text x="762" y="155" font-family="monospace" font-size="9" fill="#00e87a">1,820,000</text>
+  <text x="852" y="155" font-family="monospace" font-size="9" fill="#38bdf8">8,190,000</text>
+  <text x="940" y="155" font-family="monospace" font-size="9" fill="#f59e0b">4,765</text>
+  <text x="1030" y="155" font-family="monospace" font-size="9" fill="#a78bfa">238</text>
+  <rect x="1108" y="143" width="30" height="16" rx="3" fill="#2d0a0a" stroke="#ef4444" stroke-width="0.8"/>
+  <text x="1123" y="155" font-family="monospace" font-size="9" fill="#ef4444" text-anchor="middle">F</text>
+
+  <text x="622" y="179" font-family="monospace" font-size="9" fill="#d4edde">GPT-3</text>
+  <text x="762" y="179" font-family="monospace" font-size="9" fill="#7db896">1,713,600</text>
+  <text x="852" y="179" font-family="monospace" font-size="9" fill="#7db896">6,168,960</text>
+  <text x="940" y="179" font-family="monospace" font-size="9" fill="#7db896">3,090</text>
+  <text x="1030" y="179" font-family="monospace" font-size="9" fill="#7db896">155</text>
+  <rect x="1108" y="167" width="30" height="16" rx="3" fill="#2d0a0a" stroke="#ef4444" stroke-width="0.8"/>
+  <text x="1123" y="179" font-family="monospace" font-size="9" fill="#ef4444" text-anchor="middle">F</text>
+
+  <rect x="614" y="188" width="536" height="22" rx="2" fill="#0a1a10" opacity="0.5"/>
+  <text x="622" y="203" font-family="monospace" font-size="9" fill="#d4edde">Gemini Ultra</text>
+  <text x="762" y="203" font-family="monospace" font-size="9" fill="#7db896">910,000</text>
+  <text x="852" y="203" font-family="monospace" font-size="9" fill="#7db896">4,095,000</text>
+  <text x="940" y="203" font-family="monospace" font-size="9" fill="#7db896">2,383</text>
+  <text x="1030" y="203" font-family="monospace" font-size="9" fill="#7db896">119</text>
+  <rect x="1108" y="191" width="30" height="16" rx="3" fill="#2d0a0a" stroke="#ef4444" stroke-width="0.8"/>
+  <text x="1123" y="203" font-family="monospace" font-size="9" fill="#ef4444" text-anchor="middle">F</text>
+
+  <text x="622" y="227" font-family="monospace" font-size="9" fill="#d4edde">Claude 3 Opus</text>
+  <text x="762" y="227" font-family="monospace" font-size="9" fill="#7db896">182,000</text>
+  <text x="852" y="227" font-family="monospace" font-size="9" fill="#7db896">819,000</text>
+  <text x="940" y="227" font-family="monospace" font-size="9" fill="#7db896">477</text>
+  <text x="1030" y="227" font-family="monospace" font-size="9" fill="#7db896">24</text>
+  <rect x="1108" y="215" width="30" height="16" rx="3" fill="#1a2d0f" stroke="#f97316" stroke-width="0.8"/>
+  <text x="1123" y="227" font-family="monospace" font-size="9" fill="#f97316" text-anchor="middle">D</text>
+
+  <rect x="614" y="236" width="536" height="22" rx="2" fill="#0a1a10" opacity="0.5"/>
+  <text x="622" y="251" font-family="monospace" font-size="9" fill="#d4edde">DeepSeek-R1</text>
+  <text x="762" y="251" font-family="monospace" font-size="9" fill="#7db896">72,800</text>
+  <text x="852" y="251" font-family="monospace" font-size="9" fill="#7db896">327,600</text>
+  <text x="940" y="251" font-family="monospace" font-size="9" fill="#7db896">143</text>
+  <text x="1030" y="251" font-family="monospace" font-size="9" fill="#7db896">7.2</text>
+  <rect x="1108" y="239" width="30" height="16" rx="3" fill="#2d2a0a" stroke="#eab308" stroke-width="0.8"/>
+  <text x="1123" y="251" font-family="monospace" font-size="9" fill="#eab308" text-anchor="middle">C</text>
+
+  <text x="622" y="275" font-family="monospace" font-size="9" fill="#d4edde">LLaMA 3 70B</text>
+  <text x="762" y="275" font-family="monospace" font-size="9" fill="#7db896">54,600</text>
+  <text x="852" y="275" font-family="monospace" font-size="9" fill="#7db896">327,600</text>
+  <text x="940" y="275" font-family="monospace" font-size="9" fill="#7db896">143</text>
+  <text x="1030" y="275" font-family="monospace" font-size="9" fill="#7db896">7.2</text>
+  <rect x="1108" y="263" width="30" height="16" rx="3" fill="#2d2a0a" stroke="#eab308" stroke-width="0.8"/>
+  <text x="1123" y="275" font-family="monospace" font-size="9" fill="#eab308" text-anchor="middle">C</text>
+
+  <rect x="614" y="284" width="536" height="22" rx="2" fill="#0a1a10" opacity="0.5"/>
+  <text x="622" y="299" font-family="monospace" font-size="9" fill="#d4edde">Claude Sonnet</text>
+  <text x="762" y="299" font-family="monospace" font-size="9" fill="#00e87a">18,200</text>
+  <text x="852" y="299" font-family="monospace" font-size="9" fill="#38bdf8">109,200</text>
+  <text x="940" y="299" font-family="monospace" font-size="9" fill="#f59e0b">48</text>
+  <text x="1030" y="299" font-family="monospace" font-size="9" fill="#a78bfa">2.4</text>
+  <rect x="1108" y="287" width="30" height="16" rx="3" fill="#1a2d0f" stroke="#84cc16" stroke-width="0.8"/>
+  <text x="1123" y="299" font-family="monospace" font-size="9" fill="#84cc16" text-anchor="middle">B</text>
+
+  <text x="622" y="323" font-family="monospace" font-size="9" fill="#d4edde">Mistral 7B</text>
+  <text x="762" y="323" font-family="monospace" font-size="9" fill="#00e87a">3,185</text>
+  <text x="852" y="323" font-family="monospace" font-size="9" fill="#38bdf8">19,110</text>
+  <text x="940" y="323" font-family="monospace" font-size="9" fill="#f59e0b">8.3</text>
+  <text x="1030" y="323" font-family="monospace" font-size="9" fill="#a78bfa">0.4</text>
+  <rect x="1108" y="311" width="30" height="16" rx="3" fill="#0f2a18" stroke="#22c55e" stroke-width="0.8"/>
+  <text x="1123" y="323" font-family="monospace" font-size="9" fill="#22c55e" text-anchor="middle">A</text>
+
+  <rect x="614" y="332" width="536" height="22" rx="2" fill="#0a1a10" opacity="0.5"/>
+  <text x="622" y="347" font-family="monospace" font-size="9" fill="#d4edde">Phi-3 Mini</text>
+  <text x="762" y="347" font-family="monospace" font-size="9" fill="#00e87a">1,820</text>
+  <text x="852" y="347" font-family="monospace" font-size="9" fill="#38bdf8">10,920</text>
+  <text x="940" y="347" font-family="monospace" font-size="9" fill="#f59e0b">4.8</text>
+  <text x="1030" y="347" font-family="monospace" font-size="9" fill="#a78bfa">0.2</text>
+  <rect x="1108" y="335" width="30" height="16" rx="3" fill="#0f2d1a" stroke="#00e87a" stroke-width="0.8"/>
+  <text x="1123" y="347" font-family="monospace" font-size="9" fill="#00e87a" text-anchor="middle">A+</text>
+
+  <text x="622" y="371" font-family="monospace" font-size="9" fill="#d4edde">BERT-Large</text>
+  <text x="762" y="371" font-family="monospace" font-size="9" fill="#00e87a">7,741</text>
+  <text x="852" y="371" font-family="monospace" font-size="9" fill="#38bdf8">27,872</text>
+  <text x="940" y="371" font-family="monospace" font-size="9" fill="#f59e0b">17.3</text>
+  <text x="1030" y="371" font-family="monospace" font-size="9" fill="#a78bfa">0.9</text>
+  <rect x="1108" y="359" width="30" height="16" rx="3" fill="#0f2a18" stroke="#22c55e" stroke-width="0.8"/>
+  <text x="1123" y="371" font-family="monospace" font-size="9" fill="#22c55e" text-anchor="middle">A</text>
+
+  <rect x="614" y="380" width="536" height="22" rx="2" fill="#0a1a10" opacity="0.5"/>
+  <text x="622" y="395" font-family="monospace" font-size="9" fill="#d4edde">Stable Diffusion</text>
+  <text x="762" y="395" font-family="monospace" font-size="9" fill="#00e87a">3,913</text>
+  <text x="852" y="395" font-family="monospace" font-size="9" fill="#38bdf8">14,087</text>
+  <text x="940" y="395" font-family="monospace" font-size="9" fill="#f59e0b">8.7</text>
+  <text x="1030" y="395" font-family="monospace" font-size="9" fill="#a78bfa">0.4</text>
+  <rect x="1108" y="383" width="30" height="16" rx="3" fill="#0f2a18" stroke="#22c55e" stroke-width="0.8"/>
+  <text x="1123" y="395" font-family="monospace" font-size="9" fill="#22c55e" text-anchor="middle">A</text>
+
+  <!-- Divider -->
+  <rect x="614" y="410" width="536" height="1" fill="#00e87a" opacity="0.07"/>
+
+  <!-- Geographic insight -->
+  <rect x="614" y="420" width="536" height="80" rx="6" fill="#0a1f12" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.15"/>
+  <text x="630" y="440" font-family="monospace" font-size="10" fill="#00e87a" letter-spacing="1">🌍 IMPACTO GEOGRÁFICO EN EL MISMO MODELO</text>
+  <text x="630" y="458" font-family="monospace" font-size="9" fill="#7db896">Islandia  0.012 kg/kWh  →  factor de emisión mínimo</text>
+  <text x="630" y="473" font-family="monospace" font-size="9" fill="#7db896">EE.UU.    0.386 kg/kWh  →  referencia</text>
+  <text x="630" y="488" font-family="monospace" font-size="9" fill="#ef4444">Polonia   0.810 kg/kWh  →  hasta 90× más emisiones</text>
+
+  <!-- Bottom stats row -->
+  <rect x="614" y="510" width="536" height="60" rx="6" fill="#030a06" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.1"/>
+  <text x="630" y="532" font-family="monospace" font-size="9" fill="#7db896" opacity="0.6">Modelos incluidos</text>
+  <text x="630" y="548" font-family="monospace" font-size="18" fill="#00e87a" font-weight="700">50</text>
+  <text x="730" y="532" font-family="monospace" font-size="9" fill="#7db896" opacity="0.6">Dimensiones</text>
+  <text x="730" y="548" font-family="monospace" font-size="18" fill="#38bdf8" font-weight="700">5</text>
+  <text x="830" y="532" font-family="monospace" font-size="9" fill="#7db896" opacity="0.6">Idiomas</text>
+  <text x="830" y="548" font-family="monospace" font-size="18" fill="#a78bfa" font-weight="700">11</text>
+  <text x="930" y="532" font-family="monospace" font-size="9" fill="#7db896" opacity="0.6">Países</text>
+  <text x="930" y="548" font-family="monospace" font-size="18" fill="#f59e0b" font-weight="700">15</text>
+  <text x="1030" y="532" font-family="monospace" font-size="9" fill="#7db896" opacity="0.6">Referencias</text>
+  <text x="1030" y="548" font-family="monospace" font-size="18" fill="#2ec97a" font-weight="700">47</text>
+
+  <!-- Bottom bar -->
+  <rect x="0" y="600" width="1200" height="30" fill="#030a06"/>
+  <rect x="0" y="600" width="1200" height="1" fill="#00e87a" opacity="0.07"/>
+  <text x="40" y="620" font-family="monospace" font-size="9" fill="#7db896" opacity="0.5">© 2026 Elizabeth Díaz Familia · Metodología: Díaz Familia (2026) · CC BY 4.0</text>
+  <text x="900" y="620" font-family="monospace" font-size="9" fill="#7db896" opacity="0.5">lizzy0981.github.io/calculadora-huella-carbono-ia</text>
+</svg>

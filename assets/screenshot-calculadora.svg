@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#030a06"/>
+      <stop offset="100%" style="stop-color:#060f09"/>
+    </linearGradient>
+    <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   style="stop-color:#f87171"/>
+      <stop offset="16%"  style="stop-color:#fb923c"/>
+      <stop offset="32%"  style="stop-color:#facc15"/>
+      <stop offset="48%"  style="stop-color:#00e87a"/>
+      <stop offset="64%"  style="stop-color:#38bdf8"/>
+      <stop offset="80%"  style="stop-color:#818cf8"/>
+      <stop offset="100%" style="stop-color:#e879f9"/>
+    </linearGradient>
+    <linearGradient id="cardgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1f15"/>
+      <stop offset="100%" style="stop-color:#0a1a10"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid dots -->
+  <pattern id="dots" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+    <circle cx="15" cy="15" r="0.8" fill="#00e87a" opacity="0.07"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+
+  <!-- Ambient glow -->
+  <ellipse cx="600" cy="200" rx="400" ry="200" fill="#00e87a" opacity="0.025"/>
+
+  <!-- Rainbow bar top -->
+  <rect x="0" y="0" width="1200" height="3" fill="url(#rainbow)"/>
+
+  <!-- ── HEADER ── -->
+  <rect x="0" y="3" width="1200" height="64" fill="#060f09" opacity="0.95"/>
+  <rect x="0" y="67" width="1200" height="1" fill="#00e87a" opacity="0.08"/>
+
+  <!-- Logo area -->
+  <text x="40" y="42" font-family="monospace" font-size="11" fill="#00e87a" opacity="0.5" letter-spacing="2">●</text>
+  <text x="56" y="42" font-family="monospace" font-size="13" fill="#00e87a" font-weight="700" letter-spacing="1">IA Sostenible · Data Science · Green Computing</text>
+
+  <!-- Author chip -->
+  <rect x="860" y="24" width="300" height="28" rx="14" fill="#0d1f15" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.2"/>
+  <text x="876" y="42" font-family="monospace" font-size="11" fill="#2ec97a">👩‍💻</text>
+  <text x="896" y="42" font-family="monospace" font-size="10" fill="#7db896">Elizabeth Díaz Familia</text>
+  <text x="1025" y="42" font-family="monospace" font-size="10" fill="#00e87a" opacity="0.5">· Sustainable AI Scientist</text>
+
+  <!-- ── MAIN TITLE ── -->
+  <text x="600" y="115" font-family="Arial Black, sans-serif" font-size="26" fill="#d4edde" text-anchor="middle" font-weight="800" letter-spacing="-0.5">Calculadora de Huella de Carbono</text>
+  <text x="600" y="140" font-family="Arial, sans-serif" font-size="14" fill="#7db896" text-anchor="middle">Impacto ambiental de modelos de Inteligencia Artificial · 5 dimensiones · 50 modelos · 11 idiomas</text>
+
+  <!-- ── INPUT CARD ── -->
+  <rect x="40" y="165" width="420" height="420" rx="12" fill="url(#cardgrad)" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.15"/>
+  <rect x="40" y="165" width="420" height="3" rx="1" fill="#00e87a" opacity="0.6"/>
+  <text x="60" y="195" font-family="monospace" font-size="10" fill="#00e87a" letter-spacing="2" opacity="0.7">CONFIGURACIÓN DEL MODELO</text>
+
+  <!-- Model input -->
+  <rect x="60" y="210" width="380" height="38" rx="6" fill="#0a1a10" stroke="#00e87a" stroke-width="1" stroke-opacity="0.25"/>
+  <text x="75" y="234" font-family="monospace" font-size="13" fill="#00e87a" font-weight="500">GPT-4</text>
+  <text x="370" y="234" font-family="monospace" font-size="10" fill="#7db896" opacity="0.6">▼</text>
+
+  <!-- Presets row -->
+  <text x="60" y="268" font-family="monospace" font-size="9" fill="#7db896" opacity="0.6">Presets rápidos →</text>
+  <rect x="148" y="255" width="68" height="22" rx="11" fill="#0d2318" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.3"/>
+  <text x="182" y="270" font-family="monospace" font-size="9" fill="#00e87a" text-anchor="middle">GPT-4</text>
+  <rect x="222" y="255" width="80" height="22" rx="11" fill="#0a1a10" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.15"/>
+  <text x="262" y="270" font-family="monospace" font-size="9" fill="#7db896" text-anchor="middle">Claude</text>
+  <rect x="308" y="255" width="80" height="22" rx="11" fill="#0a1a10" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.15"/>
+  <text x="348" y="270" font-family="monospace" font-size="9" fill="#7db896" text-anchor="middle">DeepSeek</text>
+
+  <!-- Sliders / params -->
+  <text x="60" y="310" font-family="monospace" font-size="9" fill="#7db896" opacity="0.7">GPUs</text>
+  <rect x="60" y="316" width="380" height="6" rx="3" fill="#0a1a10"/>
+  <rect x="60" y="316" width="250" height="6" rx="3" fill="#00e87a" opacity="0.4"/>
+  <circle cx="310" cy="319" r="7" fill="#00e87a" filter="url(#glow)"/>
+  <text x="400" y="326" font-family="monospace" font-size="10" fill="#00e87a">25,000</text>
+
+  <text x="60" y="345" font-family="monospace" font-size="9" fill="#7db896" opacity="0.7">Horas de entrenamiento</text>
+  <rect x="60" y="351" width="380" height="6" rx="3" fill="#0a1a10"/>
+  <rect x="60" y="351" width="300" height="6" rx="3" fill="#00e87a" opacity="0.3"/>
+  <circle cx="360" cy="354" r="7" fill="#00e87a" filter="url(#glow)"/>
+  <text x="400" y="361" font-family="monospace" font-size="10" fill="#00e87a">2,000</text>
+
+  <text x="60" y="380" font-family="monospace" font-size="9" fill="#7db896" opacity="0.7">PUE del centro de datos</text>
+  <rect x="60" y="386" width="380" height="6" rx="3" fill="#0a1a10"/>
+  <rect x="60" y="386" width="190" height="6" rx="3" fill="#00e87a" opacity="0.35"/>
+  <circle cx="250" cy="389" r="7" fill="#00e87a" filter="url(#glow)"/>
+  <text x="400" y="396" font-family="monospace" font-size="10" fill="#00e87a">1.30</text>
+
+  <!-- Country selector -->
+  <text x="60" y="420" font-family="monospace" font-size="9" fill="#7db896" opacity="0.7">País / Región</text>
+  <rect x="60" y="426" width="180" height="32" rx="6" fill="#0a1a10" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.2"/>
+  <text x="75" y="447" font-family="monospace" font-size="11" fill="#d4edde">🇺🇸 Estados Unidos</text>
+
+  <text x="255" y="420" font-family="monospace" font-size="9" fill="#7db896" opacity="0.7">Factor (kg CO₂/kWh)</text>
+  <rect x="255" y="426" width="185" height="32" rx="6" fill="#0a1a10" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.2"/>
+  <text x="270" y="447" font-family="monospace" font-size="13" fill="#00e87a" font-weight="700">0.386</text>
+
+  <!-- Calculate button -->
+  <rect x="60" y="472" width="380" height="44" rx="8" fill="#00e87a"/>
+  <text x="250" y="500" font-family="Arial Black, sans-serif" font-size="14" fill="#030a06" text-anchor="middle" font-weight="800" letter-spacing="1">CALCULAR IMPACTO</text>
+
+  <!-- Status -->
+  <circle cx="62" cy="540" r="4" fill="#00e87a" opacity="0.8"/>
+  <text x="72" y="544" font-family="monospace" font-size="9" fill="#7db896">Online</text>
+  <rect x="110" y="533" width="1" height="12" fill="#00e87a" opacity="0.1"/>
+  <text x="118" y="544" font-family="monospace" font-size="9" fill="#7db896">Eco mode: off</text>
+
+  <!-- ── RESULTS CARD ── -->
+  <rect x="480" y="165" width="360" height="420" rx="12" fill="url(#cardgrad)" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.15"/>
+  <rect x="480" y="165" width="360" height="3" rx="1" fill="#00e87a" opacity="0.4"/>
+  <text x="500" y="195" font-family="monospace" font-size="10" fill="#00e87a" letter-spacing="2" opacity="0.7">RESULTADOS</text>
+
+  <!-- Model name result -->
+  <text x="500" y="225" font-family="Arial Black, sans-serif" font-size="20" fill="#d4edde" font-weight="800">GPT-4</text>
+  <text x="500" y="244" font-family="monospace" font-size="10" fill="#7db896">OpenAI · LLM · 25,000 GPUs · 2,000h</text>
+
+  <!-- Rating badge -->
+  <rect x="730" y="208" width="90" height="44" rx="8" fill="#1a0a0a" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="775" y="228" font-family="Arial Black, sans-serif" font-size="11" fill="#ef4444" text-anchor="middle" letter-spacing="1">RATING</text>
+  <text x="775" y="246" font-family="Arial Black, sans-serif" font-size="16" fill="#ef4444" text-anchor="middle" font-weight="800">F</text>
+
+  <!-- 5 dimension results -->
+  <!-- CO2 -->
+  <rect x="500" y="260" width="320" height="52" rx="6" fill="#0a1a10" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.2"/>
+  <text x="516" y="280" font-family="monospace" font-size="9" fill="#7db896" opacity="0.7">CO₂ EMITIDO</text>
+  <text x="516" y="300" font-family="monospace" font-size="18" fill="#00e87a" font-weight="700">1,820,000</text>
+  <text x="656" y="300" font-family="monospace" font-size="11" fill="#7db896"> kg CO₂</text>
+
+  <!-- Energy -->
+  <rect x="500" y="320" width="153" height="48" rx="6" fill="#0a1a10" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.15"/>
+  <text x="516" y="338" font-family="monospace" font-size="8" fill="#7db896" opacity="0.7">ENERGÍA</text>
+  <text x="516" y="356" font-family="monospace" font-size="13" fill="#2ec97a" font-weight="700">4,550,000</text>
+  <text x="516" y="368" font-family="monospace" font-size="8" fill="#7db896">kWh</text>
+
+  <!-- Water -->
+  <rect x="661" y="320" width="159" height="48" rx="6" fill="#0a1a10" stroke="#38bdf8" stroke-width="0.5" stroke-opacity="0.2"/>
+  <text x="677" y="338" font-family="monospace" font-size="8" fill="#7db896" opacity="0.7">AGUA</text>
+  <text x="677" y="356" font-family="monospace" font-size="13" fill="#38bdf8" font-weight="700">8,190,000</text>
+  <text x="677" y="368" font-family="monospace" font-size="8" fill="#7db896">litros</text>
+
+  <!-- E-waste + Minerals -->
+  <rect x="500" y="376" width="153" height="48" rx="6" fill="#0a1a10" stroke="#f59e0b" stroke-width="0.5" stroke-opacity="0.2"/>
+  <text x="516" y="394" font-family="monospace" font-size="8" fill="#7db896" opacity="0.7">E-WASTE</text>
+  <text x="516" y="412" font-family="monospace" font-size="13" fill="#f59e0b" font-weight="700">4,765</text>
+  <text x="516" y="424" font-family="monospace" font-size="8" fill="#7db896">kg residuos</text>
+
+  <rect x="661" y="376" width="159" height="48" rx="6" fill="#0a1a10" stroke="#a78bfa" stroke-width="0.5" stroke-opacity="0.2"/>
+  <text x="677" y="394" font-family="monospace" font-size="8" fill="#7db896" opacity="0.7">MINERALES</text>
+  <text x="677" y="412" font-family="monospace" font-size="13" fill="#a78bfa" font-weight="700">238</text>
+  <text x="677" y="424" font-family="monospace" font-size="8" fill="#7db896">kg críticos</text>
+
+  <!-- Equivalencias -->
+  <text x="500" y="455" font-family="monospace" font-size="9" fill="#7db896" opacity="0.6" letter-spacing="2">EQUIVALENCIAS</text>
+  <text x="500" y="475" font-family="monospace" font-size="10" fill="#d4edde">🚗 391,397 autos · 1 año</text>
+  <text x="500" y="493" font-family="monospace" font-size="10" fill="#d4edde">✈️ 4,040 vuelos transatlánticos</text>
+  <text x="500" y="511" font-family="monospace" font-size="10" fill="#d4edde">🌳 30,333 árboles · 10 años</text>
+  <text x="500" y="529" font-family="monospace" font-size="10" fill="#d4edde">💡 168,519 hogares · 1 mes</text>
+  <text x="500" y="547" font-family="monospace" font-size="10" fill="#d4edde">💰 $627,900 USD costo energético</text>
+
+  <!-- ── CHART CARD ── -->
+  <rect x="856" y="165" width="304" height="420" rx="12" fill="url(#cardgrad)" stroke="#00e87a" stroke-width="0.5" stroke-opacity="0.15"/>
+  <rect x="856" y="165" width="304" height="3" rx="1" fill="#00e87a" opacity="0.3"/>
+  <text x="876" y="195" font-family="monospace" font-size="10" fill="#00e87a" letter-spacing="2" opacity="0.7">COMPARATIVA CO₂</text>
+
+  <!-- Bar chart bars -->
+  <!-- GPT-4 bar (highlighted) -->
+  <text x="876" y="222" font-family="monospace" font-size="9" fill="#00e87a">GPT-4</text>
+  <rect x="930" y="210" width="200" height="18" rx="3" fill="#00e87a" opacity="0.8"/>
+  <text x="1136" y="224" font-family="monospace" font-size="8" fill="#00e87a">1.8M</text>
+
+  <!-- GPT-3 -->
+  <text x="876" y="248" font-family="monospace" font-size="9" fill="#7db896">GPT-3</text>
+  <rect x="930" y="236" width="190" height="16" rx="3" fill="#2ec97a" opacity="0.5"/>
+  <text x="1126" y="249" font-family="monospace" font-size="8" fill="#7db896">1.7M</text>
+
+  <!-- Gemini Ultra -->
+  <text x="876" y="272" font-family="monospace" font-size="9" fill="#7db896">Gemini Ultra</text>
+  <rect x="930" y="260" width="100" height="16" rx="3" fill="#2ec97a" opacity="0.4"/>
+  <text x="1036" y="273" font-family="monospace" font-size="8" fill="#7db896">910K</text>
+
+  <!-- LLaMA 3 70B -->
+  <text x="876" y="296" font-family="monospace" font-size="9" fill="#7db896">LLaMA 3 70B</text>
+  <rect x="930" y="284" width="6" height="16" rx="3" fill="#2ec97a" opacity="0.4"/>
+  <text x="942" y="297" font-family="monospace" font-size="8" fill="#7db896">54K</text>
+
+  <!-- Mistral -->
+  <text x="876" y="320" font-family="monospace" font-size="9" fill="#7db896">Mistral 7B</text>
+  <rect x="930" y="308" width="2" height="16" rx="3" fill="#2ec97a" opacity="0.4"/>
+  <text x="938" y="321" font-family="monospace" font-size="8" fill="#7db896">3K</text>
+
+  <!-- DeepSeek -->
+  <text x="876" y="344" font-family="monospace" font-size="9" fill="#7db896">DeepSeek-R1</text>
+  <rect x="930" y="332" width="8" height="16" rx="3" fill="#2ec97a" opacity="0.4"/>
+  <text x="944" y="345" font-family="monospace" font-size="8" fill="#7db896">72K</text>
+
+  <!-- Claude Sonnet -->
+  <text x="876" y="368" font-family="monospace" font-size="9" fill="#7db896">Claude Sonnet</text>
+  <rect x="930" y="356" width="2" height="16" rx="3" fill="#2ec97a" opacity="0.4"/>
+  <text x="938" y="369" font-family="monospace" font-size="8" fill="#7db896">18K</text>
+
+  <!-- Divider -->
+  <rect x="876" y="385" width="264" height="1" fill="#00e87a" opacity="0.07"/>
+
+  <!-- Rating scale -->
+  <text x="876" y="405" font-family="monospace" font-size="9" fill="#7db896" opacity="0.6" letter-spacing="1">RATING ESCALA</text>
+
+  <rect x="876" y="414" width="38" height="20" rx="4" fill="#0f2d1a" stroke="#00e87a" stroke-width="0.8"/>
+  <text x="895" y="428" font-family="monospace" font-size="9" fill="#00e87a" text-anchor="middle" font-weight="700">A+</text>
+
+  <rect x="920" y="414" width="30" height="20" rx="4" fill="#0f2a18" stroke="#22c55e" stroke-width="0.8"/>
+  <text x="935" y="428" font-family="monospace" font-size="9" fill="#22c55e" text-anchor="middle" font-weight="700">A</text>
+
+  <rect x="956" y="414" width="30" height="20" rx="4" fill="#1a2d0f" stroke="#84cc16" stroke-width="0.8"/>
+  <text x="971" y="428" font-family="monospace" font-size="9" fill="#84cc16" text-anchor="middle" font-weight="700">B</text>
+
+  <rect x="992" y="414" width="30" height="20" rx="4" fill="#2d2a0a" stroke="#eab308" stroke-width="0.8"/>
+  <text x="1007" y="428" font-family="monospace" font-size="9" fill="#eab308" text-anchor="middle" font-weight="700">C</text>
+
+  <rect x="1028" y="414" width="30" height="20" rx="4" fill="#2d1a0a" stroke="#f97316" stroke-width="0.8"/>
+  <text x="1043" y="428" font-family="monospace" font-size="9" fill="#f97316" text-anchor="middle" font-weight="700">D</text>
+
+  <rect x="1064" y="414" width="30" height="20" rx="4" fill="#2d0a0a" stroke="#ef4444" stroke-width="0.8"/>
+  <text x="1079" y="428" font-family="monospace" font-size="9" fill="#ef4444" text-anchor="middle" font-weight="700">F</text>
+
+  <!-- Lang selector pills -->
+  <text x="876" y="460" font-family="monospace" font-size="9" fill="#7db896" opacity="0.5">🌐 ES  EN  FR  PT  RU  中  日  한  ع  ע  TR</text>
+
+  <!-- Bottom stats -->
+  <rect x="876" y="474" width="264" height="1" fill="#00e87a" opacity="0.07"/>
+  <text x="876" y="494" font-family="monospace" font-size="9" fill="#7db896" opacity="0.5">50 modelos · 5 dimensiones · 15 países</text>
+  <text x="876" y="510" font-family="monospace" font-size="9" fill="#7db896" opacity="0.5">Metodología: Díaz Familia (2026) · CC BY 4.0</text>
+  <text x="876" y="530" font-family="monospace" font-size="9" fill="#00e87a" opacity="0.4">lizzy0981.github.io/calculadora-huella-carbono-ia</text>
+
+  <!-- ── BOTTOM BAR ── -->
+  <rect x="0" y="600" width="1200" height="30" fill="#030a06"/>
+  <rect x="0" y="600" width="1200" height="1" fill="#00e87a" opacity="0.07"/>
+  <text x="40" y="620" font-family="monospace" font-size="9" fill="#7db896" opacity="0.5">© 2026 Elizabeth Díaz Familia · Metodología: Díaz Familia (2026) · CC BY 4.0</text>
+  <text x="900" y="620" font-family="monospace" font-size="9" fill="#7db896" opacity="0.5">github.com/Lizzy0981</text>
+</svg>

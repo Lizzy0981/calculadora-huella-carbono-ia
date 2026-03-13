@@ -1,0 +1,2736 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Elizabeth Díaz Familia">
+<meta name="description" content="Calculadora científica de huella de carbono de modelos de IA — 5 dimensiones de impacto ambiental">
+<meta name="theme-color" content="#050d0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🌿 Huella de Carbono IA — Elizabeth Díaz Familia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS — Deep Forest Scientific Terminal
+   ═══════════════════════════════════════════════ */
+:root {
+  --bg-void:      #030a06;
+  --bg-deep:      #060f09;
+  --bg-base:      #091410;
+  --bg-card:      #0c1c14;
+  --bg-raised:    #102219;
+  --bg-glass:     rgba(12, 28, 20, 0.75);
+  --bg-overlay:   rgba(3, 10, 6, 0.85);
+
+  --green-100: #e8faf0;
+  --green-200: #b3edcf;
+  --green-300: #6edba3;
+  --green-400: #2ec97a;
+  --green-500: #00e87a;
+  --green-600: #00b85f;
+  --green-glow: rgba(0, 232, 122, 0.15);
+  --green-glow-strong: rgba(0, 232, 122, 0.35);
+
+  --cyan-400: #22d3ee;
+  --cyan-500: #06c0e0;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --purple-400: #a78bfa;
+
+  --text-primary:   #d4edde;
+  --text-secondary: #7db896;
+  --text-muted:     #3d6b52;
+  --text-data:      #00e87a;
+  --text-label:     #5a9470;
+
+  --border-subtle:  rgba(0, 232, 122, 0.08);
+  --border-default: rgba(0, 232, 122, 0.18);
+  --border-active:  rgba(0, 232, 122, 0.50);
+
+  --shadow-card:  0 4px 24px rgba(0,0,0,0.4), 0 1px 4px rgba(0,232,122,0.06);
+  --shadow-glow:  0 0 30px rgba(0,232,122,0.2), 0 0 60px rgba(0,232,122,0.08);
+  --shadow-btn:   0 4px 16px rgba(0,232,122,0.3);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+  --transition-spring: 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:16px; scroll-behavior:smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-void);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════════
+   ANIMATED BACKGROUND
+   ═══════════════════════════════════════════════ */
+.bg-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(0,80,40,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,50,30,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 50% 50%, rgba(0,20,12,0.05) 0%, transparent 80%);
+  pointer-events: none;
+}
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(0,232,122,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,232,122,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+.bg-particles {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--green-500);
+  border-radius: 50%;
+  opacity: 0;
+  animation: float-up var(--dur, 12s) var(--delay, 0s) ease-in infinite;
+}
+@keyframes float-up {
+  0%   { opacity:0; transform: translateY(0) translateX(0); }
+  10%  { opacity: var(--max-op, 0.4); }
+  90%  { opacity: var(--max-op, 0.4); }
+  100% { opacity:0; transform: translateY(-100vh) translateX(var(--drift, 30px)); }
+}
+
+/* ═══════════════════════════════════════════════
+   RAINBOW BAR
+   ═══════════════════════════════════════════════ */
+.rainbow-bar {
+  position: fixed; top:0; left:0; right:0; z-index: 100;
+  height: 4px;
+  background: linear-gradient(90deg,
+    #ff6b6b 0%, #ffd93d 16.6%, #6bcb77 33.3%,
+    #4d96ff 50%, #c77dff 66.6%, #ff6b6b 83.3%, #ffd93d 100%);
+  background-size: 200% 100%;
+  animation: rainbow-shift 6s linear infinite;
+}
+@keyframes rainbow-shift {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* ═══════════════════════════════════════════════
+   SCROLL PROGRESS
+   ═══════════════════════════════════════════════ */
+.scroll-progress {
+  position: fixed; top:4px; left:0; right:0; z-index:99;
+  height: 2px;
+  background: var(--green-500);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.1s;
+  box-shadow: 0 0 8px var(--green-500);
+}
+
+/* ═══════════════════════════════════════════════
+   STATUS BAR
+   ═══════════════════════════════════════════════ */
+.status-bar {
+  position: fixed; top:4px; right:16px; z-index:200;
+  display: flex; gap:8px; align-items:center;
+  padding-top: 4px;
+}
+.status-pill {
+  display: flex; align-items:center; gap:5px;
+  padding: 3px 10px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.status-pill:hover { border-color: var(--border-default); }
+.status-dot {
+  width:6px; height:6px;
+  border-radius:50%;
+  background: var(--green-500);
+  box-shadow: 0 0 6px var(--green-500);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.status-dot.offline { background: var(--amber-400); box-shadow: 0 0 6px var(--amber-400); }
+.status-dot.saving  { background: var(--cyan-400);  box-shadow: 0 0 6px var(--cyan-400);  }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ═══════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════ */
+.app-wrap {
+  position: relative; z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+/* ═══════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════ */
+.header {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+}
+.header-eyebrow {
+  display: inline-flex; align-items:center; gap:8px;
+  padding: 5px 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green-400);
+  margin-bottom: 20px;
+  background: var(--green-glow);
+}
+.header-eyebrow::before { content:'●'; animation: pulse-dot 2s infinite; }
+.header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--green-300) 0%, var(--green-500) 40%, var(--cyan-400) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 14px;
+}
+.header-sub {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 560px;
+  margin: 0 auto 24px;
+  line-height: 1.6;
+}
+.author-chip {
+  display: inline-flex; align-items:center; gap:10px;
+  padding: 8px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+  margin: 4px;
+}
+.author-chip:hover { border-color: var(--border-default); color: var(--text-primary); }
+.author-chip span { color: var(--green-400); font-weight: 500; }
+
+/* ═══════════════════════════════════════════════
+   LIVE CARBON BAR
+   ═══════════════════════════════════════════════ */
+.live-carbon-bar {
+  display: flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.lcb-location { display:flex; align-items:center; gap:8px; color: var(--text-secondary); }
+.lcb-location strong { color: var(--text-primary); }
+.lcb-intensity {
+  display:flex; align-items:center; gap:10px;
+}
+.lcb-value {
+  font-size: 18px; font-weight:700;
+  color: var(--green-500);
+}
+.lcb-bar-wrap {
+  width: 120px; height: 6px;
+  background: var(--bg-raised);
+  border-radius: 3px; overflow:hidden;
+}
+.lcb-bar-fill {
+  height:100%;
+  border-radius:3px;
+  transition: width 1s ease, background 1s ease;
+}
+.lcb-label { color: var(--text-muted); font-size:10px; }
+.lcb-api { color: var(--text-muted); font-size:10px; display:flex; align-items:center; gap:4px; }
+.lcb-api .live-dot { width:5px;height:5px;border-radius:50%; background:var(--green-500); animation:pulse-dot 2s infinite; }
+
+/* ═══════════════════════════════════════════════
+   CARDS & PANELS
+   ═══════════════════════════════════════════════ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--transition);
+}
+.card:hover { border-color: var(--border-default); }
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  display: flex; align-items:center; gap:10px;
+}
+.card-title .icon {
+  width: 32px; height: 32px;
+  background: var(--green-glow);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  display: flex; align-items:center; justify-content:center;
+  font-size: 16px;
+}
+
+/* ═══════════════════════════════════════════════
+   MODEL SEARCH
+   ═══════════════════════════════════════════════ */
+.search-wrap { position: relative; margin-bottom: 24px; }
+.search-input {
+  width: 100%;
+  padding: 14px 48px 14px 18px;
+  background: var(--bg-raised);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  outline: none;
+  transition: var(--transition);
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus {
+  border-color: var(--green-500);
+  box-shadow: 0 0 0 3px var(--green-glow);
+  background: var(--bg-card);
+}
+.search-icon {
+  position: absolute; right:14px; top:50%; transform:translateY(-50%);
+  color: var(--text-muted); font-size:18px; pointer-events:none;
+}
+.autocomplete-list {
+  position: absolute; top:calc(100% + 6px); left:0; right:0; z-index:500;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: none;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+}
+.autocomplete-list.show { display:block; }
+.ac-item {
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex; align-items:center; justify-content:space-between;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.ac-item:last-child { border-bottom:none; }
+.ac-item:hover, .ac-item.selected { background: var(--green-glow); }
+.ac-name { font-weight:500; color: var(--text-primary); font-size:14px; }
+.ac-co2  { font-family:var(--font-mono); font-size:12px; color: var(--text-secondary); }
+.ac-badge {
+  font-size:10px; padding:2px 7px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════════
+   PARAMS GRID
+   ═══════════════════════════════════════════════ */
+.params-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.field {
+  display: flex; flex-direction:column; gap:6px;
+}
+.field-label {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-label);
+  display: flex; align-items:center; gap:6px;
+}
+.field-label .tip {
+  width:15px; height:15px;
+  border-radius:50%;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size:9px;
+  display:inline-flex; align-items:center; justify-content:center;
+  cursor:help;
+  transition: var(--transition);
+}
+.field-label .tip:hover { border-color: var(--green-500); color: var(--green-400); }
+.field-input, .field-select {
+  padding: 11px 14px;
+  background: var(--bg-raised);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field-input:focus, .field-select:focus {
+  border-color: var(--green-500);
+  box-shadow: 0 0 0 2px var(--green-glow);
+  background: var(--bg-card);
+}
+.field-input:hover, .field-select:hover { border-color: var(--border-default); }
+.field-hint { font-size:11px; color: var(--text-muted); }
+.field-select option { background: var(--bg-card); color: var(--text-primary); }
+
+/* ═══════════════════════════════════════════════
+   PRESET CHIPS
+   ═══════════════════════════════════════════════ */
+.presets-row {
+  display: flex; flex-wrap:wrap; gap:8px;
+  margin-bottom: 24px;
+}
+.preset-chip {
+  padding: 6px 14px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-spring);
+}
+.preset-chip:hover {
+  border-color: var(--green-500);
+  color: var(--green-400);
+  background: var(--green-glow);
+  transform: translateY(-2px);
+}
+.preset-chip.active {
+  background: var(--green-glow-strong);
+  border-color: var(--green-500);
+  color: var(--green-400);
+}
+
+/* ═══════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════ */
+.btn-row {
+  display: flex; gap:12px; flex-wrap:wrap;
+}
+.btn-primary {
+  flex: 1; min-width:160px;
+  padding: 15px 28px;
+  background: linear-gradient(135deg, var(--green-500), var(--green-400));
+  color: var(--bg-void);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-spring);
+  position: relative; overflow: hidden;
+  box-shadow: var(--shadow-btn);
+  letter-spacing: 0.02em;
+}
+.btn-primary::after {
+  content:'';
+  position:absolute; top:0; left:-100%; width:100%; height:100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+.btn-primary:hover::after { left:100%; }
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,232,122,0.4);
+}
+.btn-primary:active { transform: translateY(-1px); }
+
+.btn-secondary {
+  padding: 15px 24px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex; align-items:center; gap:8px;
+}
+.btn-secondary:hover {
+  border-color: var(--red-400);
+  color: var(--red-400);
+  background: rgba(248,113,113,0.05);
+}
+
+/* ═══════════════════════════════════════════════
+   RESULTS SECTION
+   ═══════════════════════════════════════════════ */
+#results-section {
+  display: none;
+  animation: reveal 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+#results-section.show { display:block; }
+@keyframes reveal {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════
+   DIMENSION CARDS
+   ═══════════════════════════════════════════════ */
+.dimensions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.dim-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  position: relative; overflow:hidden;
+  transition: var(--transition-spring);
+  cursor: default;
+}
+.dim-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
+  background: var(--dim-color, var(--green-500));
+  opacity: 0.7;
+}
+.dim-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--dim-color, var(--border-default));
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.dim-icon { font-size: 22px; margin-bottom: 10px; }
+.dim-label {
+  font-family: var(--font-mono);
+  font-size: 10px; letter-spacing:0.1em;
+  text-transform:uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.dim-value {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--dim-color, var(--green-500));
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.dim-unit { font-size:11px; color: var(--text-muted); }
+.dim-card[data-dim="co2"]      { --dim-color: #00e87a; }
+.dim-card[data-dim="energy"]   { --dim-color: #22d3ee; }
+.dim-card[data-dim="water"]    { --dim-color: #60a5fa; }
+.dim-card[data-dim="ewaste"]   { --dim-color: #f59e0b; }
+.dim-card[data-dim="minerals"] { --dim-color: #a78bfa; }
+
+/* ═══════════════════════════════════════════════
+   SUSTAINABILITY RATING
+   ═══════════════════════════════════════════════ */
+.rating-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  display: flex; align-items:center; gap:24px; flex-wrap:wrap;
+}
+.rating-badge {
+  width: 72px; height: 72px;
+  border-radius: var(--radius-md);
+  display: flex; align-items:center; justify-content:center;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  border: 2px solid;
+  flex-shrink:0;
+  position:relative;
+}
+.rating-badge::after {
+  content:'';
+  position:absolute; inset:-6px;
+  border-radius: calc(var(--radius-md) + 4px);
+  border: 1px solid currentColor;
+  opacity:0.3;
+}
+.rating-badge.Aplus  { color:#00e87a; border-color:#00e87a; background:rgba(0,232,122,0.1); }
+.rating-badge.A      { color:#6edba3; border-color:#6edba3; background:rgba(110,219,163,0.1); }
+.rating-badge.B      { color:#22d3ee; border-color:#22d3ee; background:rgba(34,211,238,0.1); }
+.rating-badge.C      { color:#fbbf24; border-color:#fbbf24; background:rgba(251,191,36,0.1); }
+.rating-badge.D      { color:#f97316; border-color:#f97316; background:rgba(249,115,22,0.1); }
+.rating-badge.F      { color:#f87171; border-color:#f87171; background:rgba(248,113,113,0.1); }
+.rating-info { flex:1; min-width:200px; }
+.rating-title {
+  font-family: var(--font-display); font-size:1.1rem; font-weight:700;
+  color: var(--text-primary); margin-bottom:4px;
+}
+.rating-desc { font-size:13px; color: var(--text-secondary); line-height:1.5; }
+.rating-bar-wrap {
+  flex: 2; min-width:180px;
+}
+.rating-bar-label {
+  display:flex; justify-content:space-between;
+  font-family:var(--font-mono); font-size:10px;
+  color: var(--text-muted); margin-bottom:6px;
+}
+.rating-bar-track {
+  height: 8px;
+  background: var(--bg-raised);
+  border-radius: 4px; overflow:hidden;
+}
+.rating-bar-fill {
+  height:100%; border-radius:4px;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ═══════════════════════════════════════════════
+   EQUIVALENCES
+   ═══════════════════════════════════════════════ */
+.equivs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.equiv-item {
+  display: flex; align-items:center; gap:12px;
+  padding: 14px 16px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  opacity:0; transform:translateX(-8px);
+}
+.equiv-item.shown {
+  opacity:1; transform:translateX(0);
+  transition: all 0.4s ease-out var(--stagger, 0s);
+}
+.equiv-item:hover { border-color: var(--border-default); background: var(--bg-card); }
+.equiv-icon { font-size:22px; flex-shrink:0; }
+.equiv-text { font-size:13px; color: var(--text-secondary); line-height:1.4; }
+.equiv-text strong { color: var(--text-primary); font-family:var(--font-mono); font-weight:500; }
+
+/* ═══════════════════════════════════════════════
+   CHART
+   ═══════════════════════════════════════════════ */
+.chart-wrap {
+  position: relative;
+  height: 320px;
+  margin-bottom: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   COMPARISON TABLE
+   ═══════════════════════════════════════════════ */
+.compare-table {
+  width:100%; border-collapse:collapse;
+  font-size:13px;
+}
+.compare-table th {
+  padding: 10px 14px;
+  text-align:left;
+  font-family:var(--font-mono);
+  font-size:10px; letter-spacing:0.1em; text-transform:uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.compare-table td {
+  padding: 12px 14px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size:12px;
+}
+.compare-table tr.highlight td { color: var(--green-400); background: var(--green-glow); }
+.compare-table tr:last-child td { border-bottom:none; }
+.compare-table td:first-child { color: var(--text-primary); font-weight:500; }
+.compare-bar-cell { min-width:120px; }
+.compare-bar {
+  height:5px; border-radius:3px;
+  background: var(--border-subtle);
+  overflow:hidden; margin-top:4px;
+}
+.compare-bar-fill {
+  height:100%; border-radius:3px;
+  background: linear-gradient(90deg, var(--green-500), var(--cyan-400));
+  transition: width 0.8s ease;
+}
+
+/* ═══════════════════════════════════════════════
+   LANGUAGE SWITCHER
+   ═══════════════════════════════════════════════ */
+.lang-btn {
+  position: relative;
+  display: inline-flex; align-items:center; gap:7px;
+  padding: 8px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer; transition: var(--transition);
+  margin: 4px;
+}
+.lang-btn:hover { border-color: var(--green-500); color: var(--green-400); background: var(--green-glow); }
+.lang-btn .globe { font-size:15px; }
+.lang-dropdown {
+  position: absolute; top: calc(100% + 8px); left:50%;
+  transform: translateX(-50%);
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  min-width: 280px;
+  z-index: 500;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.6);
+}
+.lang-dropdown.open { display: grid; }
+.lang-option {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-secondary);
+  text-align:center; transition: var(--transition);
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+}
+.lang-option:hover { border-color: var(--border-default); background: var(--bg-card); color: var(--text-primary); }
+.lang-option.active { border-color: var(--green-500); background: var(--green-glow); color: var(--green-400); }
+.lang-option .lang-flag { font-size:18px; }
+.lang-option .lang-name { font-size:10px; }
+.results-header {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 22px 28px;
+  margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+  position: relative; overflow: hidden;
+}
+.results-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 100% at 0% 50%, var(--green-glow), transparent);
+  pointer-events: none;
+}
+.rh-left { position: relative; z-index: 1; }
+.rh-eyebrow {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 6px;
+}
+.rh-model-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--green-300) 0%, var(--green-500) 50%, var(--cyan-400) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1.15; margin-bottom: 8px;
+}
+.rh-meta {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
+}
+.rh-meta-item strong { color: var(--green-400); }
+.rh-badge {
+  position: relative; z-index: 1;
+  padding: 8px 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-secondary); background: var(--bg-raised);
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST NOTIFICATIONS
+   ═══════════════════════════════════════════════ */
+.toast-container {
+  position: fixed; top:24px; right:20px; z-index:1000;
+  display:flex; flex-direction:column; gap:8px;
+  pointer-events:none;
+}
+.toast {
+  padding: 12px 18px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--text-primary);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: toast-in 0.3s ease-out;
+  display:flex; align-items:center; gap:8px;
+  pointer-events:auto;
+  max-width: 280px;
+}
+.toast.error { border-color: rgba(248,113,113,0.4); }
+.toast.success { border-color: rgba(0,232,122,0.4); }
+@keyframes toast-in {
+  from { transform:translateX(100%); opacity:0; }
+  to   { transform:translateX(0); opacity:1; }
+}
+@keyframes toast-out {
+  from { transform:translateX(0); opacity:1; }
+  to   { transform:translateX(120%); opacity:0; }
+}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════ */
+.footer {
+  text-align:center;
+  padding: 40px 20px 20px;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 60px;
+}
+.footer-links { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
+.footer-link {
+  font-size:13px; color: var(--text-muted);
+  text-decoration:none; transition: var(--transition);
+  display:flex; align-items:center; gap:5px;
+}
+.footer-link:hover { color: var(--green-400); }
+.footer-copy { font-size:12px; color: var(--text-muted); font-family: var(--font-mono); }
+
+/* ═══════════════════════════════════════════════
+   SECTION SPACING
+   ═══════════════════════════════════════════════ */
+.section-gap { margin-bottom: 20px; }
+.section-title {
+  font-family: var(--font-display); font-size:1rem; font-weight:700;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  display:flex; align-items:center; gap:8px;
+  text-transform:uppercase; letter-spacing:0.06em; font-size:11px;
+}
+.section-title::after {
+  content:''; flex:1; height:1px;
+  background: linear-gradient(90deg, var(--border-subtle), transparent);
+}
+
+/* ═══════════════════════════════════════════════
+   DATA SAVER BANNER
+   ═══════════════════════════════════════════════ */
+.datasaver-banner {
+  display:none;
+  padding: 10px 16px;
+  background: rgba(6,192,224,0.08);
+  border: 1px solid rgba(6,192,224,0.2);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--cyan-400);
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  display: flex; align-items:center; gap:8px;
+}
+.datasaver-banner.active { display:flex; }
+
+/* ═══════════════════════════════════════════════
+   TOOLTIP
+   ═══════════════════════════════════════════════ */
+[data-tooltip] { position:relative; }
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position:absolute; bottom:calc(100% + 6px); left:50%;
+  transform:translateX(-50%);
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size:11px; color: var(--text-secondary);
+  white-space:nowrap; z-index:500;
+  box-shadow: var(--shadow-card);
+  pointer-events:none;
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════ */
+@media (max-width:768px) {
+  .header { padding:50px 12px 28px; }
+  .app-wrap { padding:24px 12px 60px; }
+  .params-grid { grid-template-columns:1fr 1fr; }
+  .dimensions-grid { grid-template-columns:1fr 1fr; }
+  .btn-row { flex-direction:column; }
+  .rating-panel { flex-direction:column; }
+}
+@media (max-width:480px) {
+  .params-grid { grid-template-columns:1fr; }
+  .dimensions-grid { grid-template-columns:1fr 1fr; }
+  .equivs-grid { grid-template-columns:1fr; }
+}
+
+/* ═══════════════════════════════════════════════
+   PRINT
+   ═══════════════════════════════════════════════ */
+@media print {
+  .bg-canvas,.bg-grid,.bg-particles,.rainbow-bar,
+  .scroll-progress,.status-bar,.btn-row,.presets-row { display:none!important; }
+  body { background:#fff; color:#000; }
+  .card { background:#fff; border:1px solid #ccc; }
+}
+
+/* ═══════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════ */
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation-duration:0.01ms!important;
+    transition-duration:0.01ms!important;
+  }
+}
+@media (prefers-contrast:high) {
+  :root { --border-default: rgba(0,232,122,0.6); --text-secondary:#aedfc0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Background layers -->
+<div class="bg-canvas"></div>
+<div class="bg-grid"></div>
+<div class="bg-particles" id="particles"></div>
+
+<!-- Top decorations -->
+<div class="rainbow-bar"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Status pills -->
+<div class="status-bar">
+  <div class="status-pill" id="offlinePill">
+    <span class="status-dot" id="connectionDot"></span>
+    <span id="connectionLabel" data-i18n="status.online">Online</span>
+  </div>
+  <div class="status-pill" id="saverPill" onclick="toggleDataSaver()">
+    <span class="status-dot saving" id="saverDot"></span>
+    <span id="saverLabel" data-i18n="status.eco">Eco</span>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══════════════════ APP ═══════════════════ -->
+<div class="app-wrap">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-eyebrow" data-i18n="header.eyebrow">IA Sostenible · Data Science · Green Computing</div>
+    <h1 data-i18n="header.title">Huella de Carbono<br>de Modelos de IA</h1>
+    <p class="header-sub" data-i18n="header.subtitle">
+      Calcula el impacto ambiental completo en 5 dimensiones científicas —
+      CO₂, energía, agua, residuos electrónicos y minerales críticos.
+    </p>
+    <div style="margin-top:8px">
+      <a href="https://lizzy0981.github.io" target="_blank" class="author-chip">
+        👩‍💻 <span>Elizabeth Díaz Familia</span> · <span data-i18n="header.author-role">Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI</span>
+      </a>
+      <a href="index.html" class="author-chip" data-i18n="header.paper-link">📄 Ver Paper Científico</a>
+
+      <!-- LANGUAGE SWITCHER -->
+      <div class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+        <span class="globe">🌐</span>
+        <span id="langCurrentLabel">Español</span>
+        <span style="font-size:10px;opacity:0.6">▾</span>
+        <div class="lang-dropdown" id="langDropdown">
+          <div class="lang-option active" data-lang="es" onclick="setLang('es',event)"><span class="lang-flag">🇪🇸</span><span class="lang-name">Español</span></div>
+          <div class="lang-option" data-lang="en" onclick="setLang('en',event)"><span class="lang-flag">🇺🇸</span><span class="lang-name">English</span></div>
+          <div class="lang-option" data-lang="fr" onclick="setLang('fr',event)"><span class="lang-flag">🇫🇷</span><span class="lang-name">Français</span></div>
+          <div class="lang-option" data-lang="pt" onclick="setLang('pt',event)"><span class="lang-flag">🇧🇷</span><span class="lang-name">Português</span></div>
+          <div class="lang-option" data-lang="ru" onclick="setLang('ru',event)"><span class="lang-flag">🇷🇺</span><span class="lang-name">Русский</span></div>
+          <div class="lang-option" data-lang="zh" onclick="setLang('zh',event)"><span class="lang-flag">🇨🇳</span><span class="lang-name">中文</span></div>
+          <div class="lang-option" data-lang="ja" onclick="setLang('ja',event)"><span class="lang-flag">🇯🇵</span><span class="lang-name">日本語</span></div>
+          <div class="lang-option" data-lang="ko" onclick="setLang('ko',event)"><span class="lang-flag">🇰🇷</span><span class="lang-name">한국어</span></div>
+          <div class="lang-option" data-lang="ar" onclick="setLang('ar',event)"><span class="lang-flag">🇸🇦</span><span class="lang-name">العربية</span></div>
+          <div class="lang-option" data-lang="he" onclick="setLang('he',event)"><span class="lang-flag">🇮🇱</span><span class="lang-name">עברית</span></div>
+          <div class="lang-option" data-lang="tr" onclick="setLang('tr',event)"><span class="lang-flag">🇹🇷</span><span class="lang-name">Türkçe</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- LIVE CARBON BAR -->
+  <div class="live-carbon-bar" id="liveCarbonBar">
+    <div class="lcb-location">
+      📍 <strong id="lcbCountry" data-i18n="lcb.detecting">Detectando ubicación…</strong>
+      <span id="lcbRegion" style="color:var(--text-muted)"></span>
+    </div>
+    <div class="lcb-intensity">
+      <div>
+        <div class="lcb-label" data-i18n="lcb.label">Intensidad de carbono en vivo</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="lcb-value" id="lcbValue">—</span>
+          <span style="font-size:11px;color:var(--text-muted)">gCO₂/kWh</span>
+          <div class="lcb-bar-wrap"><div class="lcb-bar-fill" id="lcbBarFill" style="width:0%;background:var(--green-500)"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="lcb-api">
+      <span class="live-dot" id="apiDot"></span>
+      <span id="apiSource" data-i18n="lcb.loading">Cargando API…</span>
+    </div>
+  </div>
+
+  <!-- DATA SAVER BANNER -->
+  <div class="datasaver-banner" id="datasakerBanner">
+    <span data-i18n="banner.eco">⚡ Modo Eco activo — APIs pausadas, animaciones reducidas, caché local activado</span>
+  </div>
+
+  <!-- ═══ CALCULATOR CARD ═══ -->
+  <div class="card section-gap">
+    <div class="card-title">
+      <div class="icon">🧮</div>
+      <span data-i18n="calc.title">Configurar Modelo de IA</span>
+    </div>
+
+    <!-- CAMPO ÚNICO — nombre + búsqueda inteligente en uno solo -->
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="fModelName"
+        data-i18n-placeholder="calc.placeholder"
+        placeholder="Escribe el nombre de la IA que quieres analizar…"
+        autocomplete="off" spellcheck="false"
+        style="font-size:15px;padding-right:52px">
+      <span class="search-icon" style="font-size:20px;right:16px">⌕</span>
+      <div class="autocomplete-list" id="autocompleteList"></div>
+    </div>
+    <p id="calcHint" style="font-size:11px;color:var(--text-muted);margin:-14px 0 18px 2px;font-family:var(--font-mono)" data-i18n="calc.hint">
+      💡 Si el modelo es conocido aparecerán sugerencias con los parámetros técnicos — o escribe cualquier nombre personalizado
+    </p>
+
+    <!-- Preset chips -->
+    <div class="presets-row" id="presetsRow">
+      <span id="presetsLabel" style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);padding:6px 0;align-self:center" data-i18n="calc.presets-label">Presets rápidos →</span>
+    </div>
+
+    <!-- Params -->
+    <div class="params-grid">
+      <div class="field">
+        <label class="field-label" for="fGpuCount">
+          <span data-i18n="field.gpu-count">Cantidad de GPUs</span>
+          <span class="tip" data-i18n-tooltip="field.gpu-count-tip" data-tooltip="Número total de GPUs en paralelo durante el entrenamiento">?</span>
+        </label>
+        <input type="number" class="field-input" id="fGpuCount" min="1" max="100000">
+        <span class="field-hint" data-i18n="field.gpu-count-hint">ej: 512 (A100s para LLaMA 3 70B)</span>
+      </div>
+      <div class="field">
+        <label class="field-label" for="fGpuType">
+          <span data-i18n="field.gpu-type">Tipo de GPU</span>
+          <span class="tip" data-i18n-tooltip="field.gpu-type-tip" data-tooltip="Potencia máxima en kW según especificaciones NVIDIA">?</span>
+        </label>
+        <select class="field-select" id="fGpuType">
+          <option value="0.3">V100 — 300 W</option>
+          <option value="0.4" selected>A100 — 400 W</option>
+          <option value="0.7">H100 — 700 W</option>
+          <option value="0.45">RTX 4090 — 450 W</option>
+          <option value="0.35">RTX 3090 — 350 W</option>
+          <option value="0.56">AMD MI250X — 560 W</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" for="fHours">
+          <span data-i18n="field.hours">Horas de entrenamiento</span>
+          <span class="tip" data-i18n-tooltip="field.hours-tip" data-tooltip="Tiempo total de cómputo activo (no incluye preparación de datos)">?</span>
+        </label>
+        <input type="number" class="field-input" id="fHours" min="0.1" max="10000">
+        <span class="field-hint" data-i18n="field.hours-hint">ej: 336 h ≈ 14 días continuos</span>
+      </div>
+      <div class="field">
+        <label class="field-label" for="fPue">
+          <span data-i18n="field.pue">PUE del centro de datos</span>
+          <span class="tip" data-i18n-tooltip="field.pue-tip" data-tooltip="Power Usage Effectiveness. 1.0 = perfecto. Google ≈1.1, Promedio industria ≈1.6">?</span>
+        </label>
+        <select class="field-select" id="fPue">
+          <option value="1.1" data-i18n-opt="pue.google">Google Cloud — 1.10</option>
+          <option value="1.2" selected data-i18n-opt="pue.leading">Anthropic / Leading — 1.20</option>
+          <option value="1.4" data-i18n-opt="pue.aws">AWS / Azure — 1.40</option>
+          <option value="1.6" data-i18n-opt="pue.avg">Promedio industria — 1.60</option>
+          <option value="2.0" data-i18n-opt="pue.bad">Centros ineficientes — 2.00</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" for="fLocation">
+          <span data-i18n="field.location">Región / Factor de carbono</span>
+          <span class="tip" data-i18n-tooltip="field.location-tip" data-tooltip="kg CO₂ por kWh según la matriz energética del país (IEA 2025)">?</span>
+        </label>
+        <select class="field-select" id="fLocation">
+          <option value="0.01">🇮🇸 Islandia — 0.01 kg/kWh</option>
+          <option value="0.06">🇫🇷 Francia — 0.06 kg/kWh</option>
+          <option value="0.20">🇸🇪 Suecia — 0.20 kg/kWh</option>
+          <option value="0.276">🇩🇴 Rep. Dominicana — 0.276 kg/kWh</option>
+          <option value="0.30">🇪🇺 Europa (promedio) — 0.30 kg/kWh</option>
+          <option value="0.386" selected>🇺🇸 EE.UU. — 0.386 kg/kWh</option>
+          <option value="0.40">🇧🇷 Brasil — 0.40 kg/kWh</option>
+          <option value="0.60">🇬🇧 Reino Unido — 0.60 kg/kWh</option>
+          <option value="0.70">🇨🇳 China — 0.70 kg/kWh</option>
+          <option value="0.80">🇮🇳 India — 0.80 kg/kWh</option>
+          <option value="0.90">🇦🇺 Australia — 0.90 kg/kWh</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" for="fEnergyCost">
+          <span data-i18n="field.energy-cost">Costo energético (USD/kWh)</span>
+          <span class="tip" data-i18n-tooltip="field.energy-cost-tip" data-tooltip="Precio de la electricidad industrial. EE.UU. promedio: $0.07">?</span>
+        </label>
+        <input type="number" class="field-input" id="fEnergyCost" min="0.01" max="1.0" step="0.01" value="0.07">
+        <span class="field-hint" data-i18n="field.energy-cost-hint">Industrial cloud: $0.05–$0.12</span>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn-primary" id="btnCalc" onclick="calculate()">
+        <span data-i18n="btn.calculate">⚡ Calcular Impacto Ambiental</span>
+      </button>
+      <button class="btn-secondary" onclick="clearAll()">
+        <span data-i18n="btn.clear">🗑 Limpiar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ RESULTS ═══ -->
+  <div id="results-section">
+
+    <!-- MODEL NAME HEADER -->
+    <div class="results-header" id="resultsHeader">
+      <div class="rh-left">
+        <div class="rh-eyebrow" data-i18n="results.eyebrow">📊 Resultados del análisis ambiental para:</div>
+        <div class="rh-model-name" id="rhModelName">—</div>
+        <div class="rh-meta" id="rhMeta"></div>
+      </div>
+      <div class="rh-badge" id="rhBadge" data-i18n="results.badge">Calculado ahora</div>
+    </div>
+
+    <!-- 5 Dimension Cards -->
+    <p class="section-title" data-i18n="section.dims">Impacto en 5 dimensiones científicas</p>
+    <div class="dimensions-grid">
+      <div class="dim-card" data-dim="co2">
+        <div class="dim-icon">🌡️</div>
+        <div class="dim-label" data-i18n="dim.co2">CO₂ total</div>
+        <div class="dim-value" id="rCo2">—</div>
+        <div class="dim-unit" data-i18n="dim.co2-unit">kg de CO₂</div>
+      </div>
+      <div class="dim-card" data-dim="energy">
+        <div class="dim-icon">⚡</div>
+        <div class="dim-label" data-i18n="dim.energy">Energía</div>
+        <div class="dim-value" id="rEnergy">—</div>
+        <div class="dim-unit" data-i18n="dim.energy-unit">kWh consumidos</div>
+      </div>
+      <div class="dim-card" data-dim="water">
+        <div class="dim-icon">💧</div>
+        <div class="dim-label" data-i18n="dim.water">Agua dulce</div>
+        <div class="dim-value" id="rWater">—</div>
+        <div class="dim-unit" data-i18n="dim.water-unit">litros</div>
+      </div>
+      <div class="dim-card" data-dim="ewaste">
+        <div class="dim-icon">🖥️</div>
+        <div class="dim-label" data-i18n="dim.ewaste">E-Waste</div>
+        <div class="dim-value" id="rEwaste">—</div>
+        <div class="dim-unit" data-i18n="dim.ewaste-unit">kg residuos electrónicos</div>
+      </div>
+      <div class="dim-card" data-dim="minerals">
+        <div class="dim-icon">⛏️</div>
+        <div class="dim-label" data-i18n="dim.minerals">Minerales críticos</div>
+        <div class="dim-value" id="rMinerals">—</div>
+        <div class="dim-unit" data-i18n="dim.minerals-unit">kg (cobalto, litio…)</div>
+      </div>
+    </div>
+
+    <!-- Sustainability Rating -->
+    <div class="rating-panel section-gap">
+      <div class="rating-badge" id="ratingBadge">—</div>
+      <div class="rating-info">
+        <div class="rating-title" id="ratingTitle" data-i18n="rating.calculating">Calculando…</div>
+        <div class="rating-desc" id="ratingDesc"></div>
+      </div>
+      <div class="rating-bar-wrap">
+        <div class="rating-bar-label">
+          <span data-i18n="rating.best">A+ Sostenible</span><span data-i18n="rating.worst">F Crítico</span>
+        </div>
+        <div class="rating-bar-track">
+          <div class="rating-bar-fill" id="ratingBar" style="width:0%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted)" data-i18n="rating.efficiency">Eficiencia</span>
+          <span class="dim-value" style="font-size:1rem" id="rEfficiency">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equivalences -->
+    <p class="section-title" data-i18n="section.equivs">Equivalencias ambientales</p>
+    <div class="equivs-grid" id="equivsGrid"></div>
+
+    <!-- Charts -->
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">📊</div><span data-i18n="chart.title">Comparativa con modelos de referencia</span></div>
+      <div class="chart-wrap">
+        <canvas id="compChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">📋</div><span data-i18n="table.title">Tabla de impacto comparativo</span></div>
+      <div style="overflow-x:auto">
+        <table class="compare-table" id="compareTable">
+          <thead>
+            <tr>
+              <th data-i18n="table.model">Modelo</th>
+              <th data-i18n="table.co2">CO₂ (kg)</th>
+              <th data-i18n="table.water">Agua (L)</th>
+              <th data-i18n="table.rating">Rating</th>
+              <th data-i18n="table.scale">Escala</th>
+            </tr>
+          </thead>
+          <tbody id="compareBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /results -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="mailto:lizzyfamilia@gmail.com" class="footer-link">📧 lizzyfamilia@gmail.com</a>
+      <a href="https://linkedin.com/in/eli-familia/" target="_blank" class="footer-link">💼 LinkedIn</a>
+      <a href="https://github.com/Lizzy0981" target="_blank" class="footer-link">🐙 GitHub</a>
+      <a href="https://twitter.com/Lizzyfamilia" target="_blank" class="footer-link">𝕏 @Lizzyfamilia</a>
+      <a href="index.html" class="footer-link"><span data-i18n="footer.paper">📄 Paper científico</span></a>
+    </div>
+    <div class="footer-copy" data-i18n="footer.copy">
+      © 2026 Elizabeth Díaz Familia · Metodología: Díaz Familia (2026) · CC BY 4.0
+    </div>
+  </footer>
+
+</div><!-- /app-wrap -->
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT — Motor científico + APIs + Offline
+     ═══════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ─── CONSTANTS ─── */
+const EQUIV = {
+  CAR_YEAR:    4600,   // kg CO₂/año
+  FLIGHT_NY:    920,   // kg CO₂ vuelo Madrid-NY
+  HOME_MONTH:   350,   // kg CO₂/hogar/mes
+  TREE_YEAR:     25,   // kg CO₂/árbol/año
+  PHONE_CHARGE: 0.008, // kg CO₂/carga
+};
+
+// GPU lifetime (hours) for e-waste calculation (3 year lifespan)
+const GPU_LIFETIME_H = 26280;
+// GPU mass approximation (kg)
+const GPU_MASS_KG = { '0.3':1.5, '0.4':2.1, '0.7':2.8, '0.45':2.3, '0.35':1.9, '0.56':3.0 };
+// Critical minerals per GPU (kg, amortized)
+const GPU_MINERALS_KG = { '0.3':0.03, '0.4':0.05, '0.7':0.08, '0.45':0.06, '0.35':0.04, '0.56':0.07 };
+// Water intensity L/kWh for data centers (average)
+const WATER_INTENSITY = 1.8;
+
+/* ─── MODEL DATABASE (50 models with 5 dimensions) ─── */
+const MODELS_DB = [
+  { id:'gpt4',      name:'GPT-4',              co2:1820000, energy:4550000, water:8190000,  ewaste:4765,  minerals:238,  company:'OpenAI',        category:'LLM',   gpus:25000, power:0.7, hours:2000, pue:1.3, loc:0.4,   verified:false },
+  { id:'gpt4o',     name:'GPT-4o',             co2:1456000, energy:3640000, water:6552000,  ewaste:3812,  minerals:191,  company:'OpenAI',        category:'LLM',   gpus:20000, power:0.7, hours:1800, pue:1.3, loc:0.4,   verified:false },
+  { id:'gpt4omini', name:'GPT-4o mini',        co2:  91000, energy: 227500, water: 409500,  ewaste: 191,  minerals:9.5,  company:'OpenAI',        category:'LLM',   gpus:2048,  power:0.4, hours:400,  pue:1.3, loc:0.4,   verified:false },
+  { id:'o1',        name:'o1',                 co2:2730000, energy:6825000, water:12285000, ewaste:7148,  minerals:357,  company:'OpenAI',        category:'LLM',   gpus:30000, power:0.7, hours:2200, pue:1.3, loc:0.4,   verified:false },
+  { id:'o3mini',    name:'o3-mini',            co2: 182000, energy: 455000, water:  819000, ewaste: 477,  minerals: 24,  company:'OpenAI',        category:'LLM',   gpus:4096,  power:0.4, hours:600,  pue:1.3, loc:0.4,   verified:false },
+  { id:'gpt3',      name:'GPT-3',              co2:1713600, energy:3427200, water:6168960,  ewaste:3090,  minerals:155,  company:'OpenAI',        category:'LLM',   gpus:10000, power:0.3, hours:816,  pue:1.4, loc:0.5,   verified:true  },
+  { id:'gpt2',      name:'GPT-2',              co2:    910, energy:   1820, water:    3276, ewaste:   2,  minerals:0.1,  company:'OpenAI',        category:'LLM',   gpus:32,    power:0.3, hours:168,  pue:1.4, loc:0.5,   verified:true  },
+  { id:'claude3o',  name:'Claude 3 Opus',      co2: 182000, energy: 455000, water:  819000, ewaste: 477,  minerals: 24,  company:'Anthropic',     category:'LLM',   gpus:2048,  power:0.4, hours:480,  pue:1.2, loc:0.3,   verified:false },
+  { id:'claudes',   name:'Claude Sonnet',      co2:  18200, energy:  60667, water:  109200, ewaste:  48,  minerals:2.4,  company:'Anthropic',     category:'LLM',   gpus:1024,  power:0.4, hours:120,  pue:1.2, loc:0.3,   verified:true  },
+  { id:'claude35s', name:'Claude 3.5 Sonnet',  co2:  22118, energy:  73728, water:  132710, ewaste:  48,  minerals:2.4,  company:'Anthropic',     category:'LLM',   gpus:1024,  power:0.4, hours:150,  pue:1.2, loc:0.3,   verified:false },
+  { id:'claudeh',   name:'Claude Haiku',       co2:   3640, energy:  12133, water:   21840, ewaste: 9.6,  minerals:0.5,  company:'Anthropic',     category:'LLM',   gpus:256,   power:0.4, hours:80,   pue:1.2, loc:0.3,   verified:false },
+  { id:'gemultra',  name:'Gemini Ultra',       co2: 910000, energy:2275000, water:4095000,  ewaste:2383,  minerals:119,  company:'Google',        category:'LLM',   gpus:16384, power:0.4, hours:1200, pue:1.1, loc:0.3,   verified:false },
+  { id:'gempro',    name:'Gemini Pro',         co2:  45500, energy: 151667, water:  273000, ewaste: 120,  minerals:  6,  company:'Google',        category:'LLM',   gpus:1024,  power:0.4, hours:300,  pue:1.1, loc:0.3,   verified:false },
+  { id:'bard',      name:'Bard / Gemini',      co2:  62335, energy: 207783, water:  374010, ewaste: 192,  minerals:9.6,  company:'Google',        category:'LLM',   gpus:2048,  power:0.4, hours:200,  pue:1.1, loc:0.3,   verified:true  },
+  { id:'palm2',     name:'PaLM 2',             co2: 455000, energy:1137500, water:2047500,  ewaste:1192,  minerals: 60,  company:'Google',        category:'LLM',   gpus:8192,  power:0.4, hours:960,  pue:1.1, loc:0.3,   verified:false },
+  { id:'gemma27b',  name:'Gemma 2 27B',        co2:  18200, energy:  60667, water:  109200, ewaste:  48,  minerals:2.4,  company:'Google',        category:'LLM',   gpus:1024,  power:0.4, hours:120,  pue:1.1, loc:0.3,   verified:false },
+  { id:'gemma2b',   name:'Gemma 2B',           co2:   1820, energy:   6067, water:   10920, ewaste: 4.8,  minerals:0.2,  company:'Google',        category:'LLM',   gpus:256,   power:0.4, hours:60,   pue:1.1, loc:0.3,   verified:false },
+  { id:'t5xxl',     name:'T5-XXL',             co2:   5460, energy:  13650, water:   24570, ewaste:  14,  minerals:0.7,  company:'Google',        category:'LLM',   gpus:128,   power:0.3, hours:336,  pue:1.4, loc:0.5,   verified:true  },
+  { id:'llama3_70', name:'LLaMA 3 70B',        co2:  54600, energy: 182000, water:  327600, ewaste: 143,  minerals:7.2,  company:'Meta',          category:'LLM',   gpus:2048,  power:0.4, hours:280,  pue:1.4, loc:0.386, verified:true  },
+  { id:'llama3_8',  name:'LLaMA 3 8B',         co2:   8190, energy:  27300, water:   49140, ewaste:  21,  minerals:1.1,  company:'Meta',          category:'LLM',   gpus:512,   power:0.4, hours:120,  pue:1.4, loc:0.386, verified:true  },
+  { id:'llama31_405',name:'LLaMA 3.1 405B',    co2: 272000, energy: 680000, water: 1224000, ewaste: 715,  minerals: 36,  company:'Meta',          category:'LLM',   gpus:8192,  power:0.4, hours:576,  pue:1.4, loc:0.386, verified:false },
+  { id:'llama32_3', name:'LLaMA 3.2 3B',       co2:   2730, energy:   9100, water:   16380, ewaste: 7.2,  minerals:0.4,  company:'Meta',          category:'LLM',   gpus:256,   power:0.4, hours:72,   pue:1.4, loc:0.386, verified:false },
+  { id:'llama2_70', name:'LLaMA 2 70B',        co2:  68250, energy: 227500, water:  409500, ewaste: 179,  minerals:  9,  company:'Meta',          category:'LLM',   gpus:2048,  power:0.4, hours:350,  pue:1.4, loc:0.5,   verified:true  },
+  { id:'codellama',  name:'CodeLlama 34B',     co2:  27300, energy:  91000, water:  163800, ewaste:  72,  minerals:3.6,  company:'Meta',          category:'Code',  gpus:1024,  power:0.4, hours:180,  pue:1.4, loc:0.386, verified:false },
+  { id:'mistral7',   name:'Mistral 7B',        co2:   3185, energy:  10617, water:   19110, ewaste: 8.3,  minerals:0.4,  company:'Mistral AI',    category:'LLM',   gpus:512,   power:0.4, hours:55,   pue:1.4, loc:0.3,   verified:true  },
+  { id:'mistralm',   name:'Mixtral 8×7B',      co2:  25480, energy:  84933, water:  152880, ewaste:  66,  minerals:3.3,  company:'Mistral AI',    category:'LLM',   gpus:1024,  power:0.4, hours:220,  pue:1.4, loc:0.3,   verified:false },
+  { id:'deepseek',   name:'DeepSeek-R1',       co2:  72800, energy: 182000, water:  327600, ewaste: 143,  minerals:7.2,  company:'DeepSeek',      category:'LLM',   gpus:2048,  power:0.7, hours:100,  pue:1.4, loc:0.7,   verified:true  },
+  { id:'falcon180',  name:'Falcon 180B',       co2: 227500, energy: 569000, water: 1024200, ewaste: 572,  minerals: 29,  company:'TII',           category:'LLM',   gpus:4096,  power:0.4, hours:480,  pue:1.4, loc:0.4,   verified:false },
+  { id:'falcon40',   name:'Falcon 40B',        co2:  54600, energy: 136500, water:  245700, ewaste: 143,  minerals:7.2,  company:'TII',           category:'LLM',   gpus:1024,  power:0.4, hours:360,  pue:1.4, loc:0.4,   verified:false },
+  { id:'commandrp',  name:'Command R+',        co2:  91000, energy: 227500, water:  409500, ewaste: 238,  minerals: 12,  company:'Cohere',        category:'LLM',   gpus:2048,  power:0.4, hours:300,  pue:1.3, loc:0.4,   verified:false },
+  { id:'commandr',   name:'Command R',         co2:  27300, energy:  68250, water:  122850, ewaste:  71,  minerals:3.6,  company:'Cohere',        category:'LLM',   gpus:1024,  power:0.4, hours:180,  pue:1.3, loc:0.4,   verified:false },
+  { id:'grok1',      name:'Grok-1',            co2: 364000, energy: 910000, water: 1638000, ewaste: 954,  minerals: 48,  company:'xAI',           category:'LLM',   gpus:8192,  power:0.4, hours:768,  pue:1.4, loc:0.386, verified:false },
+  { id:'grok2',      name:'Grok-2',            co2: 728000, energy:1820000, water: 3276000, ewaste:1908,  minerals: 95,  company:'xAI',           category:'LLM',   gpus:16384, power:0.4, hours:768,  pue:1.4, loc:0.386, verified:false },
+  { id:'qwen2',      name:'Qwen 2',            co2:  36400, energy: 121333, water:  218400, ewaste:  95,  minerals:4.8,  company:'Alibaba',       category:'LLM',   gpus:1024,  power:0.4, hours:250,  pue:1.3, loc:0.7,   verified:false },
+  { id:'qwen25_72',  name:'Qwen 2.5 72B',      co2:  54600, energy: 182000, water:  327600, ewaste: 143,  minerals:7.2,  company:'Alibaba',       category:'LLM',   gpus:2048,  power:0.4, hours:280,  pue:1.3, loc:0.7,   verified:false },
+  { id:'yi34',       name:'Yi-34B',            co2:  36400, energy: 121333, water:  218400, ewaste:  95,  minerals:4.8,  company:'01.AI',         category:'LLM',   gpus:1024,  power:0.4, hours:250,  pue:1.3, loc:0.7,   verified:false },
+  { id:'vicuna13',   name:'Vicuna 13B',         co2:   9100, energy:  30333, water:   54600, ewaste:  24,  minerals:1.2,  company:'LMSYS',         category:'LLM',   gpus:512,   power:0.4, hours:120,  pue:1.4, loc:0.386, verified:false },
+  { id:'starcoder2', name:'StarCoder2 15B',     co2:  10920, energy:  36400, water:   65520, ewaste:  29,  minerals:1.4,  company:'HuggingFace',   category:'Code',  gpus:512,   power:0.4, hours:144,  pue:1.4, loc:0.4,   verified:false },
+  { id:'titantext',  name:'Titan Text (AWS)',   co2:  45500, energy: 151667, water:  273000, ewaste: 120,  minerals:  6,  company:'Amazon',        category:'LLM',   gpus:2048,  power:0.4, hours:300,  pue:1.3, loc:0.4,   verified:false },
+  { id:'phi3',       name:'Phi-3 Mini',         co2:   1820, energy:   6067, water:   10920, ewaste: 4.8,  minerals:0.2,  company:'Microsoft',     category:'LLM',   gpus:256,   power:0.4, hours:60,   pue:1.2, loc:0.386, verified:false },
+  { id:'phi2',       name:'Phi-2',              co2:    910, energy:   3033, water:    5460, ewaste: 2.4,  minerals:0.1,  company:'Microsoft',     category:'LLM',   gpus:128,   power:0.4, hours:48,   pue:1.2, loc:0.386, verified:false },
+  { id:'copilot',    name:'GitHub Copilot',     co2:  28665, energy:  57330, water:  103194, ewaste:  63,  minerals:3.2,  company:'Microsoft',     category:'Code',  gpus:512,   power:0.3, hours:168,  pue:1.4, loc:0.5,   verified:false },
+  { id:'bert',       name:'BERT-Large',         co2:   7741, energy:  15482, water:   27872, ewaste:17.3,  minerals:0.9,  company:'Google',        category:'LLM',   gpus:64,    power:0.3, hours:96,   pue:1.4, loc:0.5,   verified:true  },
+  { id:'dalle3',     name:'DALL-E 3',           co2: 160160, energy: 533867, water:  960960, ewaste: 419,  minerals: 21,  company:'OpenAI',        category:'Image', gpus:4096,  power:0.7, hours:100,  pue:1.3, loc:0.386, verified:false },
+  { id:'sd',         name:'Stable Diffusion',   co2:   3913, energy:   7826, water:   14087, ewaste: 8.7,  minerals:0.4,  company:'Stability AI',  category:'Image', gpus:256,   power:0.3, hours:150,  pue:1.4, loc:0.5,   verified:true  },
+  { id:'sdxl',       name:'Stable Diffusion XL',co2:  18200, energy:  36400, water:   65520, ewaste:  40,  minerals:  2,  company:'Stability AI',  category:'Image', gpus:512,   power:0.3, hours:360,  pue:1.4, loc:0.5,   verified:false },
+  { id:'flux1',      name:'FLUX.1',             co2:  27300, energy:  54600, water:   98280, ewaste:  60,  minerals:  3,  company:'Black Forest',  category:'Image', gpus:512,   power:0.4, hours:360,  pue:1.4, loc:0.4,   verified:false },
+  { id:'midjourney', name:'Midjourney',         co2:  45500, energy:  91000, water:  163800, ewaste: 101,  minerals:5.1,  company:'Midjourney',    category:'Image', gpus:256,   power:0.3, hours:150,  pue:1.4, loc:0.5,   verified:false },
+  { id:'whisper',    name:'Whisper Large v3',   co2:   3640, energy:  12133, water:   21840, ewaste: 9.6,  minerals:0.5,  company:'OpenAI',        category:'Audio', gpus:256,   power:0.4, hours:80,   pue:1.3, loc:0.4,   verified:false },
+  { id:'clip',       name:'CLIP ViT-L/14',      co2:   2730, energy:   9100, water:   16380, ewaste: 7.2,  minerals:0.4,  company:'OpenAI',        category:'Vision',gpus:256,   power:0.3, hours:120,  pue:1.3, loc:0.4,   verified:false },
+];
+
+/* ─── APP STATE ─── */
+const STATE = {
+  dataSaver: false,
+  offline: !navigator.onLine,
+  locationFactor: 0.386,
+  currentResults: null,
+  compChart: null,
+  apiCache: {},
+};
+
+/* ─── SERVICE WORKER (inline, offline support) ─── */
+if ('serviceWorker' in navigator) {
+  const SW_CODE = `
+    const CACHE='ai-carbon-v1';
+    const PRECACHE=['./','/calculadora.html'];
+    self.addEventListener('install',e=>e.waitUntil(
+      caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{}))
+    ));
+    self.addEventListener('fetch',e=>{
+      if(e.request.url.includes('ipapi.co')||e.request.url.includes('carbonintensity')){
+        e.respondWith(
+          fetch(e.request).then(r=>{
+            const clone=r.clone();
+            caches.open(CACHE).then(c=>c.put(e.request,clone));
+            return r;
+          }).catch(()=>caches.match(e.request))
+        );
+        return;
+      }
+      e.respondWith(
+        caches.match(e.request).then(r=>r||fetch(e.request))
+      );
+    });
+  `;
+  try {
+    const blob = new Blob([SW_CODE], {type:'text/javascript'});
+    const url  = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url, {scope:'/'}).catch(()=>{});
+  } catch(e) {}
+}
+
+/* ─── PARTICLES ─── */
+(function spawnParticles(){
+  const container = document.getElementById('particles');
+  for(let i=0;i<30;i++){
+    const p = document.createElement('div');
+    p.className='particle';
+    p.style.left  = Math.random()*100+'%';
+    p.style.setProperty('--dur',   (8+Math.random()*12)+'s');
+    p.style.setProperty('--delay', (Math.random()*12)+'s');
+    p.style.setProperty('--drift', (Math.random()*60-30)+'px');
+    p.style.setProperty('--max-op', (0.1+Math.random()*0.3).toFixed(2));
+    p.style.width = p.style.height = (1+Math.random()*2)+'px';
+    container.appendChild(p);
+  }
+})();
+
+/* ─── SCROLL PROGRESS ─── */
+window.addEventListener('scroll', ()=>{
+  const el = document.getElementById('scrollProgress');
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+  el.style.transform = `scaleX(${Math.min(pct,1)})`;
+}, {passive:true});
+
+/* ─── ONLINE/OFFLINE ─── */
+function updateConnectionStatus(){
+  STATE.offline = !navigator.onLine;
+  const dot   = document.getElementById('connectionDot');
+  const label = document.getElementById('connectionLabel');
+  dot.className   = 'status-dot' + (STATE.offline ? ' offline' : '');
+  label.textContent = STATE.offline ? 'Offline' : 'Online';
+  if(STATE.offline) toast('⚠️ Sin conexión — usando datos en caché','error');
+}
+window.addEventListener('online',  updateConnectionStatus);
+window.addEventListener('offline', updateConnectionStatus);
+
+/* ─── DATA SAVER ─── */
+function toggleDataSaver(){
+  STATE.dataSaver = !STATE.dataSaver;
+  document.getElementById('saverLabel').textContent = STATE.dataSaver ? 'Eco ✓' : 'Eco';
+  const banner = document.getElementById('datasakerBanner');
+  banner.classList.toggle('active', STATE.dataSaver);
+  toast(STATE.dataSaver ? '⚡ Modo Eco activado — ahorrando datos y energía' : '🔄 Modo Eco desactivado', 'success');
+}
+
+/* ─── TOAST ─── */
+function toast(msg, type='success', duration=3500){
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = msg;
+  c.appendChild(t);
+  setTimeout(()=>{
+    t.style.animation='toast-out 0.3s ease-in forwards';
+    setTimeout(()=>t.remove(),300);
+  }, duration);
+}
+
+/* ─── LIVE CARBON API ─── */
+async function fetchLiveCarbon(){
+  if(STATE.dataSaver) return;
+
+  // Try to detect location via ipapi.co (free, no key needed)
+  try {
+    const cacheKey = 'location_cache';
+    let locData = null;
+
+    // Check cache first (30 min TTL)
+    const cached = localStorage.getItem(cacheKey);
+    if(cached){
+      const {data, ts} = JSON.parse(cached);
+      if(Date.now()-ts < 1800000) locData = data;
+    }
+
+    if(!locData && navigator.onLine){
+      const res = await Promise.race([
+        fetch('https://ipapi.co/json/'),
+        new Promise((_,r)=>setTimeout(r,4000))
+      ]);
+      locData = await res.json();
+      localStorage.setItem(cacheKey, JSON.stringify({data:locData, ts:Date.now()}));
+    }
+
+    if(locData){
+      document.getElementById('lcbCountry').textContent = locData.country_name || 'Desconocido';
+      document.getElementById('lcbRegion').textContent  = locData.city ? `· ${locData.city}` : '';
+
+      // Set location factor based on country code
+      const CF = {
+        IS:0.01, FR:0.06, SE:0.20, DO:0.276, DE:0.35,
+        US:0.386, BR:0.40, GB:0.60, CN:0.70, IN:0.80, AU:0.90
+      };
+      if(CF[locData.country_code]){
+        STATE.locationFactor = CF[locData.country_code];
+        // Auto-select in dropdown
+        const sel = document.getElementById('fLocation');
+        for(let opt of sel.options){
+          if(Math.abs(parseFloat(opt.value)-STATE.locationFactor)<0.01){
+            sel.value = opt.value; break;
+          }
+        }
+      }
+    }
+  } catch(e) {
+    document.getElementById('lcbCountry').textContent = 'No detectado';
+  }
+
+  // Try UK real-time carbon intensity (free, no key)
+  // For non-UK: use our hardcoded values from paper
+  try {
+    const locSel   = parseFloat(document.getElementById('fLocation').value);
+    const isUK     = Math.abs(locSel-0.60)<0.01;
+
+    if(isUK && navigator.onLine){
+      const res = await Promise.race([
+        fetch('https://api.carbonintensity.org.uk/intensity'),
+        new Promise((_,r)=>setTimeout(r,4000))
+      ]);
+      const json = await res.json();
+      const val  = json.data[0].intensity.actual || json.data[0].intensity.forecast;
+      const idx  = json.data[0].index; // very low / low / moderate / high / very high
+
+      updateCarbonBar(val, idx, 'Carbon Intensity UK API (Real-time)');
+    } else {
+      // Use our paper data converted to gCO₂/kWh
+      const gCO2 = locSel * 1000;
+      const idx  = gCO2<100?'very low':gCO2<200?'low':gCO2<400?'moderate':gCO2<600?'high':'very high';
+      updateCarbonBar(gCO2, idx, 'Datos IEA 2025 (Paper científico)');
+    }
+  } catch(e) {
+    const locSel = parseFloat(document.getElementById('fLocation').value);
+    updateCarbonBar(locSel*1000,'moderate','Datos IEA 2025 (offline)');
+    document.getElementById('apiSource').textContent = 'Datos locales (sin conexión)';
+  }
+}
+
+function updateCarbonBar(val, idx, source){
+  document.getElementById('lcbValue').textContent = Math.round(val);
+  document.getElementById('apiSource').textContent = source;
+  document.getElementById('apiDot').style.background = navigator.onLine?'var(--green-500)':'var(--amber-400)';
+
+  const pct  = Math.min(val/900*100, 100);
+  const fill = document.getElementById('lcbBarFill');
+  fill.style.width = pct+'%';
+  fill.style.background = val<200?'var(--green-500)':val<400?'var(--cyan-400)':val<600?'var(--amber-400)':'var(--red-400)';
+}
+
+/* ─── AUTOCOMPLETE ─── */
+(function initSearch(){
+  const input = document.getElementById('fModelName');
+  const list  = document.getElementById('autocompleteList');
+  let selectedIdx = -1;
+
+  input.addEventListener('input', ()=>{
+    const q = input.value.toLowerCase().trim();
+    list.innerHTML=''; selectedIdx=-1;
+    if(!q){ list.classList.remove('show'); return; }
+
+    const matches = MODELS_DB.filter(m=>
+      m.name.toLowerCase().includes(q)||m.company.toLowerCase().includes(q)||m.category.toLowerCase().includes(q)
+    ).slice(0,8);
+    if(!matches.length){ list.classList.remove('show'); return; }
+
+    matches.forEach(m=>{
+      const el = document.createElement('div');
+      el.className='ac-item';
+      el.innerHTML=`
+        <div>
+          <div class="ac-name">${m.name} <span style="font-size:10px;color:var(--text-muted)">${m.company}</span></div>
+          <div class="ac-co2">${m.co2.toLocaleString('es')} kg CO₂ · ${m.gpus.toLocaleString()} GPUs · ${m.hours}h</div>
+        </div>
+        <div style="display:flex;gap:4px;align-items:center">
+          <span class="ac-badge">${m.category}</span>
+          ${m.verified?'<span style="color:var(--green-500);font-size:12px" title="Verificado con paper">✓</span>':''}
+        </div>`;
+      el.addEventListener('mousedown', e=>{
+        e.preventDefault();
+        applyModel(m);
+        list.classList.remove('show');
+      });
+      list.appendChild(el);
+    });
+    list.classList.add('show');
+  });
+
+  input.addEventListener('blur', ()=>setTimeout(()=>list.classList.remove('show'),150));
+  input.addEventListener('keydown', e=>{
+    const items = list.querySelectorAll('.ac-item');
+    if(e.key==='ArrowDown'){ selectedIdx=Math.min(selectedIdx+1,items.length-1); }
+    else if(e.key==='ArrowUp'){ selectedIdx=Math.max(selectedIdx-1,-1); }
+    else if(e.key==='Escape'){ list.classList.remove('show'); }
+    else if(e.key==='Enter'&&selectedIdx>=0){ items[selectedIdx].dispatchEvent(new MouseEvent('mousedown')); }
+    items.forEach((el,i)=>el.classList.toggle('selected',i===selectedIdx));
+  });
+})();
+
+/* ─── PRESETS ─── */
+(function buildPresets(){
+  const row = document.getElementById('presetsRow');
+  const shown = ['gpt4','claudes','llama3_70','deepseek','sd','bert','phi3'];
+  shown.forEach(id=>{
+    const m = MODELS_DB.find(x=>x.id===id);
+    if(!m) return;
+    const chip = document.createElement('button');
+    chip.className='preset-chip';
+    chip.textContent=m.name;
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll('.preset-chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      applyModel(m);
+      toast(`✓ ${t('toast.preset')}: ${m.name}`, 'success', 2000);
+    });
+    row.appendChild(chip);
+  });
+  // NO default model — field starts empty so user writes any AI name freely
+})();
+
+function applyModel(m){
+  document.getElementById('fModelName').value  = m.name;
+  document.getElementById('fGpuCount').value   = m.gpus;
+  document.getElementById('fGpuType').value    = m.power.toFixed(1);
+  document.getElementById('fHours').value      = m.hours;
+  document.getElementById('fPue').value        = m.pue.toFixed(1);
+  document.getElementById('fLocation').value   = m.loc;
+  document.getElementById('fEnergyCost').value = 0.07;
+}
+
+/* ─── CLEAR ─── */
+function clearAll(){
+  document.getElementById('fModelName').value   = '';
+  document.getElementById('fGpuCount').value    = '';
+  document.getElementById('fHours').value       = '';
+  document.getElementById('fEnergyCost').value  = 0.07;
+  document.getElementById('fGpuType').value     = '0.4';
+  document.getElementById('fPue').value         = '1.2';
+  document.getElementById('fLocation').value    = '0.386';
+  document.querySelectorAll('.preset-chip').forEach(c=>c.classList.remove('active'));
+
+  const rs = document.getElementById('results-section');
+  rs.classList.remove('show'); rs.style.display='none';
+  if(STATE.compChart){ STATE.compChart.destroy(); STATE.compChart=null; }
+  STATE.currentResults = null;
+  toast(t('toast.cleared'), 'success', 2000);
+}
+
+/* ─── CALCULATE ─── */
+function calculate(){
+  const modelName = document.getElementById('fModelName').value.trim();
+  const gpuCount  = parseFloat(document.getElementById('fGpuCount').value);
+  const gpuPower  = parseFloat(document.getElementById('fGpuType').value);
+  const hours     = parseFloat(document.getElementById('fHours').value);
+  const pue       = parseFloat(document.getElementById('fPue').value);
+  const locFactor = parseFloat(document.getElementById('fLocation').value);
+  const energyCost= parseFloat(document.getElementById('fEnergyCost').value);
+
+  if(!modelName){ toast(t('err.no-name'),'error'); document.getElementById('fModelName').focus(); return; }
+  if(!gpuCount||!gpuPower||!hours||!pue||!locFactor){
+    toast(t('err.fields'),'error'); return;
+  }
+  if(gpuCount<1||gpuCount>100000){ toast(t('err.gpu-range'),'error'); return; }
+  if(hours<0.1||hours>20000){ toast(t('err.hours-range'),'error'); return; }
+
+  // ── CORE CALCULATIONS ──
+  const energyKWh = gpuCount * gpuPower * hours * pue;
+  const co2Kg     = energyKWh * locFactor;
+  const costUSD   = energyKWh * energyCost;
+
+  // Water: 1.8 L/kWh average data center water intensity (Li et al. 2023)
+  const waterL    = energyKWh * WATER_INTENSITY;
+
+  // E-Waste: (GPU mass × GPU count × training fraction of lifetime)
+  const gpuMass   = GPU_MASS_KG[gpuPower.toFixed(1)] || 2.1;
+  const ewasteKg  = gpuCount * gpuMass * (hours / GPU_LIFETIME_H);
+
+  // Minerals: critical minerals amortized per GPU per use
+  const minKgPerGpu = GPU_MINERALS_KG[gpuPower.toFixed(1)] || 0.05;
+  const mineralsKg  = gpuCount * minKgPerGpu * (hours / GPU_LIFETIME_H);
+
+  // Efficiency score
+  const effScore = co2Kg / (energyKWh / 1000);
+
+  // Get location name from select
+  const locSel   = document.getElementById('fLocation');
+  const locName  = locSel.options[locSel.selectedIndex].text.split(' — ')[0];
+  const gpuSel   = document.getElementById('fGpuType');
+  const gpuName  = gpuSel.options[gpuSel.selectedIndex].text.split(' — ')[0];
+  const pueSel   = document.getElementById('fPue');
+  const pueName  = pueSel.options[pueSel.selectedIndex].text.split(' — ')[0];
+
+  const results = {
+    modelName, gpuCount, gpuPower, hours, pue, locFactor,
+    locName, gpuName, pueName,
+    co2Kg, energyKWh, waterL, ewasteKg, mineralsKg, costUSD, effScore
+  };
+  STATE.currentResults = results;
+
+  displayResults(results);
+}
+
+/* ─── DISPLAY RESULTS ─── */
+function displayResults(r){
+  const section = document.getElementById('results-section');
+  section.style.display = 'block';
+  setTimeout(()=>section.classList.add('show'),10);
+
+  // ── Populate results header with the actual model name ──
+  document.getElementById('rhModelName').textContent = r.modelName;
+  document.getElementById('rhMeta').innerHTML = `
+    <span class="rh-meta-item">${r.gpuCount.toLocaleString('es')} × ${r.gpuName}</span>
+    <span class="rh-meta-item"><strong>${r.hours}</strong> ${t('results.hours')} ${t('results.training')}</span>
+    <span class="rh-meta-item">PUE <strong>${r.pue}</strong> · ${r.pueName}</span>
+    <span class="rh-meta-item">📍 ${r.locName}</span>
+  `;
+  document.getElementById('rhBadge').textContent = new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+
+  // ── Format helpers ──
+  const fmt = (n,d=0)=>n.toLocaleString('es',{maximumFractionDigits:d,minimumFractionDigits:d});
+  const fmtSmart = n=>{
+    if(n>=1e6) return fmt(n/1e6,2)+'M';
+    if(n>=1e3) return fmt(n/1e3,1)+'K';
+    return fmt(n,1);
+  };
+
+  // ── Dimension cards ──
+  animCount('rCo2',     r.co2Kg,     fmtSmart);
+  animCount('rEnergy',  r.energyKWh, fmtSmart);
+  animCount('rWater',   r.waterL,    fmtSmart);
+  animCount('rEwaste',  r.ewasteKg,  v=>fmt(v,1));
+  animCount('rMinerals',r.mineralsKg,v=>fmt(v,2));
+
+  // ── Rating ──
+  const rating = getRating(r.co2Kg);
+  const badge  = document.getElementById('ratingBadge');
+  badge.textContent  = rating.label;
+  badge.className    = 'rating-badge '+rating.cls;
+  document.getElementById('ratingTitle').textContent = rating.title;
+  document.getElementById('ratingDesc').textContent  = rating.desc;
+  document.getElementById('ratingBar').style.width   = rating.barPct+'%';
+  document.getElementById('ratingBar').style.background = rating.color;
+  document.getElementById('rEfficiency').textContent = fmt(r.effScore,0)+' g/kWh';
+  document.getElementById('rEfficiency').style.color  = rating.color;
+
+  // ── Equivalences ──
+  const equivs = [
+    { icon:'🚗', val:fmt(r.co2Kg/EQUIV.CAR_YEAR,1),     label:t('equiv.cars') },
+    { icon:'✈️', val:fmt(r.co2Kg/EQUIV.FLIGHT_NY,1),    label:t('equiv.flights') },
+    { icon:'🏠', val:fmt(r.co2Kg/EQUIV.HOME_MONTH,1),   label:t('equiv.homes') },
+    { icon:'🌳', val:fmt(r.co2Kg/EQUIV.TREE_YEAR,0),    label:t('equiv.trees') },
+    { icon:'📱', val:fmt(r.co2Kg/EQUIV.PHONE_CHARGE,0), label:t('equiv.phones') },
+    { icon:'💰', val:'$'+fmt(r.costUSD,0),               label:t('equiv.cost') },
+  ];
+  const grid = document.getElementById('equivsGrid');
+  grid.innerHTML='';
+  equivs.forEach((eq,i)=>{
+    const div=document.createElement('div');
+    div.className='equiv-item';
+    div.style.setProperty('--stagger', (i*0.07)+'s');
+    div.innerHTML=`<span class="equiv-icon">${eq.icon}</span>
+      <span class="equiv-text"><strong>${eq.val}</strong><br>${eq.label}</span>`;
+    grid.appendChild(div);
+    setTimeout(()=>div.classList.add('shown'),50+i*70);
+  });
+
+  // ── Charts ──
+  buildChart(r);
+  buildTable(r);
+
+  // Smooth scroll
+  setTimeout(()=>{
+    document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});
+  },200);
+
+  toast('✅ Cálculo completado en 5 dimensiones','success');
+}
+
+/* ─── ANIMATED COUNTER ─── */
+function animCount(id, finalVal, formatter){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const dur=900, fps=60, steps=dur/1000*fps;
+  let i=0;
+  const timer=setInterval(()=>{
+    i++;
+    const progress = i/steps;
+    const ease = 1-Math.pow(1-progress,3); // ease-out cubic
+    const cur = finalVal*ease;
+    el.textContent = formatter(cur);
+    if(i>=steps){ el.textContent=formatter(finalVal); clearInterval(timer); }
+  }, 1000/fps);
+}
+
+/* ─── SUSTAINABILITY RATING ─── */
+function getRating(co2Kg){
+  if(co2Kg< 10000) return {label:'A+',cls:'Aplus',title:t('rating.Aplus.title'),desc:t('rating.Aplus.desc'),barPct:8,  color:'#00e87a'};
+  if(co2Kg< 50000) return {label:'A', cls:'A',    title:t('rating.A.title'),    desc:t('rating.A.desc'),    barPct:22, color:'#6edba3'};
+  if(co2Kg<200000) return {label:'B', cls:'B',    title:t('rating.B.title'),    desc:t('rating.B.desc'),    barPct:40, color:'#22d3ee'};
+  if(co2Kg<600000) return {label:'C', cls:'C',    title:t('rating.C.title'),    desc:t('rating.C.desc'),    barPct:60, color:'#fbbf24'};
+  if(co2Kg<1500000)return {label:'D', cls:'D',    title:t('rating.D.title'),    desc:t('rating.D.desc'),    barPct:78, color:'#f97316'};
+  return               {label:'F', cls:'F',    title:t('rating.F.title'),    desc:t('rating.F.desc'),    barPct:95, color:'#f87171'};
+}
+
+/* ─── CHART ─── */
+function buildChart(r){
+  if(STATE.compChart){ STATE.compChart.destroy(); }
+
+  // Put the user's model first, then reference models (excluding if same name)
+  const userName = r.modelName;
+  const refModels=[
+    {name:'GPT-4',       co2:1820000, color:'#f87171'},
+    {name:'GPT-3',       co2:1713600, color:'#fb923c'},
+    {name:'Gemini Ultra',co2:910000,  color:'#fbbf24'},
+    {name:'Bard',        co2:62335,   color:'#22d3ee'},
+    {name:'LLaMA 3 70B', co2:54600,   color:'#a78bfa'},
+    {name:'Midjourney',  co2:45500,   color:'#34d399'},
+    {name:'Claude Sonnet',co2:18200,  color:'#60a5fa'},
+    {name:'BERT-Large',  co2:7741,    color:'#94a3b8'},
+    {name:'Phi-3 Mini',  co2:1820,    color:'#f472b6'},
+  ].filter(m=>m.name.toLowerCase()!==userName.toLowerCase());
+
+  // Insert user model at correct sorted position
+  const allModels = [
+    {name: userName, co2: r.co2Kg, color:'#00e87a', isUser:true},
+    ...refModels
+  ].sort((a,b)=>b.co2-a.co2).slice(0,10);
+
+  const ctx = document.getElementById('compChart').getContext('2d');
+  STATE.compChart = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: allModels.map(m=>m.isUser?`★ ${m.name}`:m.name),
+      datasets:[{
+        data: allModels.map(m=>m.co2),
+        backgroundColor: allModels.map(m=>m.isUser?'rgba(0,232,122,0.25)':m.color+'22'),
+        borderColor:     allModels.map(m=>m.color),
+        borderWidth:     allModels.map(m=>m.isUser?3:1.5),
+        borderRadius:    6,
+        borderSkipped:   false,
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'rgba(9,20,16,0.95)',
+          borderColor:'rgba(0,232,122,0.3)',
+          borderWidth:1,
+          titleColor:'#d4edde',
+          bodyColor:'#7db896',
+          titleFont:{family:"'Syne',sans-serif",weight:'bold'},
+          callbacks:{
+            title: ctx=>ctx[0].label.replace('★ ',''),
+            label: ctx=>'  '+ctx.parsed.x.toLocaleString('es')+' kg CO₂'
+          }
+        }
+      },
+      scales:{
+        x:{
+          grid:{color:'rgba(0,232,122,0.05)'},
+          ticks:{
+            color:'#5a9470',font:{family:"'JetBrains Mono',monospace",size:10},
+            callback:v=>v>=1e6?v/1e6+'M':v>=1e3?v/1e3+'K':v
+          },
+          border:{color:'rgba(0,232,122,0.1)'}
+        },
+        y:{
+          grid:{display:false},
+          ticks:{color:'#7db896',font:{size:11}},
+          border:{color:'rgba(0,232,122,0.1)'}
+        }
+      },
+      animation:{duration:STATE.dataSaver?0:1000,easing:'easeOutQuart'}
+    }
+  });
+}
+
+/* ─── COMPARISON TABLE ─── */
+function buildTable(r){
+  const userName = r.modelName;
+  const refs=[
+    {name: userName,     co2:r.co2Kg,   water:r.waterL,   isUser:true },
+    {name:'GPT-4',       co2:1820000,   water:8190000  },
+    {name:'GPT-3',       co2:1713600,   water:6168960  },
+    {name:'Gemini Ultra',co2:910000,    water:4095000  },
+    {name:'Bard',        co2:62335,     water:374010   },
+    {name:'LLaMA 3 70B', co2:54600,     water:327600   },
+    {name:'Claude Sonnet',co2:18200,    water:109200   },
+    {name:'BERT-Large',  co2:7741,      water:27872    },
+  ].filter((m,i)=>m.isUser||m.name.toLowerCase()!==userName.toLowerCase())
+   .sort((a,b)=>b.co2-a.co2);
+
+  const maxCo2 = refs[0].co2;
+  const tbody  = document.getElementById('compareBody');
+  tbody.innerHTML='';
+  const fmtS = n=>n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':n.toFixed(0);
+
+  refs.forEach(m=>{
+    const rating = getRating(m.co2);
+    const pct    = (m.co2/maxCo2*100);
+    const tr     = document.createElement('tr');
+    if(m.isUser) tr.className='highlight';
+    tr.innerHTML=`
+      <td>${m.isUser?'★ ':''}${m.name}${m.isUser?' '+t('table.calculated'):''}</td>
+      <td>${fmtS(m.co2)}</td>
+      <td>${fmtS(m.water)}</td>
+      <td><span style="color:${rating.color};font-weight:700">${rating.label}</span></td>
+      <td class="compare-bar-cell">
+        <div style="font-family:var(--font-mono);font-size:10px">${pct.toFixed(1)}%</div>
+        <div class="compare-bar">
+          <div class="compare-bar-fill" style="width:${pct}%;background:${rating.color}"></div>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SISTEMA DE TRADUCCIÓN COMPLETO — 11 idiomas
+   Cada clave cubre TODOS los textos visibles de la página
+   ═══════════════════════════════════════════════════════════════ */
+const T = {
+  es: {
+    dir:'ltr', name:'Español', flag:'🇪🇸',
+    /* Header */
+    'header.eyebrow':      'IA Sostenible · Data Science · Green Computing',
+    'header.title':        'Huella de Carbono<br>de Modelos de IA',
+    'header.subtitle':     'Calcula el impacto ambiental completo en 5 dimensiones científicas — CO₂, energía, agua, residuos electrónicos y minerales críticos.',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 Ver Paper Científico',
+    /* Status */
+    'status.online':       'Online', 'status.offline':'Sin conexión', 'status.eco':'Eco',
+    /* Live carbon bar */
+    'lcb.detecting':       'Detectando ubicación…',
+    'lcb.label':           'Intensidad de carbono en vivo',
+    'lcb.loading':         'Cargando API…',
+    'lcb.source-live':     'API en vivo',
+    'lcb.source-cached':   'Datos en caché',
+    /* Eco banner */
+    'banner.eco':          '⚡ Modo Eco activo — APIs pausadas, animaciones reducidas, caché local activado',
+    /* Calculator */
+    'calc.title':          'Configurar Modelo de IA',
+    'calc.placeholder':    'Escribe el nombre de la IA que quieres analizar…',
+    'calc.hint':           '💡 Si el modelo es conocido aparecerán sugerencias con parámetros técnicos — o escribe cualquier nombre personalizado',
+    'calc.presets-label':  'Presets rápidos →',
+    /* Fields */
+    'field.gpu-count':     'Cantidad de GPUs',
+    'field.gpu-count-tip': 'Número total de GPUs en paralelo durante el entrenamiento',
+    'field.gpu-count-hint':'ej: 512 (A100s para LLaMA 3 70B)',
+    'field.gpu-type':      'Tipo de GPU',
+    'field.gpu-type-tip':  'Potencia máxima en kW según especificaciones NVIDIA',
+    'field.hours':         'Horas de entrenamiento',
+    'field.hours-tip':     'Tiempo total de cómputo activo (no incluye preparación de datos)',
+    'field.hours-hint':    'ej: 336 h ≈ 14 días continuos',
+    'field.pue':           'PUE del centro de datos',
+    'field.pue-tip':       'Power Usage Effectiveness. 1.0 = perfecto. Google ≈1.1, Promedio industria ≈1.6',
+    'field.location':      'Región / Factor de carbono',
+    'field.location-tip':  'kg CO₂ por kWh según la matriz energética del país (IEA 2025)',
+    'field.energy-cost':   'Costo energético (USD/kWh)',
+    'field.energy-cost-tip':'Precio de la electricidad industrial. EE.UU. promedio: $0.07',
+    'field.energy-cost-hint':'Industrial cloud: $0.05–$0.12',
+    'pue.avg':             'Promedio industria — 1.60',
+    'pue.bad':             'Centros ineficientes — 2.00',
+    /* Buttons */
+    'btn.calculate':       '⚡ Calcular Impacto Ambiental',
+    'btn.clear':           '🗑 Limpiar',
+    /* Results */
+    'results.eyebrow':     '📊 Resultados del análisis ambiental para:',
+    'results.badge':       'Calculado ahora',
+    'results.hours':       'horas', 'results.training':'entrenamiento',
+    /* Sections */
+    'section.dims':        'Impacto en 5 dimensiones científicas',
+    'section.equivs':      'Equivalencias ambientales',
+    /* Dimensions */
+    'dim.co2':'CO₂ total',     'dim.co2-unit':'kg de CO₂',
+    'dim.energy':'Energía',    'dim.energy-unit':'kWh consumidos',
+    'dim.water':'Agua dulce',  'dim.water-unit':'litros',
+    'dim.ewaste':'E-Waste',    'dim.ewaste-unit':'kg residuos electrónicos',
+    'dim.minerals':'Minerales críticos', 'dim.minerals-unit':'kg (cobalto, litio…)',
+    /* Rating */
+    'rating.calculating':  'Calculando…',
+    'rating.best':         'A+ Sostenible',
+    'rating.worst':        'F Crítico',
+    'rating.efficiency':   'Eficiencia',
+    'rating.Aplus.title':  'Excelente — Modelo altamente sostenible',
+    'rating.Aplus.desc':   'Impacto mínimo. Comparable a un solo vuelo doméstico.',
+    'rating.A.title':      'Muy bueno — Impacto ambiental bajo',
+    'rating.A.desc':       'Dentro del rango de modelos eficientes bien diseñados.',
+    'rating.B.title':      'Bueno — Impacto moderado-bajo',
+    'rating.B.desc':       'Comparable a modelos medianos de la industria.',
+    'rating.C.title':      'Moderado — Revisar optimizaciones',
+    'rating.C.desc':       'Considera ubicación del centro de datos o reducir parámetros.',
+    'rating.D.title':      'Alto — Impacto ambiental significativo',
+    'rating.D.desc':       'Nivel de GPT-3. Considerar entrenar en regiones renovables.',
+    'rating.F.title':      'Crítico — Impacto muy alto',
+    'rating.F.desc':       'Nivel de GPT-4. Requiere compensación y optimización urgente.',
+    /* Equivalences */
+    'equiv.cars':          'autos conduciendo durante 1 año',
+    'equiv.flights':       'vuelos Madrid → Nueva York',
+    'equiv.homes':         'hogares con electricidad / mes',
+    'equiv.trees':         'árboles para compensar en 1 año',
+    'equiv.phones':        'cargas completas de smartphone',
+    'equiv.cost':          'costo estimado de electricidad',
+    /* Chart & Table */
+    'chart.title':         'Comparativa con modelos de referencia',
+    'table.title':         'Tabla de impacto comparativo',
+    'table.model':         'Modelo', 'table.co2':'CO₂ (kg)',
+    'table.water':         'Agua (L)', 'table.rating':'Rating', 'table.scale':'Escala',
+    'table.calculated':    '◀ calculado',
+    /* Errors */
+    'err.no-name':         '⚠️ Por favor escribe el nombre del modelo a calcular',
+    'err.fields':          '⚠️ Por favor completa todos los campos',
+    'err.gpu-range':       '⚠️ Número de GPUs inválido',
+    'err.hours-range':     '⚠️ Horas de entrenamiento inválidas',
+    'toast.cleared':       '🗑 Datos limpiados',
+    'toast.preset':        '✓ Parámetros cargados',
+    /* Footer */
+    'footer.paper':        '📄 Paper científico',
+    'footer.copy':         '© 2026 Elizabeth Díaz Familia · Metodología: Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  en: {
+    dir:'ltr', name:'English', flag:'🇺🇸',
+    'header.eyebrow':      'Sustainable AI · Data Science · Green Computing',
+    'header.title':        'Carbon Footprint<br>of AI Models',
+    'header.subtitle':     'Calculate the complete environmental impact across 5 scientific dimensions — CO₂, energy, water, e-waste and critical minerals.',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 View Scientific Paper',
+    'status.online':'Online','status.offline':'Offline','status.eco':'Eco',
+    'lcb.detecting':       'Detecting location…',
+    'lcb.label':           'Live carbon intensity',
+    'lcb.loading':         'Loading API…',
+    'lcb.source-live':     'Live API', 'lcb.source-cached':'Cached data',
+    'banner.eco':          '⚡ Eco mode active — APIs paused, animations reduced, local cache enabled',
+    'calc.title':          'Configure AI Model',
+    'calc.placeholder':    'Type the name of the AI you want to analyze…',
+    'calc.hint':           '💡 If the model is known, suggestions with technical parameters will appear — or type any custom name',
+    'calc.presets-label':  'Quick presets →',
+    'field.gpu-count':     'Number of GPUs',
+    'field.gpu-count-tip': 'Total GPUs running in parallel during training',
+    'field.gpu-count-hint':'e.g.: 512 (A100s for LLaMA 3 70B)',
+    'field.gpu-type':      'GPU Type',
+    'field.gpu-type-tip':  'Maximum power in kW per NVIDIA specifications',
+    'field.hours':         'Training hours',
+    'field.hours-tip':     'Total active compute time (excludes data preparation)',
+    'field.hours-hint':    'e.g.: 336 h ≈ 14 continuous days',
+    'field.pue':           'Data center PUE',
+    'field.pue-tip':       'Power Usage Effectiveness. 1.0 = perfect. Google ≈1.1, Industry avg ≈1.6',
+    'field.location':      'Region / Carbon factor',
+    'field.location-tip':  'kg CO₂ per kWh based on the country energy mix (IEA 2025)',
+    'field.energy-cost':   'Energy cost (USD/kWh)',
+    'field.energy-cost-tip':'Industrial electricity price. US average: $0.07',
+    'field.energy-cost-hint':'Industrial cloud: $0.05–$0.12',
+    'pue.avg':'Industry average — 1.60','pue.bad':'Inefficient centers — 2.00',
+    'btn.calculate':       '⚡ Calculate Environmental Impact',
+    'btn.clear':           '🗑 Clear',
+    'results.eyebrow':     '📊 Environmental analysis results for:',
+    'results.badge':       'Just calculated',
+    'results.hours':       'hours', 'results.training':'training',
+    'section.dims':        'Impact across 5 scientific dimensions',
+    'section.equivs':      'Environmental equivalences',
+    'dim.co2':'Total CO₂',      'dim.co2-unit':'kg of CO₂',
+    'dim.energy':'Energy',       'dim.energy-unit':'kWh consumed',
+    'dim.water':'Fresh water',   'dim.water-unit':'liters',
+    'dim.ewaste':'E-Waste',      'dim.ewaste-unit':'kg electronic waste',
+    'dim.minerals':'Critical minerals','dim.minerals-unit':'kg (cobalt, lithium…)',
+    'rating.calculating':'Calculating…','rating.best':'A+ Sustainable','rating.worst':'F Critical','rating.efficiency':'Efficiency',
+    'rating.Aplus.title':'Excellent — Highly sustainable model',   'rating.Aplus.desc':'Minimal impact. Comparable to a single domestic flight.',
+    'rating.A.title':    'Very good — Low environmental impact',   'rating.A.desc':'Within the range of efficient, well-designed models.',
+    'rating.B.title':    'Good — Moderate-low impact',             'rating.B.desc':'Comparable to mid-size industry models.',
+    'rating.C.title':    'Moderate — Review optimizations',        'rating.C.desc':'Consider data center location or reducing parameters.',
+    'rating.D.title':    'High — Significant environmental impact','rating.D.desc':'GPT-3 level. Consider training in renewable regions.',
+    'rating.F.title':    'Critical — Very high impact',            'rating.F.desc':'GPT-4 level. Requires urgent compensation and optimization.',
+    'equiv.cars':'cars driven for 1 year','equiv.flights':'flights Madrid → New York',
+    'equiv.homes':'homes with electricity / month','equiv.trees':'trees needed to offset in 1 year',
+    'equiv.phones':'full smartphone charges','equiv.cost':'estimated electricity cost',
+    'chart.title':'Comparison with reference models',
+    'table.title':'Comparative impact table',
+    'table.model':'Model','table.co2':'CO₂ (kg)','table.water':'Water (L)','table.rating':'Rating','table.scale':'Scale',
+    'table.calculated':'◀ calculated',
+    'err.no-name':'⚠️ Please enter the model name to calculate',
+    'err.fields':'⚠️ Please fill in all fields',
+    'err.gpu-range':'⚠️ Invalid GPU count',
+    'err.hours-range':'⚠️ Invalid training hours',
+    'toast.cleared':'🗑 Data cleared','toast.preset':'✓ Parameters loaded',
+    'footer.paper':'📄 Scientific paper',
+    'footer.copy':'© 2026 Elizabeth Díaz Familia · Methodology: Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  fr: {
+    dir:'ltr', name:'Français', flag:'🇫🇷',
+    'header.eyebrow':      'IA Durable · Data Science · Green Computing',
+    'header.title':        'Empreinte Carbone<br>des Modèles d\'IA',
+    'header.subtitle':     'Calculez l\'impact environnemental complet en 5 dimensions scientifiques — CO₂, énergie, eau, déchets électroniques et minéraux critiques.',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 Voir l\'Article Scientifique',
+    'status.online':'En ligne','status.offline':'Hors ligne','status.eco':'Éco',
+    'lcb.detecting':       'Détection de la localisation…',
+    'lcb.label':           'Intensité carbone en direct',
+    'lcb.loading':         'Chargement API…',
+    'lcb.source-live':     'API en direct','lcb.source-cached':'Données en cache',
+    'banner.eco':          '⚡ Mode Éco actif — APIs suspendues, animations réduites, cache local activé',
+    'calc.title':          'Configurer le Modèle d\'IA',
+    'calc.placeholder':    'Tapez le nom de l\'IA à analyser…',
+    'calc.hint':           '💡 Si le modèle est connu, des suggestions avec paramètres techniques apparaîtront — ou tapez n\'importe quel nom personnalisé',
+    'calc.presets-label':  'Préréglages →',
+    'field.gpu-count':     'Nombre de GPUs',
+    'field.gpu-count-tip': 'Nombre total de GPUs en parallèle pendant l\'entraînement',
+    'field.gpu-count-hint':'ex : 512 (A100s pour LLaMA 3 70B)',
+    'field.gpu-type':      'Type de GPU',
+    'field.gpu-type-tip':  'Puissance maximale en kW selon les spécifications NVIDIA',
+    'field.hours':         'Heures d\'entraînement',
+    'field.hours-tip':     'Temps de calcul actif total (hors préparation des données)',
+    'field.hours-hint':    'ex : 336 h ≈ 14 jours continus',
+    'field.pue':           'PUE du centre de données',
+    'field.pue-tip':       'Power Usage Effectiveness. 1.0 = parfait. Google ≈1.1, Moyenne industrie ≈1.6',
+    'field.location':      'Région / Facteur carbone',
+    'field.location-tip':  'kg CO₂ par kWh selon le mix énergétique du pays (AIE 2025)',
+    'field.energy-cost':   'Coût énergétique (USD/kWh)',
+    'field.energy-cost-tip':'Prix de l\'électricité industrielle. Moyenne US : $0.07',
+    'field.energy-cost-hint':'Cloud industriel : $0.05–$0.12',
+    'pue.avg':'Moyenne industrie — 1.60','pue.bad':'Centres inefficaces — 2.00',
+    'btn.calculate':       '⚡ Calculer l\'Impact Environnemental',
+    'btn.clear':           '🗑 Effacer',
+    'results.eyebrow':     '📊 Résultats de l\'analyse environnementale pour :',
+    'results.badge':       'Calculé maintenant',
+    'results.hours':       'heures','results.training':'entraînement',
+    'section.dims':        'Impact en 5 dimensions scientifiques',
+    'section.equivs':      'Équivalences environnementales',
+    'dim.co2':'CO₂ total','dim.co2-unit':'kg de CO₂',
+    'dim.energy':'Énergie','dim.energy-unit':'kWh consommés',
+    'dim.water':'Eau douce','dim.water-unit':'litres',
+    'dim.ewaste':'Déchets élec.','dim.ewaste-unit':'kg déchets électroniques',
+    'dim.minerals':'Minéraux critiques','dim.minerals-unit':'kg (cobalt, lithium…)',
+    'rating.calculating':'Calcul en cours…','rating.best':'A+ Durable','rating.worst':'F Critique','rating.efficiency':'Efficacité',
+    'rating.Aplus.title':'Excellent — Modèle très durable',      'rating.Aplus.desc':'Impact minimal. Comparable à un seul vol intérieur.',
+    'rating.A.title':    'Très bien — Faible impact environnemental','rating.A.desc':'Dans la gamme des modèles efficaces bien conçus.',
+    'rating.B.title':    'Bien — Impact modéré-faible',           'rating.B.desc':'Comparable aux modèles moyens de l\'industrie.',
+    'rating.C.title':    'Modéré — Vérifier les optimisations',   'rating.C.desc':'Considérez l\'emplacement du datacenter ou réduisez les paramètres.',
+    'rating.D.title':    'Élevé — Impact environnemental significatif','rating.D.desc':'Niveau GPT-3. Envisagez de former dans des régions renouvelables.',
+    'rating.F.title':    'Critique — Impact très élevé',          'rating.F.desc':'Niveau GPT-4. Compensation et optimisation urgentes requises.',
+    'equiv.cars':'voitures roulant 1 an','equiv.flights':'vols Madrid → New York',
+    'equiv.homes':'foyers alimentés en électricité / mois','equiv.trees':'arbres pour compenser en 1 an',
+    'equiv.phones':'charges complètes de smartphone','equiv.cost':'coût estimé de l\'électricité',
+    'chart.title':'Comparaison avec des modèles de référence',
+    'table.title':'Tableau d\'impact comparatif',
+    'table.model':'Modèle','table.co2':'CO₂ (kg)','table.water':'Eau (L)','table.rating':'Note','table.scale':'Échelle',
+    'table.calculated':'◀ calculé',
+    'err.no-name':'⚠️ Veuillez saisir le nom du modèle à calculer',
+    'err.fields':'⚠️ Veuillez remplir tous les champs',
+    'err.gpu-range':'⚠️ Nombre de GPUs invalide','err.hours-range':'⚠️ Heures d\'entraînement invalides',
+    'toast.cleared':'🗑 Données effacées','toast.preset':'✓ Paramètres chargés',
+    'footer.paper':'📄 Article scientifique',
+    'footer.copy':'© 2026 Elizabeth Díaz Familia · Méthodologie : Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  pt: {
+    dir:'ltr', name:'Português', flag:'🇧🇷',
+    'header.eyebrow':      'IA Sustentável · Data Science · Green Computing',
+    'header.title':        'Pegada de Carbono<br>de Modelos de IA',
+    'header.subtitle':     'Calcule o impacto ambiental completo em 5 dimensões científicas — CO₂, energia, água, resíduos eletrônicos e minerais críticos.',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 Ver Artigo Científico',
+    'status.online':'Online','status.offline':'Sem conexão','status.eco':'Eco',
+    'lcb.detecting':       'Detectando localização…',
+    'lcb.label':           'Intensidade de carbono ao vivo',
+    'lcb.loading':         'Carregando API…',
+    'lcb.source-live':'API ao vivo','lcb.source-cached':'Dados em cache',
+    'banner.eco':          '⚡ Modo Eco ativo — APIs pausadas, animações reduzidas, cache local ativado',
+    'calc.title':          'Configurar Modelo de IA',
+    'calc.placeholder':    'Digite o nome da IA que deseja analisar…',
+    'calc.hint':           '💡 Se o modelo for conhecido, sugestões com parâmetros técnicos aparecerão — ou digite qualquer nome personalizado',
+    'calc.presets-label':  'Presets rápidos →',
+    'field.gpu-count':     'Quantidade de GPUs',
+    'field.gpu-count-tip': 'Total de GPUs em paralelo durante o treinamento',
+    'field.gpu-count-hint':'ex: 512 (A100s para LLaMA 3 70B)',
+    'field.gpu-type':      'Tipo de GPU',
+    'field.gpu-type-tip':  'Potência máxima em kW conforme especificações NVIDIA',
+    'field.hours':         'Horas de treinamento',
+    'field.hours-tip':     'Tempo total de computação ativa (não inclui preparação de dados)',
+    'field.hours-hint':    'ex: 336 h ≈ 14 dias contínuos',
+    'field.pue':           'PUE do centro de dados',
+    'field.pue-tip':       'Power Usage Effectiveness. 1.0 = perfeito. Google ≈1.1, Média indústria ≈1.6',
+    'field.location':      'Região / Fator de carbono',
+    'field.location-tip':  'kg CO₂ por kWh segundo a matriz energética do país (AIE 2025)',
+    'field.energy-cost':   'Custo energético (USD/kWh)',
+    'field.energy-cost-tip':'Preço da eletricidade industrial. Média EUA: $0.07',
+    'field.energy-cost-hint':'Cloud industrial: $0.05–$0.12',
+    'pue.avg':'Média da indústria — 1.60','pue.bad':'Centros ineficientes — 2.00',
+    'btn.calculate':       '⚡ Calcular Impacto Ambiental',
+    'btn.clear':           '🗑 Limpar',
+    'results.eyebrow':     '📊 Resultados da análise ambiental para:',
+    'results.badge':       'Calculado agora',
+    'results.hours':       'horas','results.training':'treinamento',
+    'section.dims':        'Impacto em 5 dimensões científicas',
+    'section.equivs':      'Equivalências ambientais',
+    'dim.co2':'CO₂ total','dim.co2-unit':'kg de CO₂',
+    'dim.energy':'Energia','dim.energy-unit':'kWh consumidos',
+    'dim.water':'Água doce','dim.water-unit':'litros',
+    'dim.ewaste':'Resíduos elét.','dim.ewaste-unit':'kg resíduos eletrônicos',
+    'dim.minerals':'Minerais críticos','dim.minerals-unit':'kg (cobalto, lítio…)',
+    'rating.calculating':'Calculando…','rating.best':'A+ Sustentável','rating.worst':'F Crítico','rating.efficiency':'Eficiência',
+    'rating.Aplus.title':'Excelente — Modelo altamente sustentável','rating.Aplus.desc':'Impacto mínimo. Comparável a um único voo doméstico.',
+    'rating.A.title':'Muito bom — Baixo impacto ambiental','rating.A.desc':'Dentro do intervalo de modelos eficientes bem projetados.',
+    'rating.B.title':'Bom — Impacto moderado-baixo','rating.B.desc':'Comparável a modelos médios da indústria.',
+    'rating.C.title':'Moderado — Revisar otimizações','rating.C.desc':'Considere a localização do datacenter ou reduza os parâmetros.',
+    'rating.D.title':'Alto — Impacto ambiental significativo','rating.D.desc':'Nível GPT-3. Considere treinar em regiões com energia renovável.',
+    'rating.F.title':'Crítico — Impacto muito alto','rating.F.desc':'Nível GPT-4. Requer compensação e otimização urgente.',
+    'equiv.cars':'carros rodando por 1 ano','equiv.flights':'voos Madrid → Nova York',
+    'equiv.homes':'residências com eletricidade / mês','equiv.trees':'árvores para compensar em 1 ano',
+    'equiv.phones':'cargas completas de smartphone','equiv.cost':'custo estimado de eletricidade',
+    'chart.title':'Comparativo com modelos de referência',
+    'table.title':'Tabela de impacto comparativo',
+    'table.model':'Modelo','table.co2':'CO₂ (kg)','table.water':'Água (L)','table.rating':'Nota','table.scale':'Escala',
+    'table.calculated':'◀ calculado',
+    'err.no-name':'⚠️ Por favor insira o nome do modelo a calcular',
+    'err.fields':'⚠️ Por favor preencha todos os campos',
+    'err.gpu-range':'⚠️ Quantidade de GPUs inválida','err.hours-range':'⚠️ Horas de treinamento inválidas',
+    'toast.cleared':'🗑 Dados limpos','toast.preset':'✓ Parâmetros carregados',
+    'footer.paper':'📄 Artigo científico',
+    'footer.copy':'© 2026 Elizabeth Díaz Familia · Metodologia: Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  ru: {
+    dir:'ltr', name:'Русский', flag:'🇷🇺',
+    'header.eyebrow':      'Устойчивый ИИ · Data Science · Green Computing',
+    'header.title':        'Углеродный след<br>моделей ИИ',
+    'header.subtitle':     'Рассчитайте полное воздействие на окружающую среду по 5 научным параметрам — CO₂, энергия, вода, электронные отходы и критические минералы.',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 Читать научную статью',
+    'status.online':'Онлайн','status.offline':'Нет связи','status.eco':'Эко',
+    'lcb.detecting':       'Определение местоположения…',
+    'lcb.label':           'Интенсивность углерода в реальном времени',
+    'lcb.loading':         'Загрузка API…',
+    'lcb.source-live':'API в реальном времени','lcb.source-cached':'Кэшированные данные',
+    'banner.eco':          '⚡ Эко-режим активен — API приостановлен, анимации уменьшены, локальный кэш активирован',
+    'calc.title':          'Настроить модель ИИ',
+    'calc.placeholder':    'Введите название ИИ для анализа…',
+    'calc.hint':           '💡 Если модель известна, появятся предложения с техническими параметрами — или введите любое название',
+    'calc.presets-label':  'Быстрые пресеты →',
+    'field.gpu-count':     'Количество GPU',
+    'field.gpu-count-tip': 'Общее количество GPU параллельно во время обучения',
+    'field.gpu-count-hint':'напр.: 512 (A100 для LLaMA 3 70B)',
+    'field.gpu-type':      'Тип GPU',
+    'field.gpu-type-tip':  'Максимальная мощность в кВт по спецификациям NVIDIA',
+    'field.hours':         'Часы обучения',
+    'field.hours-tip':     'Общее активное время вычислений (без подготовки данных)',
+    'field.hours-hint':    'напр.: 336 ч ≈ 14 непрерывных дней',
+    'field.pue':           'PUE центра обработки данных',
+    'field.pue-tip':       'Коэффициент использования мощности. 1.0 = идеально. Google ≈1.1, Среднее по отрасли ≈1.6',
+    'field.location':      'Регион / Углеродный фактор',
+    'field.location-tip':  'кг CO₂ на кВтч согласно энергобалансу страны (МЭА 2025)',
+    'field.energy-cost':   'Стоимость энергии (USD/кВтч)',
+    'field.energy-cost-tip':'Промышленная цена электроэнергии. Среднее по США: $0.07',
+    'field.energy-cost-hint':'Промышленное облако: $0.05–$0.12',
+    'pue.avg':'Среднее по отрасли — 1.60','pue.bad':'Неэффективные центры — 2.00',
+    'btn.calculate':       '⚡ Рассчитать воздействие на среду',
+    'btn.clear':           '🗑 Очистить',
+    'results.eyebrow':     '📊 Результаты экологического анализа для:',
+    'results.badge':       'Только что рассчитано',
+    'results.hours':       'часов','results.training':'обучения',
+    'section.dims':        'Воздействие по 5 научным параметрам',
+    'section.equivs':      'Экологические эквиваленты',
+    'dim.co2':'CO₂ всего','dim.co2-unit':'кг CO₂',
+    'dim.energy':'Энергия','dim.energy-unit':'кВтч потреблено',
+    'dim.water':'Пресная вода','dim.water-unit':'литров',
+    'dim.ewaste':'Эл. отходы','dim.ewaste-unit':'кг электронных отходов',
+    'dim.minerals':'Критические минералы','dim.minerals-unit':'кг (кобальт, литий…)',
+    'rating.calculating':'Вычисление…','rating.best':'A+ Устойчивый','rating.worst':'F Критический','rating.efficiency':'Эффективность',
+    'rating.Aplus.title':'Отлично — Высокоустойчивая модель','rating.Aplus.desc':'Минимальное воздействие. Сопоставимо с одним внутренним рейсом.',
+    'rating.A.title':'Очень хорошо — Низкое экологическое воздействие','rating.A.desc':'В диапазоне эффективных, хорошо спроектированных моделей.',
+    'rating.B.title':'Хорошо — Умеренно-низкое воздействие','rating.B.desc':'Сопоставимо со средними моделями отрасли.',
+    'rating.C.title':'Умеренное — Пересмотреть оптимизации','rating.C.desc':'Рассмотрите расположение ЦОД или уменьшите параметры.',
+    'rating.D.title':'Высокое — Значительное экологическое воздействие','rating.D.desc':'Уровень GPT-3. Рассмотрите обучение в регионах с ВИЭ.',
+    'rating.F.title':'Критическое — Очень высокое воздействие','rating.F.desc':'Уровень GPT-4. Требуется срочная компенсация и оптимизация.',
+    'equiv.cars':'автомобилей, едущих 1 год','equiv.flights':'рейсов Мадрид → Нью-Йорк',
+    'equiv.homes':'домов с электричеством / месяц','equiv.trees':'деревьев для компенсации за 1 год',
+    'equiv.phones':'полных зарядок смартфона','equiv.cost':'расчётная стоимость электроэнергии',
+    'chart.title':'Сравнение с эталонными моделями',
+    'table.title':'Сравнительная таблица воздействия',
+    'table.model':'Модель','table.co2':'CO₂ (кг)','table.water':'Вода (л)','table.rating':'Рейтинг','table.scale':'Шкала',
+    'table.calculated':'◀ рассчитано',
+    'err.no-name':'⚠️ Пожалуйста, введите название модели для расчёта',
+    'err.fields':'⚠️ Пожалуйста, заполните все поля',
+    'err.gpu-range':'⚠️ Недопустимое количество GPU','err.hours-range':'⚠️ Недопустимые часы обучения',
+    'toast.cleared':'🗑 Данные очищены','toast.preset':'✓ Параметры загружены',
+    'footer.paper':'📄 Научная статья',
+    'footer.copy':'© 2026 Элизабет Диас Фамилия · Методология: Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  zh: {
+    dir:'ltr', name:'中文', flag:'🇨🇳',
+    'header.eyebrow':      '可持续人工智能 · 数据科学 · 绿色计算',
+    'header.title':        'AI模型<br>碳足迹计算器',
+    'header.subtitle':     '从5个科学维度全面计算环境影响 — CO₂、能源、水、电子废物和关键矿产。',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 查看科学论文',
+    'status.online':'在线','status.offline':'离线','status.eco':'生态',
+    'lcb.detecting':       '检测位置中…',
+    'lcb.label':           '实时碳强度',
+    'lcb.loading':         '加载API中…',
+    'lcb.source-live':'实时API','lcb.source-cached':'缓存数据',
+    'banner.eco':          '⚡ 生态模式已激活 — API已暂停，动画减少，本地缓存已启用',
+    'calc.title':          '配置AI模型',
+    'calc.placeholder':    '输入要分析的AI名称…',
+    'calc.hint':           '💡 如果是已知模型，将显示技术参数建议 — 或输入任意自定义名称',
+    'calc.presets-label':  '快速预设 →',
+    'field.gpu-count':     'GPU数量',
+    'field.gpu-count-tip': '训练期间并行运行的GPU总数',
+    'field.gpu-count-hint':'例：512（LLaMA 3 70B的A100）',
+    'field.gpu-type':      'GPU类型',
+    'field.gpu-type-tip':  '根据NVIDIA规格的最大功率（kW）',
+    'field.hours':         '训练小时数',
+    'field.hours-tip':     '总活跃计算时间（不含数据准备）',
+    'field.hours-hint':    '例：336小时 ≈ 连续14天',
+    'field.pue':           '数据中心PUE',
+    'field.pue-tip':       '电能使用效率。1.0 = 完美。谷歌 ≈1.1，行业平均 ≈1.6',
+    'field.location':      '地区 / 碳排放因子',
+    'field.location-tip':  '每千瓦时CO₂千克数，依据各国能源结构（IEA 2025）',
+    'field.energy-cost':   '能源成本（美元/千瓦时）',
+    'field.energy-cost-tip':'工业电价。美国平均：$0.07',
+    'field.energy-cost-hint':'工业云：$0.05–$0.12',
+    'pue.avg':'行业平均 — 1.60','pue.bad':'低效数据中心 — 2.00',
+    'btn.calculate':       '⚡ 计算环境影响',
+    'btn.clear':           '🗑 清除',
+    'results.eyebrow':     '📊 环境分析结果，分析对象：',
+    'results.badge':       '刚刚计算',
+    'results.hours':       '小时','results.training':'训练',
+    'section.dims':        '5个科学维度的影响',
+    'section.equivs':      '环境等效量',
+    'dim.co2':'总CO₂','dim.co2-unit':'千克CO₂',
+    'dim.energy':'能源','dim.energy-unit':'千瓦时消耗',
+    'dim.water':'淡水','dim.water-unit':'升',
+    'dim.ewaste':'电子废物','dim.ewaste-unit':'千克电子废物',
+    'dim.minerals':'关键矿产','dim.minerals-unit':'千克（钴、锂…）',
+    'rating.calculating':'计算中…','rating.best':'A+ 可持续','rating.worst':'F 危急','rating.efficiency':'效率',
+    'rating.Aplus.title':'优秀 — 高度可持续模型','rating.Aplus.desc':'影响最小。相当于一次国内航班。',
+    'rating.A.title':'非常好 — 低环境影响','rating.A.desc':'在高效、设计良好的模型范围内。',
+    'rating.B.title':'良好 — 中低影响','rating.B.desc':'与行业中型模型相当。',
+    'rating.C.title':'中等 — 审查优化','rating.C.desc':'考虑数据中心位置或减少参数。',
+    'rating.D.title':'高 — 显著环境影响','rating.D.desc':'GPT-3级别。考虑在可再生能源地区训练。',
+    'rating.F.title':'危急 — 极高影响','rating.F.desc':'GPT-4级别。需要紧急补偿和优化。',
+    'equiv.cars':'辆汽车行驶1年','equiv.flights':'趟马德里→纽约航班',
+    'equiv.homes':'户家庭用电/月','equiv.trees':'棵树补偿1年所需',
+    'equiv.phones':'次手机完整充电','equiv.cost':'估计电费',
+    'chart.title':'与参考模型比较','table.title':'比较影响表',
+    'table.model':'模型','table.co2':'CO₂（千克）','table.water':'水（升）','table.rating':'评级','table.scale':'规模',
+    'table.calculated':'◀ 已计算',
+    'err.no-name':'⚠️ 请输入要计算的模型名称','err.fields':'⚠️ 请填写所有字段',
+    'err.gpu-range':'⚠️ GPU数量无效','err.hours-range':'⚠️ 训练小时数无效',
+    'toast.cleared':'🗑 数据已清除','toast.preset':'✓ 参数已加载',
+    'footer.paper':'📄 科学论文',
+    'footer.copy':'© 2026 伊丽莎白·迪亚斯·法米利亚 · 方法论：Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  ja: {
+    dir:'ltr', name:'日本語', flag:'🇯🇵',
+    'header.eyebrow':      'サステナブルAI · データサイエンス · グリーンコンピューティング',
+    'header.title':        'AIモデルの<br>カーボンフットプリント',
+    'header.subtitle':     '5つの科学的次元で完全な環境影響を計算 — CO₂、エネルギー、水、電子廃棄物、重要鉱物。',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 科学論文を見る',
+    'status.online':'オンライン','status.offline':'オフライン','status.eco':'エコ',
+    'lcb.detecting':       '位置を検出中…',
+    'lcb.label':           'リアルタイム炭素強度',
+    'lcb.loading':         'API読み込み中…',
+    'lcb.source-live':'ライブAPI','lcb.source-cached':'キャッシュデータ',
+    'banner.eco':          '⚡ エコモード有効 — API一時停止、アニメーション削減、ローカルキャッシュ有効',
+    'calc.title':          'AIモデルを設定',
+    'calc.placeholder':    '分析するAIの名前を入力…',
+    'calc.hint':           '💡 既知のモデルの場合、技術パラメータの候補が表示されます — またはカスタム名を入力',
+    'calc.presets-label':  'クイックプリセット →',
+    'field.gpu-count':     'GPU数',
+    'field.gpu-count-tip': 'トレーニング中に並列で動作するGPUの総数',
+    'field.gpu-count-hint':'例: 512 (LLaMA 3 70BのA100)',
+    'field.gpu-type':      'GPUタイプ',
+    'field.gpu-type-tip':  'NVIDIA仕様による最大電力（kW）',
+    'field.hours':         'トレーニング時間',
+    'field.hours-tip':     '総アクティブ計算時間（データ準備を除く）',
+    'field.hours-hint':    '例: 336時間 ≈ 連続14日',
+    'field.pue':           'データセンターPUE',
+    'field.pue-tip':       'Power Usage Effectiveness. 1.0 = 完璧。Google ≈1.1、業界平均 ≈1.6',
+    'field.location':      '地域 / 炭素係数',
+    'field.location-tip':  '国のエネルギーミックスに基づくkWh当たりkg CO₂（IEA 2025）',
+    'field.energy-cost':   'エネルギーコスト（USD/kWh）',
+    'field.energy-cost-tip':'産業用電気料金。米国平均: $0.07',
+    'field.energy-cost-hint':'産業用クラウド: $0.05–$0.12',
+    'pue.avg':'業界平均 — 1.60','pue.bad':'非効率センター — 2.00',
+    'btn.calculate':       '⚡ 環境影響を計算',
+    'btn.clear':           '🗑 クリア',
+    'results.eyebrow':     '📊 環境分析結果（対象モデル）:',
+    'results.badge':       '今計算完了',
+    'results.hours':       '時間','results.training':'トレーニング',
+    'section.dims':        '5つの科学的次元での影響',
+    'section.equivs':      '環境等価量',
+    'dim.co2':'CO₂合計','dim.co2-unit':'kg CO₂',
+    'dim.energy':'エネルギー','dim.energy-unit':'kWh消費',
+    'dim.water':'淡水','dim.water-unit':'リットル',
+    'dim.ewaste':'電子廃棄物','dim.ewaste-unit':'kg電子廃棄物',
+    'dim.minerals':'重要鉱物','dim.minerals-unit':'kg（コバルト、リチウム…）',
+    'rating.calculating':'計算中…','rating.best':'A+ サステナブル','rating.worst':'F 緊急','rating.efficiency':'効率',
+    'rating.Aplus.title':'優秀 — 高度にサステナブルなモデル','rating.Aplus.desc':'最小限の影響。国内線1便に相当。',
+    'rating.A.title':'非常に良い — 低い環境影響','rating.A.desc':'効率的で設計の良いモデルの範囲内。',
+    'rating.B.title':'良好 — 中低程度の影響','rating.B.desc':'業界の中規模モデルに相当。',
+    'rating.C.title':'中程度 — 最適化を見直す','rating.C.desc':'データセンターの場所を変えるか、パラメータを削減してください。',
+    'rating.D.title':'高い — 重大な環境影響','rating.D.desc':'GPT-3レベル。再生可能エネルギー地域でのトレーニングを検討。',
+    'rating.F.title':'緊急 — 非常に高い影響','rating.F.desc':'GPT-4レベル。緊急の補償と最適化が必要。',
+    'equiv.cars':'台の車が1年走行','equiv.flights':'便のマドリード→ニューヨーク',
+    'equiv.homes':'世帯の月間電力','equiv.trees':'本の木で1年分を相殺',
+    'equiv.phones':'回のスマートフォン満充電','equiv.cost':'推定電気代',
+    'chart.title':'参照モデルとの比較','table.title':'比較影響表',
+    'table.model':'モデル','table.co2':'CO₂（kg）','table.water':'水（L）','table.rating':'評価','table.scale':'規模',
+    'table.calculated':'◀ 計算済み',
+    'err.no-name':'⚠️ 計算するモデル名を入力してください','err.fields':'⚠️ すべてのフィールドを入力してください',
+    'err.gpu-range':'⚠️ GPU数が無効です','err.hours-range':'⚠️ トレーニング時間が無効です',
+    'toast.cleared':'🗑 データがクリアされました','toast.preset':'✓ パラメータを読み込みました',
+    'footer.paper':'📄 科学論文',
+    'footer.copy':'© 2026 エリザベス・ディアス・ファミリア · 方法論: Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  ko: {
+    dir:'ltr', name:'한국어', flag:'🇰🇷',
+    'header.eyebrow':      '지속 가능한 AI · 데이터 과학 · 그린 컴퓨팅',
+    'header.title':        'AI 모델의<br>탄소 발자국',
+    'header.subtitle':     '5가지 과학적 차원에서 완전한 환경 영향 계산 — CO₂, 에너지, 물, 전자 폐기물 및 핵심 광물.',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 과학 논문 보기',
+    'status.online':'온라인','status.offline':'오프라인','status.eco':'에코',
+    'lcb.detecting':       '위치 감지 중…',
+    'lcb.label':           '실시간 탄소 강도',
+    'lcb.loading':         'API 로딩 중…',
+    'lcb.source-live':'실시간 API','lcb.source-cached':'캐시 데이터',
+    'banner.eco':          '⚡ 에코 모드 활성화 — API 일시 중지, 애니메이션 감소, 로컬 캐시 활성화',
+    'calc.title':          'AI 모델 구성',
+    'calc.placeholder':    '분석할 AI 이름을 입력하세요…',
+    'calc.hint':           '💡 알려진 모델이면 기술 매개변수 제안이 나타납니다 — 또는 임의 이름을 입력하세요',
+    'calc.presets-label':  '빠른 프리셋 →',
+    'field.gpu-count':     'GPU 수',
+    'field.gpu-count-tip': '훈련 중 병렬로 실행되는 총 GPU 수',
+    'field.gpu-count-hint':'예: 512 (LLaMA 3 70B용 A100)',
+    'field.gpu-type':      'GPU 유형',
+    'field.gpu-type-tip':  'NVIDIA 사양에 따른 최대 전력 (kW)',
+    'field.hours':         '훈련 시간',
+    'field.hours-tip':     '총 활성 계산 시간 (데이터 준비 제외)',
+    'field.hours-hint':    '예: 336시간 ≈ 연속 14일',
+    'field.pue':           '데이터센터 PUE',
+    'field.pue-tip':       '전력 사용 효율. 1.0 = 완벽. Google ≈1.1, 업계 평균 ≈1.6',
+    'field.location':      '지역 / 탄소 계수',
+    'field.location-tip':  '국가 에너지 믹스에 따른 kWh당 kg CO₂ (IEA 2025)',
+    'field.energy-cost':   '에너지 비용 (USD/kWh)',
+    'field.energy-cost-tip':'산업용 전기 가격. 미국 평균: $0.07',
+    'field.energy-cost-hint':'산업용 클라우드: $0.05–$0.12',
+    'pue.avg':'업계 평균 — 1.60','pue.bad':'비효율적 센터 — 2.00',
+    'btn.calculate':       '⚡ 환경 영향 계산',
+    'btn.clear':           '🗑 지우기',
+    'results.eyebrow':     '📊 환경 분석 결과 (대상 모델):',
+    'results.badge':       '방금 계산됨',
+    'results.hours':       '시간','results.training':'훈련',
+    'section.dims':        '5가지 과학적 차원의 영향',
+    'section.equivs':      '환경 등가물',
+    'dim.co2':'총 CO₂','dim.co2-unit':'kg CO₂',
+    'dim.energy':'에너지','dim.energy-unit':'kWh 소비',
+    'dim.water':'담수','dim.water-unit':'리터',
+    'dim.ewaste':'전자 폐기물','dim.ewaste-unit':'kg 전자 폐기물',
+    'dim.minerals':'핵심 광물','dim.minerals-unit':'kg (코발트, 리튬…)',
+    'rating.calculating':'계산 중…','rating.best':'A+ 지속 가능','rating.worst':'F 위험','rating.efficiency':'효율',
+    'rating.Aplus.title':'우수 — 고도로 지속 가능한 모델','rating.Aplus.desc':'최소 영향. 국내선 항공편 1회와 동일.',
+    'rating.A.title':'매우 좋음 — 낮은 환경 영향','rating.A.desc':'효율적이고 잘 설계된 모델 범위 내.',
+    'rating.B.title':'좋음 — 중저 영향','rating.B.desc':'업계 중형 모델과 동일.',
+    'rating.C.title':'보통 — 최적화 검토 필요','rating.C.desc':'데이터센터 위치 변경 또는 매개변수 축소를 고려하세요.',
+    'rating.D.title':'높음 — 상당한 환경 영향','rating.D.desc':'GPT-3 수준. 재생 가능 에너지 지역에서 훈련을 고려하세요.',
+    'rating.F.title':'위험 — 매우 높은 영향','rating.F.desc':'GPT-4 수준. 긴급 보상 및 최적화 필요.',
+    'equiv.cars':'대의 차량 1년 주행','equiv.flights':'편 마드리드→뉴욕',
+    'equiv.homes':'가구 월 전력','equiv.trees':'그루 나무 1년 상쇄',
+    'equiv.phones':'회 스마트폰 완충','equiv.cost':'예상 전기 요금',
+    'chart.title':'참조 모델과 비교','table.title':'비교 영향 표',
+    'table.model':'모델','table.co2':'CO₂ (kg)','table.water':'물 (L)','table.rating':'등급','table.scale':'규모',
+    'table.calculated':'◀ 계산됨',
+    'err.no-name':'⚠️ 계산할 모델 이름을 입력하세요','err.fields':'⚠️ 모든 필드를 입력하세요',
+    'err.gpu-range':'⚠️ GPU 수가 유효하지 않습니다','err.hours-range':'⚠️ 훈련 시간이 유효하지 않습니다',
+    'toast.cleared':'🗑 데이터 지워짐','toast.preset':'✓ 매개변수 로드됨',
+    'footer.paper':'📄 과학 논문',
+    'footer.copy':'© 2026 엘리자베스 디아스 파밀리아 · 방법론: Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  ar: {
+    dir:'rtl', name:'العربية', flag:'🇸🇦',
+    'header.eyebrow':      'الذكاء الاصطناعي المستدام · علم البيانات · الحوسبة الخضراء',
+    'header.title':        'البصمة الكربونية<br>لنماذج الذكاء الاصطناعي',
+    'header.subtitle':     'احسب التأثير البيئي الكامل في 5 أبعاد علمية — CO₂ والطاقة والماء والنفايات الإلكترونية والمعادن الحيوية.',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 عرض الورقة العلمية',
+    'status.online':'متصل','status.offline':'غير متصل','status.eco':'إيكو',
+    'lcb.detecting':       'جارٍ تحديد الموقع…',
+    'lcb.label':           'كثافة الكربون المباشرة',
+    'lcb.loading':         'جارٍ تحميل API…',
+    'lcb.source-live':'API مباشر','lcb.source-cached':'بيانات مخزنة',
+    'banner.eco':          '⚡ وضع الإيكو نشط — APIs موقوفة، الرسوم المتحركة مقللة، التخزين المؤقت المحلي مفعّل',
+    'calc.title':          'تهيئة نموذج الذكاء الاصطناعي',
+    'calc.placeholder':    'اكتب اسم الذكاء الاصطناعي للتحليل…',
+    'calc.hint':           '💡 إذا كان النموذج معروفاً، ستظهر اقتراحات مع المعاملات التقنية — أو اكتب أي اسم مخصص',
+    'calc.presets-label':  '→ إعدادات سريعة',
+    'field.gpu-count':     'عدد وحدات GPU',
+    'field.gpu-count-tip': 'إجمالي وحدات GPU التي تعمل بالتوازي أثناء التدريب',
+    'field.gpu-count-hint':'مثال: 512 (A100 لـ LLaMA 3 70B)',
+    'field.gpu-type':      'نوع GPU',
+    'field.gpu-type-tip':  'الطاقة القصوى بالكيلوواط وفق مواصفات NVIDIA',
+    'field.hours':         'ساعات التدريب',
+    'field.hours-tip':     'إجمالي وقت الحوسبة النشطة (لا يشمل إعداد البيانات)',
+    'field.hours-hint':    'مثال: 336 ساعة ≈ 14 يومًا متواصلاً',
+    'field.pue':           'معامل PUE لمركز البيانات',
+    'field.pue-tip':       'كفاءة استخدام الطاقة. 1.0 = مثالي. Google ≈1.1، متوسط الصناعة ≈1.6',
+    'field.location':      'المنطقة / معامل الكربون',
+    'field.location-tip':  'كغ CO₂ لكل kWh وفق مزيج الطاقة للبلد (IEA 2025)',
+    'field.energy-cost':   'تكلفة الطاقة (USD/kWh)',
+    'field.energy-cost-tip':'سعر الكهرباء الصناعية. متوسط الولايات المتحدة: $0.07',
+    'field.energy-cost-hint':'السحابة الصناعية: $0.05–$0.12',
+    'pue.avg':'متوسط الصناعة — 1.60','pue.bad':'مراكز غير فعالة — 2.00',
+    'btn.calculate':       '⚡ احسب التأثير البيئي',
+    'btn.clear':           '🗑 مسح',
+    'results.eyebrow':     '📊 نتائج التحليل البيئي لـ:',
+    'results.badge':       'محسوب للتو',
+    'results.hours':       'ساعات','results.training':'تدريب',
+    'section.dims':        'التأثير في 5 أبعاد علمية',
+    'section.equivs':      'المكافئات البيئية',
+    'dim.co2':'إجمالي CO₂','dim.co2-unit':'كغ من CO₂',
+    'dim.energy':'الطاقة','dim.energy-unit':'كيلوواط/ساعة مستهلكة',
+    'dim.water':'المياه العذبة','dim.water-unit':'لتر',
+    'dim.ewaste':'النفايات الإلكترونية','dim.ewaste-unit':'كغ نفايات إلكترونية',
+    'dim.minerals':'المعادن الحيوية','dim.minerals-unit':'كغ (كوبالت، ليثيوم…)',
+    'rating.calculating':'جارٍ الحساب…','rating.best':'A+ مستدام','rating.worst':'F حرج','rating.efficiency':'الكفاءة',
+    'rating.Aplus.title':'ممتاز — نموذج مستدام للغاية','rating.Aplus.desc':'أدنى تأثير. يعادل رحلة جوية محلية واحدة.',
+    'rating.A.title':'جيد جداً — تأثير بيئي منخفض','rating.A.desc':'ضمن نطاق النماذج الفعالة المصممة جيداً.',
+    'rating.B.title':'جيد — تأثير معتدل-منخفض','rating.B.desc':'يعادل نماذج متوسطة في الصناعة.',
+    'rating.C.title':'معتدل — مراجعة التحسينات','rating.C.desc':'فكر في موقع مركز البيانات أو تقليل المعاملات.',
+    'rating.D.title':'مرتفع — تأثير بيئي كبير','rating.D.desc':'مستوى GPT-3. فكر في التدريب في مناطق الطاقة المتجددة.',
+    'rating.F.title':'حرج — تأثير مرتفع جداً','rating.F.desc':'مستوى GPT-4. يستلزم تعويضاً وتحسيناً عاجلين.',
+    'equiv.cars':'سيارة تسير لمدة عام','equiv.flights':'رحلة مدريد ← نيويورك',
+    'equiv.homes':'منزل بالكهرباء / شهر','equiv.trees':'شجرة للتعويض في عام',
+    'equiv.phones':'شحنة كاملة للهاتف','equiv.cost':'تكلفة الكهرباء المقدرة',
+    'chart.title':'مقارنة مع نماذج مرجعية','table.title':'جدول التأثير المقارن',
+    'table.model':'النموذج','table.co2':'CO₂ (كغ)','table.water':'ماء (ل)','table.rating':'التقييم','table.scale':'المقياس',
+    'table.calculated':'◀ محسوب',
+    'err.no-name':'⚠️ الرجاء إدخال اسم النموذج للحساب','err.fields':'⚠️ الرجاء ملء جميع الحقول',
+    'err.gpu-range':'⚠️ عدد GPU غير صالح','err.hours-range':'⚠️ ساعات التدريب غير صالحة',
+    'toast.cleared':'🗑 تم مسح البيانات','toast.preset':'✓ تم تحميل المعاملات',
+    'footer.paper':'📄 الورقة العلمية',
+    'footer.copy':'© 2026 إليزابيث دياز فاميليا · المنهجية: Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  he: {
+    dir:'rtl', name:'עברית', flag:'🇮🇱',
+    'header.eyebrow':      'בינה מלאכותית בת-קיימא · מדע הנתונים · מחשוב ירוק',
+    'header.title':        'טביעת הרגל הפחמנית<br>של מודלי בינה מלאכותית',
+    'header.subtitle':     'חשב את ההשפעה הסביבתית המלאה ב-5 ממדים מדעיים — CO₂, אנרגיה, מים, פסולת אלקטרונית ומינרלים קריטיים.',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 צפה במאמר המדעי',
+    'status.online':'מחובר','status.offline':'לא מחובר','status.eco':'אקו',
+    'lcb.detecting':       'מזהה מיקום…',
+    'lcb.label':           'עוצמת פחמן בזמן אמת',
+    'lcb.loading':         'טוען API…',
+    'lcb.source-live':'API חי','lcb.source-cached':'נתונים מהמטמון',
+    'banner.eco':          '⚡ מצב אקו פעיל — API מושהה, אנימציות מופחתות, מטמון מקומי מופעל',
+    'calc.title':          'הגדרת מודל בינה מלאכותית',
+    'calc.placeholder':    'הקלד את שם הבינה המלאכותית לניתוח…',
+    'calc.hint':           '💡 אם המודל מוכר, יוצגו הצעות עם פרמטרים טכניים — או הקלד שם מותאם אישית',
+    'calc.presets-label':  '→ הגדרות מהירות',
+    'field.gpu-count':     'מספר GPUs',
+    'field.gpu-count-tip': 'סך GPUs הפועלים במקביל בזמן האימון',
+    'field.gpu-count-hint':'לדוגמה: 512 (A100 עבור LLaMA 3 70B)',
+    'field.gpu-type':      'סוג GPU',
+    'field.gpu-type-tip':  'הספק מרבי בקילוואט לפי מפרטי NVIDIA',
+    'field.hours':         'שעות אימון',
+    'field.hours-tip':     'זמן חישוב פעיל כולל (לא כולל הכנת נתונים)',
+    'field.hours-hint':    'לדוגמה: 336 שעות ≈ 14 ימים רציפים',
+    'field.pue':           'PUE של מרכז הנתונים',
+    'field.pue-tip':       'יעילות שימוש בחשמל. 1.0 = מושלם. Google ≈1.1, ממוצע תעשייה ≈1.6',
+    'field.location':      'אזור / מקדם פחמן',
+    'field.location-tip':  'ק"ג CO₂ לקילוואט-שעה לפי תמהיל האנרגיה של המדינה (IEA 2025)',
+    'field.energy-cost':   'עלות אנרגיה (USD/kWh)',
+    'field.energy-cost-tip':'מחיר חשמל תעשייתי. ממוצע ארה"ב: $0.07',
+    'field.energy-cost-hint':'ענן תעשייתי: $0.05–$0.12',
+    'pue.avg':'ממוצע תעשייה — 1.60','pue.bad':'מרכזים לא יעילים — 2.00',
+    'btn.calculate':       '⚡ חשב השפעה סביבתית',
+    'btn.clear':           '🗑 נקה',
+    'results.eyebrow':     '📊 תוצאות הניתוח הסביבתי עבור:',
+    'results.badge':       'חושב כעת',
+    'results.hours':       'שעות','results.training':'אימון',
+    'section.dims':        'השפעה ב-5 ממדים מדעיים',
+    'section.equivs':      'שקילויות סביבתיות',
+    'dim.co2':'סה"כ CO₂','dim.co2-unit':'ק"ג CO₂',
+    'dim.energy':'אנרגיה','dim.energy-unit':'קווט"ש נצרך',
+    'dim.water':'מים מתוקים','dim.water-unit':'ליטר',
+    'dim.ewaste':'פסולת אלקטרונית','dim.ewaste-unit':'ק"ג פסולת אלקטרונית',
+    'dim.minerals':'מינרלים קריטיים','dim.minerals-unit':'ק"ג (קובלט, ליתיום…)',
+    'rating.calculating':'מחשב…','rating.best':'A+ בר-קיימא','rating.worst':'F קריטי','rating.efficiency':'יעילות',
+    'rating.Aplus.title':'מצוין — מודל בר-קיימא מאוד','rating.Aplus.desc':'השפעה מינימלית. שווה לטיסה פנים-ארצית אחת.',
+    'rating.A.title':'טוב מאוד — השפעה סביבתית נמוכה','rating.A.desc':'בטווח של מודלים יעילים ומתוכננים היטב.',
+    'rating.B.title':'טוב — השפעה מתונה-נמוכה','rating.B.desc':'שווה למודלים בינוניים בתעשייה.',
+    'rating.C.title':'מתון — לבדוק אופטימיזציות','rating.C.desc':'שקול מיקום מרכז נתונים או הפחתת פרמטרים.',
+    'rating.D.title':'גבוה — השפעה סביבתית משמעותית','rating.D.desc':'רמת GPT-3. שקול אימון באזורים עם אנרגיה מתחדשת.',
+    'rating.F.title':'קריטי — השפעה גבוהה מאוד','rating.F.desc':'רמת GPT-4. נדרשת פיצוי ואופטימיזציה דחופה.',
+    'equiv.cars':'מכוניות נוסעות שנה','equiv.flights':'טיסות מדריד ← ניו יורק',
+    'equiv.homes':'בתים עם חשמל / חודש','equiv.trees':'עצים לפיצוי בשנה',
+    'equiv.phones':'טעינות מלאות של סמארטפון','equiv.cost':'עלות חשמל משוערת',
+    'chart.title':'השוואה עם מודלים ייחוס','table.title':'טבלת השפעה השוואתית',
+    'table.model':'מודל','table.co2':'CO₂ (ק"ג)','table.water':'מים (ל)','table.rating':'דירוג','table.scale':'סקלה',
+    'table.calculated':'◀ חושב',
+    'err.no-name':'⚠️ אנא הזן את שם המודל לחישוב','err.fields':'⚠️ אנא מלא את כל השדות',
+    'err.gpu-range':'⚠️ מספר GPU לא חוקי','err.hours-range':'⚠️ שעות אימון לא חוקיות',
+    'toast.cleared':'🗑 הנתונים נמחקו','toast.preset':'✓ הפרמטרים נטענו',
+    'footer.paper':'📄 מאמר מדעי',
+    'footer.copy':'© 2026 אליזבת דיאז פמיליה · מתודולוגיה: Díaz Familia (2026) · CC BY 4.0',
+  },
+
+  tr: {
+    dir:'ltr', name:'Türkçe', flag:'🇹🇷',
+    'header.eyebrow':      'Sürdürülebilir YZ · Veri Bilimi · Yeşil Bilişim',
+    'header.title':        'Yapay Zeka Modellerinin<br>Karbon Ayak İzi',
+    'header.subtitle':     '5 bilimsel boyutta tam çevresel etkiyi hesaplayın — CO₂, enerji, su, e-atık ve kritik mineraller.',
+    'header.author-role':  'Sustainable AI Scientist · AI Data Scientist · Sustainable Intelligence & BI',
+    'header.paper-link':   '📄 Bilimsel Makaleyi Görüntüle',
+    'status.online':'Çevrimiçi','status.offline':'Çevrimdışı','status.eco':'Eko',
+    'lcb.detecting':       'Konum algılanıyor…',
+    'lcb.label':           'Canlı karbon yoğunluğu',
+    'lcb.loading':         'API yükleniyor…',
+    'lcb.source-live':'Canlı API','lcb.source-cached':'Önbellek verisi',
+    'banner.eco':          '⚡ Eko modu etkin — API\'ler duraklatıldı, animasyonlar azaltıldı, yerel önbellek etkinleştirildi',
+    'calc.title':          'YZ Modelini Yapılandır',
+    'calc.placeholder':    'Analiz etmek istediğiniz YZ\'nin adını yazın…',
+    'calc.hint':           '💡 Model biliniyorsa teknik parametre önerileri görünecek — veya herhangi bir özel ad yazın',
+    'calc.presets-label':  'Hızlı önayarlar →',
+    'field.gpu-count':     'GPU Sayısı',
+    'field.gpu-count-tip': 'Eğitim sırasında paralel çalışan toplam GPU sayısı',
+    'field.gpu-count-hint':'örn: 512 (LLaMA 3 70B için A100)',
+    'field.gpu-type':      'GPU Türü',
+    'field.gpu-type-tip':  'NVIDIA teknik özelliklerine göre maksimum güç (kW)',
+    'field.hours':         'Eğitim saatleri',
+    'field.hours-tip':     'Toplam aktif hesaplama süresi (veri hazırlama dahil değil)',
+    'field.hours-hint':    'örn: 336 s ≈ 14 sürekli gün',
+    'field.pue':           'Veri merkezi PUE\'si',
+    'field.pue-tip':       'Güç Kullanım Verimliliği. 1.0 = mükemmel. Google ≈1.1, Sektör ort. ≈1.6',
+    'field.location':      'Bölge / Karbon faktörü',
+    'field.location-tip':  "Ülkenin enerji karmasına göre kWh başına kg CO₂ (IEA 2025)",
+    'field.energy-cost':   'Enerji maliyeti (USD/kWh)',
+    'field.energy-cost-tip':'Endüstriyel elektrik fiyatı. ABD ortalaması: $0.07',
+    'field.energy-cost-hint':'Endüstriyel bulut: $0.05–$0.12',
+    'pue.avg':'Sektör ortalaması — 1.60','pue.bad':'Verimsiz merkezler — 2.00',
+    'btn.calculate':       '⚡ Çevresel Etkiyi Hesapla',
+    'btn.clear':           '🗑 Temizle',
+    'results.eyebrow':     '📊 Şu model için çevresel analiz sonuçları:',
+    'results.badge':       'Az önce hesaplandı',
+    'results.hours':       'saat','results.training':'eğitim',
+    'section.dims':        '5 bilimsel boyutta etki',
+    'section.equivs':      'Çevresel eşdeğerler',
+    'dim.co2':'Toplam CO₂','dim.co2-unit':'kg CO₂',
+    'dim.energy':'Enerji','dim.energy-unit':'kWh tüketildi',
+    'dim.water':'Tatlı su','dim.water-unit':'litre',
+    'dim.ewaste':'E-Atık','dim.ewaste-unit':'kg elektronik atık',
+    'dim.minerals':'Kritik mineraller','dim.minerals-unit':'kg (kobalt, lityum…)',
+    'rating.calculating':'Hesaplanıyor…','rating.best':'A+ Sürdürülebilir','rating.worst':'F Kritik','rating.efficiency':'Verimlilik',
+    'rating.Aplus.title':'Mükemmel — Son derece sürdürülebilir model','rating.Aplus.desc':'Minimum etki. Tek bir iç hatta uçuşa eşdeğer.',
+    'rating.A.title':'Çok iyi — Düşük çevresel etki','rating.A.desc':'Verimli ve iyi tasarlanmış modellerin aralığında.',
+    'rating.B.title':'İyi — Orta-düşük etki','rating.B.desc':'Sektördeki orta ölçekli modellerle karşılaştırılabilir.',
+    'rating.C.title':'Orta — Optimizasyonları gözden geçirin','rating.C.desc':'Veri merkezi konumunu değiştirmeyi veya parametreleri azaltmayı düşünün.',
+    'rating.D.title':'Yüksek — Önemli çevresel etki','rating.D.desc':'GPT-3 seviyesi. Yenilenebilir enerji bölgelerinde eğitmeyi düşünün.',
+    'rating.F.title':'Kritik — Çok yüksek etki','rating.F.desc':'GPT-4 seviyesi. Acil telafi ve optimizasyon gerektirir.',
+    'equiv.cars':'araç 1 yıl boyunca sürüş','equiv.flights':'Madrid → New York uçuşu',
+    'equiv.homes':'hanenin aylık elektriği','equiv.trees':'1 yılda dengelemek için ağaç',
+    'equiv.phones':'tam akıllı telefon şarjı','equiv.cost':'tahmini elektrik maliyeti',
+    'chart.title':'Referans modellerle karşılaştırma','table.title':'Karşılaştırmalı etki tablosu',
+    'table.model':'Model','table.co2':'CO₂ (kg)','table.water':'Su (L)','table.rating':'Puan','table.scale':'Ölçek',
+    'table.calculated':'◀ hesaplandı',
+    'err.no-name':'⚠️ Lütfen hesaplanacak model adını girin','err.fields':'⚠️ Lütfen tüm alanları doldurun',
+    'err.gpu-range':'⚠️ Geçersiz GPU sayısı','err.hours-range':'⚠️ Geçersiz eğitim saatleri',
+    'toast.cleared':'🗑 Veriler temizlendi','toast.preset':'✓ Parametreler yüklendi',
+    'footer.paper':'📄 Bilimsel makale',
+    'footer.copy':'© 2026 Elizabeth Díaz Familia · Metodoloji: Díaz Familia (2026) · CC BY 4.0',
+  },
+};
+
+/* ─── MOTOR DE TRADUCCIÓN — aplica TODOS los textos de una sola vez ─── */
+let currentLang = localStorage.getItem('calc_lang') || 'es';
+
+function t(key){ return (T[currentLang] && T[currentLang][key]) || (T['es'][key]) || key; }
+
+function applyLang(code){
+  currentLang = code;
+  localStorage.setItem('calc_lang', code);
+  const L = T[code];
+
+  // Dirección RTL/LTR
+  document.documentElement.dir = L.dir;
+  document.documentElement.lang = code;
+
+  // Botón idioma
+  document.getElementById('langCurrentLabel').textContent = L.name;
+  document.querySelectorAll('.lang-option').forEach(el => el.classList.toggle('active', el.dataset.lang === code));
+  document.getElementById('langDropdown').classList.remove('open');
+
+  // Todos los elementos con data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const txt = t(key);
+    if(txt) el.innerHTML = txt;
+  });
+
+  // Placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    const txt = t(key);
+    if(txt) el.placeholder = txt;
+  });
+
+  // Tooltips
+  document.querySelectorAll('[data-i18n-tooltip]').forEach(el => {
+    const key = el.getAttribute('data-i18n-tooltip');
+    const txt = t(key);
+    if(txt) el.setAttribute('data-tooltip', txt);
+  });
+
+  // PUE options (solo las que tienen data-i18n-opt)
+  document.querySelectorAll('[data-i18n-opt]').forEach(el => {
+    const key = el.getAttribute('data-i18n-opt');
+    const txt = t(key);
+    if(txt) el.textContent = txt;
+  });
+
+  // Título de la página
+  document.title = `🌿 ${t('header.title').replace('<br>',': ')} — Elizabeth Díaz Familia`;
+
+  if(code !== 'es' || currentLang !== 'es') toast(`🌐 ${L.flag} ${L.name}`, 'success', 1800);
+}
+
+function toggleLangMenu(){ document.getElementById('langDropdown').classList.toggle('open'); }
+document.addEventListener('click', e => { if(!e.target.closest('#langBtn')) document.getElementById('langDropdown').classList.remove('open'); });
+function setLang(code, e){ if(e) e.stopPropagation(); applyLang(code); }
+
+/* ─── INIT ─── */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Apply saved/detected language to full page
+  applyLang(currentLang);
+  updateConnectionStatus();
+  fetchLiveCarbon();
+  setInterval(()=>{ if(!STATE.dataSaver && navigator.onLine) fetchLiveCarbon(); }, 600000);
+});
+
+// Update location when user changes the dropdown
+document.getElementById('fLocation').addEventListener('change', ()=>{
+  if(!STATE.dataSaver) fetchLiveCarbon();
+});
+</script>
+</body>
+</html>
