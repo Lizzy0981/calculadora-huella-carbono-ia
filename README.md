@@ -4,6 +4,18 @@ Herramienta interactiva para calcular y analizar el impacto ambiental de modelos
 
 ---
 
+## 📱 Imágenes de la Aplicación 📱
+
+![Calculadora de Huella de Carbono - Interfaz Principal](assets/screenshot-calculadora.svg)
+
+*Interfaz principal de la calculadora mostrando los controles de entrada y resultados en tiempo real.*
+
+![Análisis Comparativo - Gráficos Interactivos](assets/screenshot-graficos.svg)
+
+*Visualización de datos comparativos entre diferentes modelos
+
+---
+
 ## 📱 Demo en Vivo
 
 🔗 **[lizzy0981.github.io/calculadora-huella-carbono-ia/](https://lizzy0981.github.io/calculadora-huella-carbono-ia/)**
