@@ -1,0 +1,65 @@
+# ── Sistema operativo ──────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ── Editores ───────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-workspace
+.sublime-project
+
+# ── Logs ───────────────────────────────────────
+*.log
+logs/
+
+# ── Archivos temporales y cache ────────────────
+tmp/
+temp/
+.temp/
+.tmp/
+.cache/
+
+# ── Backups ────────────────────────────────────
+*.bak
+*.backup
+*.old
+
+# ── Variables de entorno ───────────────────────
+# IMPORTANTE: nunca subir API keys
+.env
+.env.local
+.env.production
+.env.*.local
+*.env
+
+# ── API Keys (nunca al repositorio) ────────────
+# La ElectricityMaps key se guarda en localStorage del usuario,
+# no en el código. Este bloque es una capa extra de protección.
+api-keys.json
+secrets.json
+config.local.js
+
+# ── Node (si se añaden herramientas de build) ──
+node_modules/
+package-lock.json
+yarn.lock
+dist/
+build/
+.next/
+.nuxt/
+
+# ── Notas personales (no subir) ────────────────
+personal-notes.md
+notas.md
+TODO.md
+DRAFT*.md
+draft-*.md
