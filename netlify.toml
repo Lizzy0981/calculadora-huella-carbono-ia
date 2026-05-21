@@ -1,0 +1,34 @@
+# ═══════════════════════════════════════════════════════════════
+#  Netlify — Auto Deploy Config
+#  Calculadora de Huella de Carbono de IA
+#  Elizabeth Díaz Familia · Sustainable AI Scientist
+# ═══════════════════════════════════════════════════════════════
+
+[build]
+  publish = "."
+  command = ""       # Static site — no build step needed
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# ─── Redirects ─────────────────────────────────────────────────
+[[redirects]]
+  from   = "/"
+  to     = "/index.html"
+  status = 200
+
+# ─── Security Headers ──────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options            = "DENY"
+    X-XSS-Protection           = "1; mode=block"
+    X-Content-Type-Options     = "nosniff"
+    Referrer-Policy            = "strict-origin-when-cross-origin"
+    Permissions-Policy         = "geolocation=(), microphone=(), camera=()"
+    Cache-Control              = "public, max-age=3600, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, immutable"
