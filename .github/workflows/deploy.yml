@@ -1,0 +1,82 @@
+# ═══════════════════════════════════════════════════════════════
+#  GitHub Actions — Auto Deploy to GitHub Pages
+#  Calculadora de Huella de Carbono de IA
+#  Elizabeth Díaz Familia · Sustainable AI Scientist
+#  Trigger: push to main → deploys automatically in ~30 seconds
+# ═══════════════════════════════════════════════════════════════
+
+name: 🌿 Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Manual trigger from GitHub UI
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # ─── Validate ──────────────────────────────────────────────
+  validate:
+    name: ✅ Validate HTML
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check index.html exists
+        run: |
+          if [ ! -f "index.html" ]; then
+            echo "❌ index.html not found"
+            exit 1
+          fi
+          echo "✅ index.html found ($(wc -c < index.html) bytes)"
+
+      - name: Check assets folder
+        run: |
+          if [ -d "assets" ]; then
+            echo "✅ assets/ found"
+            ls -la assets/ 2>/dev/null || true
+          else
+            echo "⚠️  No assets/ folder (OK for single-file apps)"
+          fi
+
+  # ─── Deploy ────────────────────────────────────────────────
+  deploy:
+    name: 🚀 Deploy
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'   # Deploy entire repo root
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: ✅ Deployment complete
+        run: |
+          echo "🌿 Deployed to: ${{ steps.deployment.outputs.page_url }}"
+          echo "⚡ Calculadora de Huella de Carbono IA — Elizabeth Díaz Familia"
