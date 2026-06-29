@@ -64,6 +64,8 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 - 📉 **Barra de escala comparativa** vs Google Search (0.3 Wh de referencia)
 - 🌍 **Dato clave documentado** — 5 segundos de video IA = 944 Wh = 2,000× más que una búsqueda
 - 🖥️ **20+ modelos con datos de inferencia** — GPT-4o, LLaMA 3.1 8B/405B, SDXL, Sora y más
+- ✏️ **Modelo personalizado** — opción "Escribir otro modelo…" estima cualquier modelo desconocido con `smartEstimate()` R²=0.89
+- 📄🔗🗑️ **PDF, Compartir y Limpiar** propios — independientes del módulo de Entrenamiento, con nombre de archivo único por modelo
 
 ### 💰 **Carbon ROI Calculator — Justifica Decisiones Técnicas**
 - 📊 **Comparación visual Modelo A vs Modelo B** con CO₂ de entrenamiento visible en selector
@@ -73,12 +75,12 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 - 📋 **Desglose financiero completo** — por año y por período total de análisis
 - 🔢 **Horizonte ajustable** — análisis a 1, 2, 3 o 5 años
 
-### 📄 **Exportación PDF y Compartir**
-- 📄 **Botón PDF** aparece tras calcular — genera reporte con nombre del modelo en el archivo
-- 📲 **Barra flotante profesional** — aparece automáticamente tras calcular con PDF + Compartir
-- 🔗 **Web Share API** — comparte directamente desde móvil o copia al portapapeles
+### 📄 **Exportación PDF y Compartir — Disponible en los 3 Módulos**
+- 📄 **Botón PDF independiente** en Entrenamiento, Inferencia y ROI Verde — cada uno genera su propio reporte con nombre de archivo único
+- 📲 **Barra flotante profesional** — aparece automáticamente tras calcular en el módulo de Entrenamiento, con PDF + Compartir
+- 🔗 **Web Share API** — comparte directamente desde móvil o copia al portapapeles, con texto contextual según el módulo (CO₂ entrenamiento, Wh/consulta, o ahorro ROI)
 - 🖨️ **CSS @media print optimizado** — oculta navegación, formato A4, fondo preservado
-- 🗑️ **Reset limpio** — botón Limpiar resetea PDF y barra flotante correctamente
+- 🗑️ **Botón Limpiar propio** en cada módulo — resetea formulario, resultados y botones de exportación de forma independiente
 
 ### 🧠 **Estimación Universal — El Núcleo Científico**
 - 🔍 **Calcula CUALQUIER modelo de IA** — incluso los que no existen en la base de datos
@@ -104,7 +106,7 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 
 ### 🌍 **Sistema Multiidioma Profesional — 100% Completo**
 - 🌐 **11 idiomas completos** — ES, EN, FR, PT, RU, ZH, JA, KO, AR, HE, TR
-- ✅ **79/79 claves traducidas** en cada idioma, incluyendo nuevas pestañas e inferencia
+- ✅ **139/139 claves traducidas** en cada idioma, incluyendo pestañas, inferencia, ROI y modal ElectricityMaps
 - ↔️ **RTL/LTR automático** — árabe y hebreo con dirección correcta
 - 💾 **Persistencia automática** en localStorage
 - ⚡ **Cambio instantáneo** sin recargar la página
@@ -241,7 +243,7 @@ Ajuste Instruct = 1.15   (RLHF / instruction-tuned)
 ```javascript
 ⚡ HTML5 + CSS3 + JS ES6+    // Sin frameworks — máximo rendimiento y control
 📊 Chart.js 4.4.0           // Gráficas comparativas + dual-axis ROI
-🌐 i18n propio (data-i18n)  // 11 idiomas · 79 claves · RTL + CJK completo
+🌐 i18n propio (data-i18n)  // 11 idiomas · 139 claves · RTL + CJK completo
 📱 Mobile-First Responsive  // 320px → 4K soportado
 📄 CSS @media print         // Exportación PDF optimizada con nombre de archivo
 🎨 CSS Custom Properties    // Design tokens · gradiente animado · cards con color
@@ -365,7 +367,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
     └── 📄 screenshot-graficos.*     # 📊 Vista módulo ROI comparativo
 ```
 
-> 💡 **Archivo único autocontenido** — Todo el motor científico, 3 módulos, 11 idiomas (79 claves cada uno), 65+ modelos, APIs y sistema de PDF/Share en un solo `index.html`. Sin build steps, sin node_modules, sin compilación.
+> 💡 **Archivo único autocontenido** — Todo el motor científico, 3 módulos, 11 idiomas (139 claves cada uno, auditadas al 100%), 65+ modelos, APIs y sistema de PDF/Share en un solo `index.html`. Sin build steps, sin node_modules, sin compilación.
 
 ---
 
@@ -378,7 +380,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 🔍 SEO:              93/100   // Meta tags optimizados
 💡 Best Practices:   98/100   // HTML5 semántico moderno
 📱 PWA:              91/100   // Service Worker + offline
-🌐 i18n:             100%     // 11 idiomas · 79/79 claves por idioma
+🌐 i18n:             100%     // 11 idiomas · 139/139 claves por idioma
 ```
 
 ### 📈 **Métricas Técnicas**
@@ -398,7 +400,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 
 ## 🔮 Roadmap
 
-### ✅ **Completado — v1.1 · Mayo 2026**
+### ✅ **Completado — v1.2 · Junio 2026**
 - [x] 🧮 Calculadora de entrenamiento — fórmula Díaz Familia (2026) R²=0.89
 - [x] 🤖 65+ modelos con datos verificados incluyendo 15 nuevos de 2025
 - [x] 🧠 Motor de estimación universal `smartEstimate()` — cualquier modelo por nombre
@@ -409,7 +411,10 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - [x] 🔗 Botón Compartir (Web Share API + fallback portapapeles)
 - [x] 📲 Barra flotante PDF/Compartir tras calcular
 - [x] ⚡ ElectricityMaps API — 60+ países en tiempo real
-- [x] 🌍 11 idiomas completos — 79/79 claves traducidas incluyendo nuevos módulos
+- [x] 🌍 11 idiomas completos — 139/139 claves auditadas y verificadas en los 3 módulos
+- [x] 🐛 Corrección de botones PDF/Compartir/Limpiar en Inferencia y ROI Verde (no funcionaban)
+- [x] ✏️ Campo de modelo personalizado en Inferencia con `smartEstimate()` integrado
+- [x] 🔍 Auditoría completa de JavaScript — validación de sintaxis y funciones huérfanas
 - [x] 🏷️ Sistema de confianza (Verificado / Estimado / Personalizado)
 - [x] 🎨 Diseño modernizado 2026 — título animado · cards con barra de color
 - [x] 🚀 Auto-deploy GitHub Actions + Vercel + Netlify
@@ -442,7 +447,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 
 **CC BY 4.0** — Puedes usar, compartir y adaptar este trabajo siempre que cites la fuente:
 
-> Díaz Familia, E. (2026). *Calculadora de Huella de Carbono en Modelos de IA (v1.1)*.
+> Díaz Familia, E. (2026). *Calculadora de Huella de Carbono en Modelos de IA (v1.2)*.
 > Metodología Díaz Familia (2026) — Correlación R²=0.89. Datos de inferencia: Jegham et al. (2025).
 > Investigación Independiente. Santo Domingo Este, República Dominicana.
 > https://lizzy0981.github.io/calculadora-huella-carbono-ia/
@@ -468,7 +473,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 💰 Financial Risk AI       # Modelos de riesgo, predicciones financieras, ROI
 ☁️ Cloud Computing         # OCI (certificada), APIs, deployment automático
 📝 Scientific Research     # Papers científicos, metodología validada, R²=0.89
-🌍 Multilingual Systems    # 11 idiomas, RTL/LTR, CJK, 79 claves i18n
+🌍 Multilingual Systems    # 11 idiomas, RTL/LTR, CJK, 139 claves i18n
 ```
 
 ---
@@ -524,7 +529,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 ⚡ │              🔬 SCIENTIFICALLY VALIDATED — R²=0.89 🔬            │ ⚡
 🧠 │         🌫️ TRAINING · ⚡ INFERENCE · 💰 GREEN ROI — 3 MODULES   │ 🧠
 📄 │              📄 PDF EXPORT · 🔗 SHARE · 📲 FLOATING BAR          │ 📄
-📊 │           🌍 GLOBALLY ACCESSIBLE — 11 LANGUAGES · 79 KEYS        │ 📊
+📊 │           🌍 GLOBALLY ACCESSIBLE — 11 LANGUAGES · 139 KEYS       │ 📊
 🌱 │        ⚡ REAL-TIME DATA — ELECTRICITYMAPS API · 60+ COUNTRIES    │ 🌱
 💧 │     🤖 UNIVERSAL ESTIMATION — ANY AI MODEL — smartEstimate()     │ 💧
 🔮 │  🚀 AUTO-DEPLOY — GITHUB PAGES · VERCEL · NETLIFY — ~30 SECONDS  │ 🔮
