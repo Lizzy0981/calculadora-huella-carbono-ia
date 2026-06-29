@@ -1226,7 +1226,7 @@ body {
     <span class="status-dot saving" id="saverDot"></span>
     <span id="saverLabel" data-i18n="status.eco">Eco</span>
   </div>
-  <button class="em-api-btn" id="apiKeyBtn" onclick="openApiModal()" title="ElectricityMaps API — datos en tiempo real">
+  <button class="em-api-btn" id="apiKeyBtn" onclick="openApiModal()" title="ElectricityMaps API" data-i18n-tooltip="em.title.attr">
     <span id="apiKeyIcon">🔑</span><span id="apiKeyLabel">ElectricityMaps</span>
   </button>
 </div>
@@ -1425,7 +1425,7 @@ body {
     <!-- Smart Estimator Banner -->
     <div class="est-banner" id="estBanner">
       <span>🧠</span>
-      <span id="estBannerText">Parámetros estimados — basado en el nombre del modelo (R²=0.89). Ajusta si tienes datos exactos.</span>
+      <span id="estBannerText" data-i18n="estbanner.default">Parámetros estimados — basado en el nombre del modelo (R²=0.89). Ajusta si tienes datos exactos.</span>
     </div>
     <!-- Buttons -->
     <div class="btn-row">
@@ -1547,22 +1547,22 @@ body {
   <!-- ═══ INFERENCE PANEL ═══ -->
   <div id="panel-inference" class="tab-panel">
     <div class="infer-hero">
-      <div class="infer-hero-title">⚡ Calculadora de Impacto por Inferencia</div>
-      <p class="infer-hero-sub">Mide el costo ambiental real de cada consulta en producción. El 80–90% del impacto de la IA ocurre durante la inferencia, no el entrenamiento.</p>
+      <div class="infer-hero-title" data-i18n="infer.hero.title">⚡ Calculadora de Impacto por Inferencia</div>
+      <p class="infer-hero-sub" data-i18n="infer.hero.sub">Mide el costo ambiental real de cada consulta en producción. El 80–90% del impacto de la IA ocurre durante la inferencia, no el entrenamiento.</p>
     </div>
     <div class="card">
-      <div class="card-title"><div class="icon">🤖</div><span>Selecciona Modelo y Tipo de Consulta</span></div>
+      <div class="card-title"><div class="icon">🤖</div><span data-i18n="infer.card.title">Selecciona Modelo y Tipo de Consulta</span></div>
       <div class="form-group" style="margin-bottom:20px">
-        <label class="section-label" style="display:block;margin-bottom:10px">Tipo de consulta</label>
+        <label class="section-label" style="display:block;margin-bottom:10px" data-i18n="infer.qtype.label">Tipo de consulta</label>
         <div class="qt-grid">
-          <button class="qt-btn active" onclick="selectQT('text_short',this)"><span class="qt-icon">💬</span>Texto corto<br><small style="opacity:.6;font-size:9px">~200 tokens</small></button>
-          <button class="qt-btn" onclick="selectQT('text_long',this)"><span class="qt-icon">📝</span>Texto largo<br><small style="opacity:.6;font-size:9px">~1000 tokens</small></button>
-          <button class="qt-btn" onclick="selectQT('image',this)"><span class="qt-icon">🎨</span>Imagen<br><small style="opacity:.6;font-size:9px">1024×1024px</small></button>
-          <button class="qt-btn" onclick="selectQT('video',this)"><span class="qt-icon">🎬</span>Video<br><small style="opacity:.6;font-size:9px">5 segundos</small></button>
+          <button class="qt-btn active" onclick="selectQT('text_short',this)"><span class="qt-icon">💬</span><span data-i18n="infer.qt.short">Texto corto</span><br><small style="opacity:.6;font-size:9px" data-i18n="infer.qt.short.sub">~200 tokens</small></button>
+          <button class="qt-btn" onclick="selectQT('text_long',this)"><span class="qt-icon">📝</span><span data-i18n="infer.qt.long">Texto largo</span><br><small style="opacity:.6;font-size:9px" data-i18n="infer.qt.long.sub">~1000 tokens</small></button>
+          <button class="qt-btn" onclick="selectQT('image',this)"><span class="qt-icon">🎨</span><span data-i18n="infer.qt.image">Imagen</span><br><small style="opacity:.6;font-size:9px" data-i18n="infer.qt.image.sub">1024×1024px</small></button>
+          <button class="qt-btn" onclick="selectQT('video',this)"><span class="qt-icon">🎬</span><span data-i18n="infer.qt.video">Video</span><br><small style="opacity:.6;font-size:9px" data-i18n="infer.qt.video.sub">5 segundos</small></button>
         </div>
       </div>
       <div class="form-group">
-        <label class="section-label">Modelo de IA</label>
+        <label class="section-label" data-i18n="infer.model.label">Modelo de IA</label>
         <select class="form-select" id="iModel" onchange="onInferModelChange(this)">
           <optgroup label="OpenAI"><option value="gpt4o">GPT-4o</option><option value="gpt4">GPT-4</option><option value="gpt4omini">GPT-4o mini</option><option value="o1">o1</option></optgroup>
           <optgroup label="Anthropic"><option value="claude35s">Claude 3.5 Sonnet</option><option value="claudehaiku">Claude 3.5 Haiku</option><option value="claudeopus">Claude 3 Opus</option></optgroup>
@@ -1570,42 +1570,43 @@ body {
           <optgroup label="Meta"><option value="llama3_405b">LLaMA 3.1 405B</option><option value="llama3_70b">LLaMA 3 70B</option><option value="llama3_8b">LLaMA 3.1 8B ⭐</option></optgroup>
           <optgroup label="Imágenes/Video"><option value="dalle3">DALL-E 3</option><option value="sdxl">Stable Diffusion XL</option><option value="sora">Sora</option></optgroup>
           <optgroup label="Otros"><option value="mistral7b">Mistral 7B ⭐</option><option value="dseekr1">DeepSeek-R1</option><option value="dseekv3">DeepSeek-V3</option></optgroup>
-          <option value="__custom__">✏️ Escribir otro modelo…</option>
+          <option value="__custom__" data-i18n-opt="infer.model.custom">✏️ Escribir otro modelo…</option>
         </select>
         <div id="iCustomWrap" style="display:none;margin-top:10px">
           <input type="text" class="form-input" id="iCustomModel"
+            data-i18n-placeholder="infer.custom.placeholder"
             placeholder="Ej: GPT-5, Gemini 3, MiModelo-70B…"
             oninput="onInferCustomInput(this)"
             style="border-color:rgba(251,191,36,.40)">
-          <div style="font-size:11px;color:#fbbf24;font-family:var(--font-mono);margin-top:6px;opacity:.8">
+          <div style="font-size:11px;color:#fbbf24;font-family:var(--font-mono);margin-top:6px;opacity:.8" data-i18n="infer.custom.hint">
             🧠 Se estimará automáticamente con R²=0.89 — Díaz Familia (2026)
           </div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
-        <div class="form-group"><label class="section-label" for="iQDay">Consultas por día</label><input type="number" class="form-input" id="iQDay" value="100" min="1"></div>
-        <div class="form-group"><label class="section-label" for="iCF">Factor carbono (kg CO₂/kWh)</label><input type="number" class="form-input" id="iCF" value="0.386" step="0.001" min="0.01"></div>
+        <div class="form-group"><label class="section-label" for="iQDay" data-i18n="infer.qday.label">Consultas por día</label><input type="number" class="form-input" id="iQDay" value="100" min="1"></div>
+        <div class="form-group"><label class="section-label" for="iCF" data-i18n="infer.cf.label">Factor carbono (kg CO₂/kWh)</label><input type="number" class="form-input" id="iCF" value="0.386" step="0.001" min="0.01"></div>
       </div>
       <div class="btn-row" style="margin-top:18px">
-        <button class="btn-primary" onclick="calcInference()" style="flex:1">⚡ Calcular Impacto por Inferencia</button>
-        <button class="btn-pdf" onclick="exportInferencePDF()" id="btnInferPdf" style="display:none">📄 PDF</button>
-        <button class="btn-pdf" onclick="shareInference()" id="btnInferShare" style="display:none;background:rgba(0,232,122,.10);border-color:rgba(0,232,122,.35);color:var(--green-400)">🔗 Compartir</button>
-        <button class="btn-secondary" onclick="clearInference()">🗑 Limpiar</button>
+        <button class="btn-primary" onclick="calcInference()" style="flex:1" data-i18n="infer.btn.calc">⚡ Calcular Impacto por Inferencia</button>
+        <button class="btn-pdf" onclick="exportInferencePDF()" id="btnInferPdf" style="display:none">📄 <span data-i18n="btn.pdf.short">PDF</span></button>
+        <button class="btn-pdf" onclick="shareInference()" id="btnInferShare" style="display:none;background:rgba(0,232,122,.10);border-color:rgba(0,232,122,.35);color:var(--green-400)">🔗 <span data-i18n="btn.share">Compartir</span></button>
+        <button class="btn-secondary" onclick="clearInference()">🗑 <span data-i18n="btn.clear.short">Limpiar</span></button>
       </div>
       <div class="infer-results" id="inferResults">
-        <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;color:#fbbf24;margin-bottom:16px">⚡ <span id="inferTitle">Resultados</span></div>
+        <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;color:#fbbf24;margin-bottom:16px">⚡ <span id="inferTitle" data-i18n="infer.results.default">Resultados</span></div>
         <div class="infer-metrics">
-          <div class="im-card"><div class="im-val" id="iGCO2">—</div><div class="im-lbl">g CO₂ / consulta</div></div>
-          <div class="im-card"><div class="im-val" id="iWh">—</div><div class="im-lbl">Wh / consulta</div></div>
-          <div class="im-card"><div class="im-val" id="iMlWater">—</div><div class="im-lbl">ml agua / consulta</div></div>
-          <div class="im-card"><div class="im-val" id="iDay">—</div><div class="im-lbl">kg CO₂ / día</div></div>
-          <div class="im-card"><div class="im-val" id="iMonth">—</div><div class="im-lbl">kg CO₂ / mes</div></div>
-          <div class="im-card"><div class="im-val" id="iYear">—</div><div class="im-lbl">ton CO₂ / año</div></div>
+          <div class="im-card"><div class="im-val" id="iGCO2">—</div><div class="im-lbl" data-i18n="infer.metric.gco2">g CO₂ / consulta</div></div>
+          <div class="im-card"><div class="im-val" id="iWh">—</div><div class="im-lbl" data-i18n="infer.metric.wh">Wh / consulta</div></div>
+          <div class="im-card"><div class="im-val" id="iMlWater">—</div><div class="im-lbl" data-i18n="infer.metric.water">ml agua / consulta</div></div>
+          <div class="im-card"><div class="im-val" id="iDay">—</div><div class="im-lbl" data-i18n="infer.metric.day">kg CO₂ / día</div></div>
+          <div class="im-card"><div class="im-val" id="iMonth">—</div><div class="im-lbl" data-i18n="infer.metric.month">kg CO₂ / mes</div></div>
+          <div class="im-card"><div class="im-val" id="iYear">—</div><div class="im-lbl" data-i18n="infer.metric.year">ton CO₂ / año</div></div>
         </div>
-        <div style="font-size:10px;color:var(--text-muted);margin-bottom:5px;font-family:var(--font-mono)">Escala vs Google Search (0.3 Wh) →</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-bottom:5px;font-family:var(--font-mono)" data-i18n="infer.scale.label">Escala vs Google Search (0.3 Wh) →</div>
         <div class="infer-scale"><div class="infer-scale-fill" id="iScale" style="width:0%"></div></div>
         <div class="infer-ref" id="inferRef">—</div>
-        <div class="infer-src" id="inferSrc">Fuente: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)</div>
+        <div class="infer-src" id="inferSrc" data-i18n="infer.src.default">Fuente: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)</div>
       </div>
     </div>
   </div><!-- /panel-inference -->
@@ -1613,14 +1614,14 @@ body {
   <!-- ═══ ROI VERDE PANEL ═══ -->
   <div id="panel-roi" class="tab-panel">
     <div class="roi-hero">
-      <div class="roi-hero-title">💰 Carbon ROI Calculator</div>
-      <p class="roi-hero-sub">Calcula el ahorro financiero y ambiental de migrar a un modelo más eficiente. Justifica decisiones técnicas con datos económicos reales.</p>
+      <div class="roi-hero-title" data-i18n="roi.hero.title">💰 Carbon ROI Calculator</div>
+      <p class="roi-hero-sub" data-i18n="roi.hero.sub">Calcula el ahorro financiero y ambiental de migrar a un modelo más eficiente. Justifica decisiones técnicas con datos económicos reales.</p>
     </div>
     <div class="card">
-      <div class="card-title"><div class="icon">📊</div><span>Comparación de Modelos</span></div>
+      <div class="card-title"><div class="icon">📊</div><span data-i18n="roi.card.title">Comparación de Modelos</span></div>
       <div class="roi-vs-grid">
         <div>
-          <div class="model-lbl bad">❌ Modelo Actual (Ineficiente)</div>
+          <div class="model-lbl bad" data-i18n="roi.model.a.label">❌ Modelo Actual (Ineficiente)</div>
           <select class="form-select" id="roiA">
             <option value="gpt4">GPT-4 — 1,820,000 kg CO₂</option>
             <option value="gpt3">GPT-3 — 1,713,600 kg CO₂</option>
@@ -1632,7 +1633,7 @@ body {
         </div>
         <div class="vs-center"><div class="vs-badge">VS</div></div>
         <div>
-          <div class="model-lbl good">✅ Modelo Eficiente</div>
+          <div class="model-lbl good" data-i18n="roi.model.b.label">✅ Modelo Eficiente</div>
           <select class="form-select" id="roiB">
             <option value="dseekr1">DeepSeek-R1 — 72,800 kg CO₂</option>
             <option value="dseekv3">DeepSeek-V3 ✓ — 54,600 kg CO₂</option>
@@ -1644,38 +1645,38 @@ body {
         </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px">
-        <div class="form-group"><label class="section-label" for="roiQDay">Consultas por día</label><input type="number" class="form-input" id="roiQDay" value="10000" min="1"></div>
-        <div class="form-group"><label class="section-label" for="roiKwh">Precio electricidad (USD/kWh)</label><input type="number" class="form-input" id="roiKwh" value="0.07" step="0.01"></div>
-        <div class="form-group"><label class="section-label" for="roiYears">Horizonte de análisis</label><select class="form-select" id="roiYears"><option value="1">1 año</option><option value="2">2 años</option><option value="3" selected>3 años</option><option value="5">5 años</option></select></div>
-        <div class="form-group"><label class="section-label" for="roiCF">Factor carbono (kg CO₂/kWh)</label><input type="number" class="form-input" id="roiCF" value="0.386" step="0.001"></div>
+        <div class="form-group"><label class="section-label" for="roiQDay" data-i18n="roi.qday.label">Consultas por día</label><input type="number" class="form-input" id="roiQDay" value="10000" min="1"></div>
+        <div class="form-group"><label class="section-label" for="roiKwh" data-i18n="roi.kwh.label">Precio electricidad (USD/kWh)</label><input type="number" class="form-input" id="roiKwh" value="0.07" step="0.01"></div>
+        <div class="form-group"><label class="section-label" for="roiYears" data-i18n="roi.years.label">Horizonte de análisis</label><select class="form-select" id="roiYears"><option value="1" data-i18n-opt="roi.years.1">1 año</option><option value="2" data-i18n-opt="roi.years.2">2 años</option><option value="3" selected data-i18n-opt="roi.years.3">3 años</option><option value="5" data-i18n-opt="roi.years.5">5 años</option></select></div>
+        <div class="form-group"><label class="section-label" for="roiCF" data-i18n="roi.cf.label">Factor carbono (kg CO₂/kWh)</label><input type="number" class="form-input" id="roiCF" value="0.386" step="0.001"></div>
       </div>
       <div class="btn-row" style="margin-bottom:24px">
-        <button class="btn-primary" onclick="calcROI()" style="flex:1;background:linear-gradient(135deg,#7c3aed,#6d28d9);box-shadow:0 4px 20px rgba(109,40,217,.25)">💰 Calcular ROI Verde</button>
-        <button class="btn-pdf" onclick="exportROIPDF()" id="btnROIPdf" style="display:none">📄 PDF</button>
-        <button class="btn-pdf" onclick="shareROI()" id="btnROIShare" style="display:none;background:rgba(0,232,122,.10);border-color:rgba(0,232,122,.35);color:var(--green-400)">🔗 Compartir</button>
-        <button class="btn-secondary" onclick="clearROI()">🗑 Limpiar</button>
+        <button class="btn-primary" onclick="calcROI()" style="flex:1;background:linear-gradient(135deg,#7c3aed,#6d28d9);box-shadow:0 4px 20px rgba(109,40,217,.25)" data-i18n="roi.btn.calc">💰 Calcular ROI Verde</button>
+        <button class="btn-pdf" onclick="exportROIPDF()" id="btnROIPdf" style="display:none">📄 <span data-i18n="btn.pdf.short">PDF</span></button>
+        <button class="btn-pdf" onclick="shareROI()" id="btnROIShare" style="display:none;background:rgba(0,232,122,.10);border-color:rgba(0,232,122,.35);color:var(--green-400)">🔗 <span data-i18n="btn.share">Compartir</span></button>
+        <button class="btn-secondary" onclick="clearROI()">🗑 <span data-i18n="btn.clear.short">Limpiar</span></button>
       </div>
       <div class="roi-results" id="roiResults">
         <div class="roi-kpis">
-          <div class="roi-kpi g"><div class="roi-kpi-val" id="rCO2">—</div><div class="roi-kpi-lbl">ton CO₂ ahorradas/año</div></div>
-          <div class="roi-kpi b"><div class="roi-kpi-val" id="rMwh">—</div><div class="roi-kpi-lbl">MWh ahorrados/año</div></div>
-          <div class="roi-kpi y"><div class="roi-kpi-val" id="rUsd">—</div><div class="roi-kpi-lbl">USD ahorrados total</div></div>
-          <div class="roi-kpi p"><div class="roi-kpi-val" id="rPct">—</div><div class="roi-kpi-lbl">Reducción emisiones</div></div>
+          <div class="roi-kpi g"><div class="roi-kpi-val" id="rCO2">—</div><div class="roi-kpi-lbl" data-i18n="roi.kpi.co2">ton CO₂ ahorradas/año</div></div>
+          <div class="roi-kpi b"><div class="roi-kpi-val" id="rMwh">—</div><div class="roi-kpi-lbl" data-i18n="roi.kpi.mwh">MWh ahorrados/año</div></div>
+          <div class="roi-kpi y"><div class="roi-kpi-val" id="rUsd">—</div><div class="roi-kpi-lbl" data-i18n="roi.kpi.usd">USD ahorrados total</div></div>
+          <div class="roi-kpi p"><div class="roi-kpi-val" id="rPct">—</div><div class="roi-kpi-lbl" data-i18n="roi.kpi.pct">Reducción emisiones</div></div>
         </div>
         <div class="card section-gap">
-          <div class="card-title"><div class="icon">📈</div><span>Comparativa visual</span></div>
+          <div class="card-title"><div class="icon">📈</div><span data-i18n="roi.chart.title">Comparativa visual</span></div>
           <div class="roi-chart-wrap"><canvas id="roiChart"></canvas></div>
         </div>
         <div class="roi-breakdown">
-          <div class="roi-brow-title">Desglose financiero y ambiental</div>
-          <div class="roi-brow-row"><span class="roi-brow-lbl">CO₂ modelo actual (entrenamiento)</span><span class="roi-brow-val neg" id="rbd-a">—</span></div>
-          <div class="roi-brow-row"><span class="roi-brow-lbl">CO₂ modelo eficiente (entrenamiento)</span><span class="roi-brow-val pos" id="rbd-b">—</span></div>
-          <div class="roi-brow-row"><span class="roi-brow-lbl">kWh ahorrados/año (inferencia)</span><span class="roi-brow-val pos" id="rbd-kwh">—</span></div>
-          <div class="roi-brow-row"><span class="roi-brow-lbl">Ahorro USD/año</span><span class="roi-brow-val pos" id="rbd-usd-y">—</span></div>
-          <div class="roi-brow-row"><span class="roi-brow-lbl">Ahorro total (<span id="rbd-yrs">3</span> años)</span><span class="roi-brow-val pos" id="rbd-usd-t">—</span></div>
+          <div class="roi-brow-title" data-i18n="roi.breakdown.title">Desglose financiero y ambiental</div>
+          <div class="roi-brow-row"><span class="roi-brow-lbl" data-i18n="roi.brow.co2a">CO₂ modelo actual (entrenamiento)</span><span class="roi-brow-val neg" id="rbd-a">—</span></div>
+          <div class="roi-brow-row"><span class="roi-brow-lbl" data-i18n="roi.brow.co2b">CO₂ modelo eficiente (entrenamiento)</span><span class="roi-brow-val pos" id="rbd-b">—</span></div>
+          <div class="roi-brow-row"><span class="roi-brow-lbl" data-i18n="roi.brow.kwh">kWh ahorrados/año (inferencia)</span><span class="roi-brow-val pos" id="rbd-kwh">—</span></div>
+          <div class="roi-brow-row"><span class="roi-brow-lbl" data-i18n="roi.brow.usdy">Ahorro USD/año</span><span class="roi-brow-val pos" id="rbd-usd-y">—</span></div>
+          <div class="roi-brow-row"><span class="roi-brow-lbl"><span data-i18n="roi.brow.usdt">Ahorro total</span> (<span id="rbd-yrs">3</span> <span data-i18n="roi.brow.years.word">años</span>)</span><span class="roi-brow-val pos" id="rbd-usd-t">—</span></div>
         </div>
         <div class="roi-equiv" id="roiEquiv">—</div>
-        <div class="roi-method">Metodología: Díaz Familia (2026) R²=0.89 · Datos inferencia: Jegham et al. arXiv:2505.09598 (2025)</div>
+        <div class="roi-method" data-i18n="roi.method">Metodología: Díaz Familia (2026) R²=0.89 · Datos inferencia: Jegham et al. arXiv:2505.09598 (2025)</div>
       </div>
     </div>
   </div><!-- /panel-roi -->
@@ -1861,7 +1862,7 @@ function updateConnectionStatus(){
   const label = document.getElementById('connectionLabel');
   dot.className   = 'status-dot' + (STATE.offline ? ' offline' : '');
   label.textContent = STATE.offline ? 'Offline' : 'Online';
-  if(STATE.offline) toast('⚠️ Sin conexión — usando datos en caché','error');
+  if(STATE.offline) toast(t('toast.offline'),'error');
 }
 window.addEventListener('online',  updateConnectionStatus);
 window.addEventListener('offline', updateConnectionStatus);
@@ -1872,7 +1873,7 @@ function toggleDataSaver(){
   document.getElementById('saverLabel').textContent = STATE.dataSaver ? 'Eco ✓' : 'Eco';
   const banner = document.getElementById('datasakerBanner');
   banner.classList.toggle('active', STATE.dataSaver);
-  toast(STATE.dataSaver ? '⚡ Modo Eco activado — ahorrando datos y energía' : '🔄 Modo Eco desactivado', 'success');
+  toast(STATE.dataSaver ? t('toast.eco.on') : t('toast.eco.off'), 'success');
 }
 
 /* ─── TOAST ─── */
@@ -1911,23 +1912,23 @@ function openApiModal(){
   document.getElementById('emRemoveBtn').style.display = EM_KEY ? 'block' : 'none';
   const cc = (STATE.locationCode||'US').toUpperCase();
   const zone = EM_ZONES[cc];
-  document.getElementById('emZoneDisplay').textContent = zone ? zone+' ✅' : cc+' — IEA 2025 fallback';
+  document.getElementById('emZoneDisplay').textContent = zone ? zone+' ✅' : cc+' '+t('em.zone.unsupported');
   document.getElementById('emOverlay').classList.add('open');
   setTimeout(()=>document.getElementById('emInput').focus(),100);
 }
 function closeEM(){ document.getElementById('emOverlay').classList.remove('open'); }
 function saveEMKey(){
   const val = document.getElementById('emInput').value.trim();
-  if(!val||val.includes('●')){ toast('⚠️ Pega una key válida','error'); return; }
+  if(!val||val.includes('●')){ toast(t('em.toast.invalidkey'),'error'); return; }
   EM_KEY = val; localStorage.setItem('em_api_key',val);
   closeEM(); updateEMBtn(true);
   fetchLiveCarbon();
-  toast('⚡ ElectricityMaps conectado — datos en tiempo real','success',3000);
+  toast(t('em.toast.connected'),'success',3000);
 }
 function removeEMKey(){
   EM_KEY=''; localStorage.removeItem('em_api_key');
   closeEM(); updateEMBtn(false); fetchLiveCarbon();
-  toast('🔑 API key eliminada — usando IEA 2025','success');
+  toast(t('em.toast.removed'),'success');
 }
 function updateEMBtn(ok){
   const btn=document.getElementById('apiKeyBtn');
@@ -1990,14 +1991,14 @@ let _conf='custom';
 function setConf(c){ _conf=c; }
 function showEstBanner(paramB){
   const b=document.getElementById('estBanner');
-  const t=document.getElementById('estBannerText');
-  if(!b||!t) return;
+  const txtEl=document.getElementById('estBannerText');
+  if(!b||!txtEl) return;
   if(_conf==='verified'){ b.classList.remove('show'); return; }
   if(_conf==='estimated'){
-    t.textContent=`Parámetros estimados (~${paramB}B detectados) — correlación R²=0.89. Ajusta si tienes datos exactos.`;
+    txtEl.textContent=_tfill('estbanner.estimated.template',{params:paramB});
     b.classList.add('show');
   } else {
-    t.textContent='Parámetros ingresados manualmente.';
+    txtEl.textContent=t('estbanner.custom');
     b.classList.add('show');
   }
 }
@@ -2023,16 +2024,16 @@ function exportPDF(){
 async function shareResult(){
   const model=document.getElementById('rhModelName')?.textContent||'AI Model';
   const co2=document.querySelector('.metric-val')?.textContent||'—';
-  const text=`🌍 ${model}: ${co2} kg CO₂ durante el entrenamiento.\nCalculado con Calculadora Huella de Carbono IA — Díaz Familia (2026) R²=0.89`;
+  const text=_tfill('share.training.template',{model:model,co2:co2});
   const url=window.location.href;
   if(navigator.share){ try{await navigator.share({title:'AI Carbon Footprint',text,url});return;}catch(e){} }
-  try{ await navigator.clipboard.writeText(text+'\n'+url); toast('🔗 Copiado al portapapeles','success',2500); }
-  catch(e){ toast('❌ No se pudo copiar','error'); }
+  try{ await navigator.clipboard.writeText(text+'\n'+url); toast(t('toast.copied'),'success',2500); }
+  catch(e){ toast(t('toast.copy.failed'),'error'); }
 }
 function showFloatBar(modelName){
   const bar=document.getElementById('floatBar');
   const lbl=document.getElementById('floatLbl');
-  if(bar){ lbl.textContent=`📊 ${modelName} calculado`; bar.classList.add('show'); }
+  if(bar){ lbl.textContent=_tfill('float.ready.template',{model:modelName}); bar.classList.add('show'); }
   const btn=document.getElementById('btnPdf');
   if(btn) btn.style.display='inline-flex';
 }
@@ -2066,17 +2067,36 @@ function selectQT(type,btn){
   btn.classList.add('active');
   if(document.getElementById('inferResults').classList.contains('show')) calcInference();
 }
+function onInferModelChange(sel){
+  const wrap = document.getElementById('iCustomWrap');
+  if(sel.value === '__custom__'){
+    wrap.style.display = 'block';
+    document.getElementById('iCustomModel').focus();
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+function onInferCustomInput(input){
+  if(input.value.length > 2){
+    const est = smartEstimate(input.value);
+    input.title = `~${est.paramB}B params · smartEstimate R²=0.89`;
+  }
+}
+function _tfill(key, vals){
+  let s = t(key);
+  Object.keys(vals).forEach(k => { s = s.split('{'+k+'}').join(vals[k]); });
+  return s;
+}
 function calcInference(){
   const mid=document.getElementById('iModel').value;
 
   // Handle custom model with smartEstimate
   if(mid === '__custom__'){
     const customName = document.getElementById('iCustomModel').value.trim();
-    if(!customName){ toast('✏️ Escribe el nombre del modelo primero','error'); return; }
+    if(!customName){ toast(t('infer.toast.noname'),'error'); return; }
     const est = smartEstimate(customName);
     const qd  = parseFloat(document.getElementById('iQDay').value)||100;
     const cf  = parseFloat(document.getElementById('iCF').value)||0.386;
-    // Estimate Wh/query from parameter count (proportional to training energy)
     const whQuery = Math.max(0.001, est.paramB * 0.006);
     const wue = 1.8;
     const gco2 = whQuery * cf * 1000;
@@ -2089,24 +2109,23 @@ function calcInference(){
     document.getElementById('iMonth').textContent  = co2m<1?co2m.toFixed(3):co2m.toFixed(2);
     document.getElementById('iYear').textContent   = co2y.toFixed(3);
     document.getElementById('iScale').style.width  = Math.min((whQuery/0.3)*20,100)+'%';
-    document.getElementById('inferTitle').textContent = `${customName} (estimado) · ${qd.toLocaleString()} consultas/día`;
-    document.getElementById('inferRef').innerHTML  = `🧠 Modelo desconocido estimado con <strong>smartEstimate()</strong> — ~${est.paramB}B parámetros detectados. Wh/consulta ≈ ${whQuery.toFixed(3)} Wh. Impacto anual: <strong>${co2y.toFixed(3)} ton CO₂</strong>. Metodología Díaz Familia (2026) R²=0.89.`;
-    document.getElementById('inferSrc').textContent= `Estimación automática — ajusta los parámetros si tienes datos exactos`;
+    document.getElementById('inferTitle').textContent = _tfill('infer.title.custom.template',{model:customName,n:qd.toLocaleString()});
+    document.getElementById('inferRef').innerHTML  = _tfill('infer.ref.custom.template',{params:est.paramB,wh:whQuery.toFixed(3),year:co2y.toFixed(3)});
+    document.getElementById('inferSrc').textContent= t('infer.src.custom');
     document.getElementById('inferResults').classList.add('show');
     ['btnInferPdf','btnInferShare'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='inline-flex';});
-    toast(`🧠 ${customName} estimado: ~${est.paramB}B params · ${whQuery.toFixed(3)} Wh/consulta`,'success',3000);
+    toast(_tfill('infer.toast.estimated.template',{model:customName,params:est.paramB,wh:whQuery.toFixed(3)}),'success',3000);
     return;
   }
   const qd=parseFloat(document.getElementById('iQDay').value)||100;
   const cf=parseFloat(document.getElementById('iCF').value)||0.386;
   const d=INFER[mid];
-  if(!d){ toast('⚠️ Modelo no disponible','error'); return; }
+  if(!d){ toast(t('infer.toast.notavailable'),'error'); return; }
   const typeMap={text_short:'ts',text_long:'tl',image:'img',video:'vid'};
   const wh=d[typeMap[_qType]];
-  if(wh===null||wh===undefined){ toast('⚠️ Este tipo de consulta no está disponible para este modelo','error',3000); return; }
+  if(wh===null||wh===undefined){ toast(t('infer.toast.typenotavailable'),'error',3000); return; }
   const co2q=wh*cf, gco2=co2q*1000, mlw=wh*d.wue*1000;
   const co2d=co2q*qd, co2m=co2d*30, co2y=(co2d*365)/1000;
-  const fmt=(v,dec=2)=>v>=1000?(v/1000).toFixed(1)+'k':v>=1?v.toFixed(dec):v>=0.01?v.toFixed(3):v.toExponential(2);
   document.getElementById('iGCO2').textContent  = gco2<1?gco2.toFixed(3)+'g':gco2.toFixed(1)+'g';
   document.getElementById('iWh').textContent    = wh<1?wh.toFixed(3):wh.toFixed(2);
   document.getElementById('iMlWater').textContent = mlw<1?mlw.toFixed(2):mlw.toFixed(1);
@@ -2115,13 +2134,50 @@ function calcInference(){
   document.getElementById('iYear').textContent  = co2y.toFixed(3);
   document.getElementById('iScale').style.width = Math.min((wh/0.3)*20,100)+'%';
   const mLabel=document.getElementById('iModel').options[document.getElementById('iModel').selectedIndex].text.split(' ')[0];
-  const tLabels={text_short:'texto corto',text_long:'texto largo',image:'imagen',video:'video'};
-  document.getElementById('inferTitle').textContent=`${mLabel} · ${tLabels[_qType]} · ${qd.toLocaleString()} consultas/día`;
+  const typeKeyMap={text_short:'infer.type.short',text_long:'infer.type.long',image:'infer.type.image',video:'infer.type.video'};
+  document.getElementById('inferTitle').textContent=_tfill('infer.title.template',{model:mLabel,type:t(typeKeyMap[_qType]),n:qd.toLocaleString()});
   const gx=(wh/0.3).toFixed(1);
-  document.getElementById('inferRef').innerHTML=`Una consulta consume <strong>${wh<0.1?(wh*1000).toFixed(1)+' mWh':wh.toFixed(3)+' Wh'}</strong> — equivale a <strong>${gx}× una búsqueda en Google</strong>. Con ${qd.toLocaleString()} consultas diarias: <strong>${co2y.toFixed(3)} ton CO₂/año</strong>.`;
-  document.getElementById('inferSrc').textContent=`Fuente: ${d.src} · Factor carbono: ${cf} kg CO₂/kWh`;
+  const whDisplay = wh<0.1?(wh*1000).toFixed(1)+' mWh':wh.toFixed(3)+' Wh';
+  document.getElementById('inferRef').innerHTML=_tfill('infer.ref.template',{wh:whDisplay,gx:gx,n:qd.toLocaleString(),year:co2y.toFixed(3)});
+  document.getElementById('inferSrc').textContent=_tfill('infer.src.template',{src:d.src,cf:cf});
   document.getElementById('inferResults').classList.add('show');
   ['btnInferPdf','btnInferShare'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='inline-flex';});
+}
+
+/* ── Inference: PDF / Share / Clear ── */
+function exportInferencePDF(){
+  const model = _getInferModelName();
+  const orig = document.title;
+  document.title = `inferencia-${model.replace(/[^a-zA-Z0-9]/g,'_').toLowerCase()}-diaz-familia-2026`;
+  window.print();
+  document.title = orig;
+  toast(t('toast.pdf.opening'),'success',2000);
+}
+async function shareInference(){
+  const model = _getInferModelName();
+  const gco2 = document.getElementById('iGCO2')?.textContent || '—';
+  const wh   = document.getElementById('iWh')?.textContent || '—';
+  const text = _tfill('share.inference.template',{model:model,gco2:gco2,wh:wh});
+  if(navigator.share){ try{ await navigator.share({title:'AI Inference Impact',text,url:window.location.href}); return; }catch(e){} }
+  try{ await navigator.clipboard.writeText(text+'\n'+window.location.href); toast(t('toast.copied'),'success',2500); }
+  catch(e){ toast(t('toast.copy.failed'),'error'); }
+}
+function clearInference(){
+  document.getElementById('iModel').value = 'gpt4o';
+  document.getElementById('iCustomWrap').style.display = 'none';
+  document.getElementById('iCustomModel').value = '';
+  document.getElementById('iQDay').value  = '100';
+  document.getElementById('iCF').value    = '0.386';
+  document.getElementById('inferResults').classList.remove('show');
+  document.querySelectorAll('.qt-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  _qType = 'text_short';
+  ['btnInferPdf','btnInferShare'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+  toast(t('toast.cleared'),'success',1800);
+}
+function _getInferModelName(){
+  const sel = document.getElementById('iModel');
+  if(sel.value === '__custom__') return document.getElementById('iCustomModel').value || 'custom-model';
+  return sel.options[sel.selectedIndex]?.text?.split(' (')[0] || sel.value;
 }
 
 /* ── Carbon ROI Calculator ── */
@@ -2147,7 +2203,7 @@ function calcROI(){
   const kc=parseFloat(document.getElementById('roiKwh').value)||0.07;
   const yrs=parseInt(document.getElementById('roiYears').value)||3;
   const cf=parseFloat(document.getElementById('roiCF').value)||0.386;
-  if(!A||!B){ toast('⚠️ Selecciona modelos válidos','error'); return; }
+  if(!A||!B){ toast(t('roi.toast.invalidmodels'),'error'); return; }
   const iWhA=(A.e/(2000*1e6))*1e6, iWhB=(B.e/(2000*1e6))*1e6;
   const kwhY=(iWhA-iWhB)*qd*365/1000;
   const co2Y=kwhY*cf/1000, usdY=kwhY*kc, usdT=usdY*yrs;
@@ -2160,22 +2216,23 @@ function calcROI(){
   document.getElementById('rbd-a').textContent = (A.co2/1000).toFixed(1)+' t';
   document.getElementById('rbd-b').textContent = (B.co2/1000).toFixed(1)+' t';
   document.getElementById('rbd-kwh').textContent= fmt(kwhY,0)+' kWh';
-  document.getElementById('rbd-usd-y').textContent='$'+fmt(usdY,0)+'/año';
+  document.getElementById('rbd-usd-y').textContent='$'+fmt(usdY,0)+t('roi.brow.usdy.suffix');
   document.getElementById('rbd-usd-t').textContent='$'+fmt(usdT,0);
   document.getElementById('rbd-yrs').textContent=yrs;
   const trees=Math.round(co2Y*45), flights=Math.round(co2Y*5.5);
-  document.getElementById('roiEquiv').innerHTML=`🌿 Ahorrar <strong>${co2Y.toFixed(1)} ton CO₂/año</strong> ≡ 🌳 plantar <strong>${trees.toLocaleString()} árboles</strong> · ✈️ evitar <strong>${flights.toLocaleString()} vuelos</strong> transatlánticos.`;
+  document.getElementById('roiEquiv').innerHTML=_tfill('roi.equiv.template',{co2:co2Y.toFixed(1),trees:trees.toLocaleString(),flights:flights.toLocaleString()});
   const ctx=document.getElementById('roiChart').getContext('2d');
   if(_roiChart) _roiChart.destroy();
-  const yLabels=Array.from({length:yrs},(_,i)=>`Año ${i+1}`);
+  const yearWord=t('roi.chart.year.word');
+  const yLabels=Array.from({length:yrs},(_,i)=>`${yearWord} ${i+1}`);
   const cumUSD=yLabels.map((_,i)=>parseFloat((usdY*(i+1)).toFixed(0)));
   _roiChart=new Chart(ctx,{
     data:{
-      labels:['Emisiones entrenamiento (t CO₂)',...yLabels],
+      labels:[t('roi.chart.label.training'),...yLabels],
       datasets:[
         {type:'bar',label:A.name,data:[A.co2/1000,...Array(yrs).fill(null)],backgroundColor:'rgba(248,113,113,0.65)',borderColor:'#f87171',borderWidth:2,borderRadius:6,yAxisID:'y'},
         {type:'bar',label:B.name,data:[B.co2/1000,...Array(yrs).fill(null)],backgroundColor:'rgba(0,232,122,0.65)',borderColor:'#00e87a',borderWidth:2,borderRadius:6,yAxisID:'y'},
-        {type:'line',label:'Ahorro acumulado (USD)',data:[null,...cumUSD],borderColor:'#a78bfa',backgroundColor:'rgba(167,139,250,0.08)',borderWidth:3,pointRadius:5,tension:0.4,fill:true,yAxisID:'y2'}
+        {type:'line',label:t('roi.chart.label.savings'),data:[null,...cumUSD],borderColor:'#a78bfa',backgroundColor:'rgba(167,139,250,0.08)',borderWidth:3,pointRadius:5,tension:0.4,fill:true,yAxisID:'y2'}
       ]
     },
     options:{
@@ -2183,7 +2240,7 @@ function calcROI(){
       plugins:{legend:{labels:{color:'rgba(255,255,255,0.7)',font:{family:"'Inter',sans-serif",size:11}}}},
       scales:{
         x:{ticks:{color:'rgba(255,255,255,0.5)'},grid:{color:'rgba(255,255,255,0.05)'}},
-        y:{position:'left',ticks:{color:'rgba(255,255,255,0.5)',callback:v=>v+'t'},grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'ton CO₂',color:'rgba(255,255,255,0.3)'}},
+        y:{position:'left',ticks:{color:'rgba(255,255,255,0.5)',callback:v=>v+'t'},grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:t('roi.chart.yaxis.co2'),color:'rgba(255,255,255,0.3)'}},
         y2:{position:'right',ticks:{color:'#a78bfa',callback:v=>'$'+v.toLocaleString()},grid:{display:false}}
       }
     }
@@ -2191,6 +2248,40 @@ function calcROI(){
   document.getElementById('roiResults').classList.add('show');
   ['btnROIPdf','btnROIShare'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='inline-flex';});
   setTimeout(()=>document.getElementById('roiResults').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+/* ── ROI: PDF / Share / Clear ── */
+function exportROIPDF(){
+  const a = document.getElementById('roiA').options[document.getElementById('roiA').selectedIndex].text.split(' —')[0];
+  const b = document.getElementById('roiB').options[document.getElementById('roiB').selectedIndex].text.split(' —')[0];
+  const orig = document.title;
+  document.title = `roi-verde-${a.replace(/[^a-zA-Z0-9]/g,'_').toLowerCase()}-vs-${b.replace(/[^a-zA-Z0-9]/g,'_').toLowerCase()}`;
+  window.print();
+  document.title = orig;
+  toast(t('toast.pdf.opening'),'success',2000);
+}
+async function shareROI(){
+  const co2 = document.getElementById('rCO2')?.textContent || '—';
+  const usd = document.getElementById('rUsd')?.textContent || '—';
+  const pct = document.getElementById('rPct')?.textContent || '—';
+  const a = document.getElementById('roiA').options[document.getElementById('roiA').selectedIndex].text.split(' —')[0];
+  const b = document.getElementById('roiB').options[document.getElementById('roiB').selectedIndex].text.split(' —')[0];
+  const text = _tfill('share.roi.template',{a:a,b:b,co2:co2,usd:usd,pct:pct});
+  if(navigator.share){ try{ await navigator.share({title:'Carbon ROI Calculator',text,url:window.location.href}); return; }catch(e){} }
+  try{ await navigator.clipboard.writeText(text+'\n'+window.location.href); toast(t('toast.copied'),'success',2500); }
+  catch(e){ toast(t('toast.copy.failed'),'error'); }
+}
+function clearROI(){
+  document.getElementById('roiA').selectedIndex = 0;
+  document.getElementById('roiB').selectedIndex = 0;
+  document.getElementById('roiQDay').value  = '10000';
+  document.getElementById('roiKwh').value   = '0.07';
+  document.getElementById('roiYears').value = '3';
+  document.getElementById('roiCF').value    = '0.386';
+  document.getElementById('roiResults').classList.remove('show');
+  if(_roiChart){ _roiChart.destroy(); _roiChart=null; }
+  ['btnROIPdf','btnROIShare'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
+  toast(t('toast.cleared'),'success',1800);
 }
 
 /* ─── LIVE CARBON API — ElectricityMaps + National Grid UK + IEA 2025 ─── */
@@ -2241,7 +2332,7 @@ async function fetchLiveCarbon(){
     }catch(e){
       const ck=localStorage.getItem('em_c_'+zone);
       if(ck){const{v,ts}=JSON.parse(ck);if(Date.now()-ts<900000){updateCarbonBar(v,v<400?'low':'high',`ElectricityMaps (caché) · ${zone}`);setLiveBadge('cache');return;}}
-      toast('⚠️ ElectricityMaps no disponible — usando IEA 2025','error',2500);
+      toast(t('em.toast.fallback'),'error',2500);
     }
   }
   // 3. UK National Grid (no key needed)
@@ -2507,7 +2598,7 @@ function displayResults(r){
     document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});
   },200);
 
-  toast('✅ Cálculo completado en 5 dimensiones','success');
+  toast(t('toast.calc.complete'),'success');
 }
 
 /* ─── ANIMATED COUNTER ─── */
@@ -2705,6 +2796,121 @@ const T = {
     'tab.roi': '💰 ROI Verde',
     'tab.badge.new': 'NUEVO',
     'btn.pdf': '📄 Exportar PDF',
+    'infer.hero.title': '⚡ Calculadora de Impacto por Inferencia',
+    'infer.hero.sub': 'Mide el costo ambiental real de cada consulta en producción. El 80–90% del impacto de la IA ocurre durante la inferencia, no el entrenamiento.',
+    'infer.card.title': 'Selecciona Modelo y Tipo de Consulta',
+    'infer.qtype.label': 'Tipo de consulta',
+    'infer.qt.short': 'Texto corto',
+    'infer.qt.short.sub': '~200 tokens',
+    'infer.qt.long': 'Texto largo',
+    'infer.qt.long.sub': '~1000 tokens',
+    'infer.qt.image': 'Imagen',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'Video',
+    'infer.qt.video.sub': '5 segundos',
+    'infer.model.label': 'Modelo de IA',
+    'infer.model.custom': '✏️ Escribir otro modelo…',
+    'infer.custom.placeholder': 'Ej: GPT-5, Gemini 3, MiModelo-70B…',
+    'infer.custom.hint': '🧠 Se estimará automáticamente con R²=0.89 — Díaz Familia (2026)',
+    'infer.qday.label': 'Consultas por día',
+    'infer.cf.label': 'Factor carbono (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ Calcular Impacto por Inferencia',
+    'infer.results.default': 'Resultados',
+    'infer.metric.gco2': 'g CO₂ / consulta',
+    'infer.metric.wh': 'Wh / consulta',
+    'infer.metric.water': 'ml agua / consulta',
+    'infer.metric.day': 'kg CO₂ / día',
+    'infer.metric.month': 'kg CO₂ / mes',
+    'infer.metric.year': 'ton CO₂ / año',
+    'infer.scale.label': 'Escala vs Google Search (0.3 Wh) →',
+    'infer.src.default': 'Fuente: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'texto corto',
+    'infer.type.long': 'texto largo',
+    'infer.type.image': 'imagen',
+    'infer.type.video': 'video',
+    'infer.title.template': '{model} · {type} · {n} consultas/día',
+    'infer.title.custom.template': '{model} (estimado) · {n} consultas/día',
+    'infer.ref.template': 'Una consulta consume <strong>{wh}</strong> — equivale a <strong>{gx}× una búsqueda en Google</strong>. Con {n} consultas diarias: <strong>{year} ton CO₂/año</strong>.',
+    'infer.ref.custom.template': '🧠 Modelo desconocido estimado con <strong>smartEstimate()</strong> — ~{params}B parámetros detectados. Wh/consulta ≈ {wh} Wh. Impacto anual: <strong>{year} ton CO₂</strong>. Metodología Díaz Familia (2026) R²=0.89.',
+    'infer.src.template': 'Fuente: {src} · Factor carbono: {cf} kg CO₂/kWh',
+    'infer.src.custom': 'Estimación automática — ajusta los parámetros si tienes datos exactos',
+    'infer.toast.noname': '✏️ Escribe el nombre del modelo primero',
+    'infer.toast.notavailable': '⚠️ Modelo no disponible',
+    'infer.toast.typenotavailable': '⚠️ Este tipo de consulta no está disponible para este modelo',
+    'infer.toast.estimated.template': '🧠 {model} estimado: ~{params}B params · {wh} Wh/consulta',
+    'roi.hero.title': '💰 Carbon ROI Calculator',
+    'roi.hero.sub': 'Calcula el ahorro financiero y ambiental de migrar a un modelo más eficiente. Justifica decisiones técnicas con datos económicos reales.',
+    'roi.card.title': 'Comparación de Modelos',
+    'roi.model.a.label': '❌ Modelo Actual (Ineficiente)',
+    'roi.model.b.label': '✅ Modelo Eficiente',
+    'roi.qday.label': 'Consultas por día',
+    'roi.kwh.label': 'Precio electricidad (USD/kWh)',
+    'roi.years.label': 'Horizonte de análisis',
+    'roi.years.1': '1 año',
+    'roi.years.2': '2 años',
+    'roi.years.3': '3 años',
+    'roi.years.5': '5 años',
+    'roi.cf.label': 'Factor carbono (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 Calcular ROI Verde',
+    'roi.kpi.co2': 'ton CO₂ ahorradas/año',
+    'roi.kpi.mwh': 'MWh ahorrados/año',
+    'roi.kpi.usd': 'USD ahorrados total',
+    'roi.kpi.pct': 'Reducción emisiones',
+    'roi.chart.title': 'Comparativa visual',
+    'roi.breakdown.title': 'Desglose financiero y ambiental',
+    'roi.brow.co2a': 'CO₂ modelo actual (entrenamiento)',
+    'roi.brow.co2b': 'CO₂ modelo eficiente (entrenamiento)',
+    'roi.brow.kwh': 'kWh ahorrados/año (inferencia)',
+    'roi.brow.usdy': 'Ahorro USD/año',
+    'roi.brow.usdt': 'Ahorro total',
+    'roi.brow.years.word': 'años',
+    'roi.method': 'Metodología: Díaz Familia (2026) R²=0.89 · Datos inferencia: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ Selecciona modelos válidos',
+    'roi.equiv.template': '🌿 Ahorrar <strong>{co2} ton CO₂/año</strong> ≡ 🌳 plantar <strong>{trees} árboles</strong> · ✈️ evitar <strong>{flights} vuelos</strong> transatlánticos.',
+    'roi.chart.label.training': 'Emisiones entrenamiento (t CO₂)',
+    'roi.chart.label.savings': 'Ahorro acumulado (USD)',
+    'roi.chart.yaxis.co2': 'ton CO₂',
+    'roi.chart.year.word': 'Año',
+    'roi.brow.usdy.suffix': '/año',
+    'em.modal.desc': 'Datos de intensidad de carbono <strong style="color:var(--green-400)">en tiempo real</strong> para 60+ países. Gratis con registro — tu key se guarda solo en tu navegador.',
+    'em.step1': 'Ve a <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → cuenta gratuita',
+    'em.step2': 'Copia tu <strong>auth-token</strong> del dashboard',
+    'em.step3': 'Pégalo aquí ↓',
+    'em.input.placeholder': 'Pega tu auth-token aquí…',
+    'em.zone.label': 'Zona detectada:',
+    'em.btn.remove': 'Eliminar',
+    'em.btn.cancel': 'Cancelar',
+    'em.btn.connect': 'Conectar',
+    'em.toast.invalidkey': '⚠️ Pega una key válida',
+    'em.toast.connected': '⚡ ElectricityMaps conectado — datos en tiempo real',
+    'em.toast.removed': '🔑 API key eliminada — usando IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps no disponible — usando IEA 2025',
+    'em.zone.unsupported': '— IEA 2025 fallback',
+    'em.title.attr': 'ElectricityMaps API — datos en tiempo real',
+    'float.ready': 'Reporte listo',
+    'float.ready.template': '📊 {model} calculado',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1.10',
+    'pue.leading': 'Anthropic / Leading — 1.20',
+    'pue.aws': 'AWS / Azure — 1.40',
+    'btn.share': 'Compartir',
+    'btn.clear.short': 'Limpiar',
+    'toast.offline': '⚠️ Sin conexión — usando datos en caché',
+    'toast.eco.on': '⚡ Modo Eco activado — ahorrando datos y energía',
+    'toast.eco.off': '🔄 Modo Eco desactivado',
+    'toast.pdf.opening': '📄 Abriendo diálogo PDF…',
+    'toast.copied': '🔗 Copiado al portapapeles',
+    'toast.copy.failed': '❌ No se pudo copiar',
+    'toast.calc.complete': '✅ Cálculo completado en 5 dimensiones',
+    'conf.verified': '✓ Verificado',
+    'conf.estimated': '~ Estimado',
+    'conf.custom': '✎ Personalizado',
+    'estbanner.estimated.template': 'Parámetros estimados (~{params}B detectados) — correlación R²=0.89. Ajusta si tienes datos exactos.',
+    'estbanner.custom': 'Parámetros ingresados manualmente.',
+    'estbanner.default': 'Parámetros estimados — basado en el nombre del modelo (R²=0.89). Ajusta si tienes datos exactos.',
+    'share.training.template': '🌍 {model}: {co2} kg CO₂ durante el entrenamiento.\nCalculado con Calculadora Huella de Carbono IA — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ Inferencia {model}: {gco2} CO₂ · {wh} Wh por consulta.\nCalculado con Calculadora Huella de Carbono IA — Díaz Familia (2026) R²=0.89',
+    'share.roi.template': '💰 Carbon ROI: Migrar de {a} → {b} ahorra {co2} ton CO₂/año · {usd} USD · {pct} reducción.\nCalculado con Calculadora Huella de Carbono IA — Díaz Familia (2026)',
     'btn.clear':           '🗑 Limpiar',
     /* Results */
     'results.eyebrow':     '📊 Resultados del análisis ambiental para:',
@@ -2800,6 +3006,121 @@ const T = {
     'tab.roi': '💰 Green ROI',
     'tab.badge.new': 'NEW',
     'btn.pdf': '📄 Export PDF',
+    'infer.hero.title': '⚡ Inference Impact Calculator',
+    "infer.hero.sub": "Measure the real environmental cost of each query in production. 80–90% of AI's impact happens during inference, not training.",
+    'infer.card.title': 'Select Model and Query Type',
+    'infer.qtype.label': 'Query type',
+    'infer.qt.short': 'Short text',
+    'infer.qt.short.sub': '~200 tokens',
+    'infer.qt.long': 'Long text',
+    'infer.qt.long.sub': '~1000 tokens',
+    'infer.qt.image': 'Image',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'Video',
+    'infer.qt.video.sub': '5 seconds',
+    'infer.model.label': 'AI Model',
+    'infer.model.custom': '✏️ Write another model…',
+    'infer.custom.placeholder': 'E.g.: GPT-5, Gemini 3, MyModel-70B…',
+    'infer.custom.hint': '🧠 Will be auto-estimated with R²=0.89 — Díaz Familia (2026)',
+    'infer.qday.label': 'Queries per day',
+    'infer.cf.label': 'Carbon factor (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ Calculate Inference Impact',
+    'infer.results.default': 'Results',
+    'infer.metric.gco2': 'g CO₂ / query',
+    'infer.metric.wh': 'Wh / query',
+    'infer.metric.water': 'ml water / query',
+    'infer.metric.day': 'kg CO₂ / day',
+    'infer.metric.month': 'kg CO₂ / month',
+    'infer.metric.year': 'ton CO₂ / year',
+    'infer.scale.label': 'Scale vs Google Search (0.3 Wh) →',
+    'infer.src.default': 'Source: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'short text',
+    'infer.type.long': 'long text',
+    'infer.type.image': 'image',
+    'infer.type.video': 'video',
+    'infer.title.template': '{model} · {type} · {n} queries/day',
+    'infer.title.custom.template': '{model} (estimated) · {n} queries/day',
+    'infer.ref.template': 'One query consumes <strong>{wh}</strong> — equivalent to <strong>{gx}× a Google search</strong>. With {n} daily queries: <strong>{year} ton CO₂/year</strong>.',
+    'infer.ref.custom.template': '🧠 Unknown model estimated with <strong>smartEstimate()</strong> — ~{params}B parameters detected. Wh/query ≈ {wh} Wh. Annual impact: <strong>{year} ton CO₂</strong>. Díaz Familia (2026) methodology R²=0.89.',
+    'infer.src.template': 'Source: {src} · Carbon factor: {cf} kg CO₂/kWh',
+    'infer.src.custom': 'Automatic estimate — adjust parameters if you have exact data',
+    'infer.toast.noname': '✏️ Write the model name first',
+    'infer.toast.notavailable': '⚠️ Model not available',
+    'infer.toast.typenotavailable': '⚠️ This query type is not available for this model',
+    'infer.toast.estimated.template': '🧠 {model} estimated: ~{params}B params · {wh} Wh/query',
+    'roi.hero.title': '💰 Carbon ROI Calculator',
+    'roi.hero.sub': 'Calculate the financial and environmental savings of switching to a more efficient model. Justify technical decisions with real economic data.',
+    'roi.card.title': 'Model Comparison',
+    'roi.model.a.label': '❌ Current Model (Inefficient)',
+    'roi.model.b.label': '✅ Efficient Model',
+    'roi.qday.label': 'Queries per day',
+    'roi.kwh.label': 'Electricity price (USD/kWh)',
+    'roi.years.label': 'Analysis horizon',
+    'roi.years.1': '1 year',
+    'roi.years.2': '2 years',
+    'roi.years.3': '3 years',
+    'roi.years.5': '5 years',
+    'roi.cf.label': 'Carbon factor (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 Calculate Green ROI',
+    'roi.kpi.co2': 'ton CO₂ saved/year',
+    'roi.kpi.mwh': 'MWh saved/year',
+    'roi.kpi.usd': 'Total USD saved',
+    'roi.kpi.pct': 'Emissions reduction',
+    'roi.chart.title': 'Visual comparison',
+    'roi.breakdown.title': 'Financial and environmental breakdown',
+    'roi.brow.co2a': 'Current model CO₂ (training)',
+    'roi.brow.co2b': 'Efficient model CO₂ (training)',
+    'roi.brow.kwh': 'kWh saved/year (inference)',
+    'roi.brow.usdy': 'USD savings/year',
+    'roi.brow.usdt': 'Total savings',
+    'roi.brow.years.word': 'years',
+    'roi.method': 'Methodology: Díaz Familia (2026) R²=0.89 · Inference data: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ Select valid models',
+    'roi.equiv.template': '🌿 Saving <strong>{co2} ton CO₂/year</strong> ≡ 🌳 planting <strong>{trees} trees</strong> · ✈️ avoiding <strong>{flights} transatlantic flights</strong>.',
+    'roi.chart.label.training': 'Training emissions (t CO₂)',
+    'roi.chart.label.savings': 'Cumulative savings (USD)',
+    'roi.chart.yaxis.co2': 'ton CO₂',
+    'roi.chart.year.word': 'Year',
+    'roi.brow.usdy.suffix': '/year',
+    'em.modal.desc': '<strong style="color:var(--green-400)">Real-time</strong> carbon intensity data for 60+ countries. Free with sign-up — your key stays only in your browser.',
+    'em.step1': 'Go to <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → free account',
+    'em.step2': 'Copy your <strong>auth-token</strong> from the dashboard',
+    'em.step3': 'Paste it here ↓',
+    'em.input.placeholder': 'Paste your auth-token here…',
+    'em.zone.label': 'Detected zone:',
+    'em.btn.remove': 'Remove',
+    'em.btn.cancel': 'Cancel',
+    'em.btn.connect': 'Connect',
+    'em.toast.invalidkey': '⚠️ Paste a valid key',
+    'em.toast.connected': '⚡ ElectricityMaps connected — real-time data active',
+    'em.toast.removed': '🔑 API key removed — using IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps unavailable — using IEA 2025',
+    'em.zone.unsupported': '— IEA 2025 fallback',
+    'em.title.attr': 'ElectricityMaps API — real-time data',
+    'float.ready': 'Report ready',
+    'float.ready.template': '📊 {model} calculated',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1.10',
+    'pue.leading': 'Anthropic / Leading — 1.20',
+    'pue.aws': 'AWS / Azure — 1.40',
+    'btn.share': 'Share',
+    'btn.clear.short': 'Clear',
+    'toast.offline': '⚠️ No connection — using cached data',
+    'toast.eco.on': '⚡ Eco mode activated — saving data and energy',
+    'toast.eco.off': '🔄 Eco mode deactivated',
+    'toast.pdf.opening': '📄 Opening PDF dialog…',
+    'toast.copied': '🔗 Copied to clipboard',
+    'toast.copy.failed': '❌ Could not copy',
+    'toast.calc.complete': '✅ Calculation complete across 5 dimensions',
+    'conf.verified': '✓ Verified',
+    'conf.estimated': '~ Estimated',
+    'conf.custom': '✎ Custom',
+    'estbanner.estimated.template': 'Estimated parameters (~{params}B detected) — R²=0.89 correlation. Adjust if you have exact data.',
+    'estbanner.custom': 'Manually entered parameters.',
+    'estbanner.default': 'Estimated parameters — based on the model name (R²=0.89). Adjust if you have exact data.',
+    'share.training.template': '🌍 {model}: {co2} kg CO₂ during training.\nCalculated with AI Carbon Footprint Calculator — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ Inference {model}: {gco2} CO₂ · {wh} Wh per query.\nCalculated with AI Carbon Footprint Calculator — Díaz Familia (2026) R²=0.89',
+    'share.roi.template': '💰 Carbon ROI: Switching from {a} → {b} saves {co2} ton CO₂/year · {usd} USD · {pct} reduction.\nCalculated with AI Carbon Footprint Calculator — Díaz Familia (2026)',
     'btn.clear':           '🗑 Clear',
     'results.eyebrow':     '📊 Environmental analysis results for:',
     'results.badge':       'Just calculated',
@@ -2873,6 +3194,121 @@ const T = {
     'tab.roi': '💰 ROI Vert',
     'tab.badge.new': 'NOUVEAU',
     'btn.pdf': '📄 Exporter PDF',
+    "infer.hero.title": "⚡ Calculateur d'Impact par Inférence",
+    "infer.hero.sub": "Mesurez le coût environnemental réel de chaque requête en production. 80–90% de l'impact de l'IA se produit pendant l'inférence, pas l'entraînement.",
+    'infer.card.title': 'Sélectionnez Modèle et Type de Requête',
+    'infer.qtype.label': 'Type de requête',
+    'infer.qt.short': 'Texte court',
+    'infer.qt.short.sub': '~200 tokens',
+    'infer.qt.long': 'Texte long',
+    'infer.qt.long.sub': '~1000 tokens',
+    'infer.qt.image': 'Image',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'Vidéo',
+    'infer.qt.video.sub': '5 secondes',
+    "infer.model.label": "Modèle d'IA",
+    'infer.model.custom': '✏️ Écrire un autre modèle…',
+    'infer.custom.placeholder': 'Ex: GPT-5, Gemini 3, MonModèle-70B…',
+    'infer.custom.hint': '🧠 Sera estimé automatiquement avec R²=0.89 — Díaz Familia (2026)',
+    'infer.qday.label': 'Requêtes par jour',
+    'infer.cf.label': 'Facteur carbone (kg CO₂/kWh)',
+    "infer.btn.calc": "⚡ Calculer l'Impact par Inférence",
+    'infer.results.default': 'Résultats',
+    'infer.metric.gco2': 'g CO₂ / requête',
+    'infer.metric.wh': 'Wh / requête',
+    'infer.metric.water': 'ml eau / requête',
+    'infer.metric.day': 'kg CO₂ / jour',
+    'infer.metric.month': 'kg CO₂ / mois',
+    'infer.metric.year': 't CO₂ / an',
+    'infer.scale.label': 'Échelle vs Google Search (0.3 Wh) →',
+    'infer.src.default': 'Source : Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'texte court',
+    'infer.type.long': 'texte long',
+    'infer.type.image': 'image',
+    'infer.type.video': 'vidéo',
+    'infer.title.template': '{model} · {type} · {n} requêtes/jour',
+    'infer.title.custom.template': '{model} (estimé) · {n} requêtes/jour',
+    'infer.ref.template': 'Une requête consomme <strong>{wh}</strong> — équivaut à <strong>{gx}× une recherche Google</strong>. Avec {n} requêtes quotidiennes : <strong>{year} t CO₂/an</strong>.',
+    'infer.ref.custom.template': '🧠 Modèle inconnu estimé avec <strong>smartEstimate()</strong> — ~{params}B paramètres détectés. Wh/requête ≈ {wh} Wh. Impact annuel : <strong>{year} t CO₂</strong>. Méthodologie Díaz Familia (2026) R²=0.89.',
+    'infer.src.template': 'Source : {src} · Facteur carbone : {cf} kg CO₂/kWh',
+    'infer.src.custom': 'Estimation automatique — ajustez les paramètres si vous avez des données exactes',
+    "infer.toast.noname": "✏️ Écrivez d'abord le nom du modèle",
+    'infer.toast.notavailable': '⚠️ Modèle non disponible',
+    "infer.toast.typenotavailable": "⚠️ Ce type de requête n'est pas disponible pour ce modèle",
+    'infer.toast.estimated.template': '🧠 {model} estimé : ~{params}B params · {wh} Wh/requête',
+    'roi.hero.title': '💰 Calculateur ROI Carbone',
+    'roi.hero.sub': 'Calculez les économies financières et environnementales en passant à un modèle plus efficace. Justifiez les décisions techniques avec des données économiques réelles.',
+    'roi.card.title': 'Comparaison de Modèles',
+    'roi.model.a.label': '❌ Modèle Actuel (Inefficace)',
+    'roi.model.b.label': '✅ Modèle Efficace',
+    'roi.qday.label': 'Requêtes par jour',
+    'roi.kwh.label': 'Prix électricité (USD/kWh)',
+    "roi.years.label": "Horizon d'analyse",
+    'roi.years.1': '1 an',
+    'roi.years.2': '2 ans',
+    'roi.years.3': '3 ans',
+    'roi.years.5': '5 ans',
+    'roi.cf.label': 'Facteur carbone (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 Calculer le ROI Vert',
+    'roi.kpi.co2': 't CO₂ économisées/an',
+    'roi.kpi.mwh': 'MWh économisés/an',
+    'roi.kpi.usd': 'USD économisés au total',
+    'roi.kpi.pct': 'Réduction des émissions',
+    'roi.chart.title': 'Comparaison visuelle',
+    'roi.breakdown.title': 'Répartition financière et environnementale',
+    'roi.brow.co2a': 'CO₂ modèle actuel (entraînement)',
+    'roi.brow.co2b': 'CO₂ modèle efficace (entraînement)',
+    'roi.brow.kwh': 'kWh économisés/an (inférence)',
+    'roi.brow.usdy': 'Économies USD/an',
+    'roi.brow.usdt': 'Économies totales',
+    'roi.brow.years.word': 'ans',
+    'roi.method': 'Méthodologie : Díaz Familia (2026) R²=0.89 · Données inférence : Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ Sélectionnez des modèles valides',
+    'roi.equiv.template': '🌿 Économiser <strong>{co2} t CO₂/an</strong> ≡ 🌳 planter <strong>{trees} arbres</strong> · ✈️ éviter <strong>{flights} vols</strong> transatlantiques.',
+    'roi.chart.label.training': 'Émissions entraînement (t CO₂)',
+    'roi.chart.label.savings': 'Économies cumulées (USD)',
+    'roi.chart.yaxis.co2': 't CO₂',
+    'roi.chart.year.word': 'An',
+    'roi.brow.usdy.suffix': '/an',
+    'em.modal.desc': 'Données d\'intensité carbone <strong style="color:var(--green-400)">en temps réel</strong> pour 60+ pays. Gratuit avec inscription — votre clé reste uniquement dans votre navigateur.',
+    'em.step1': 'Allez sur <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → compte gratuit',
+    'em.step2': 'Copiez votre <strong>auth-token</strong> depuis le tableau de bord',
+    'em.step3': 'Collez-le ici ↓',
+    'em.input.placeholder': 'Collez votre auth-token ici…',
+    'em.zone.label': 'Zone détectée :',
+    'em.btn.remove': 'Supprimer',
+    'em.btn.cancel': 'Annuler',
+    'em.btn.connect': 'Connecter',
+    'em.toast.invalidkey': '⚠️ Collez une clé valide',
+    'em.toast.connected': '⚡ ElectricityMaps connecté — données en temps réel',
+    'em.toast.removed': '🔑 Clé API supprimée — utilisation IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps indisponible — utilisation IEA 2025',
+    'em.zone.unsupported': '— repli IEA 2025',
+    'em.title.attr': 'ElectricityMaps API — données en temps réel',
+    'float.ready': 'Rapport prêt',
+    'float.ready.template': '📊 {model} calculé',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1,10',
+    'pue.leading': 'Anthropic / Leading — 1,20',
+    'pue.aws': 'AWS / Azure — 1,40',
+    'btn.share': 'Partager',
+    'btn.clear.short': 'Effacer',
+    'toast.offline': '⚠️ Pas de connexion — utilisation du cache',
+    "toast.eco.on": "⚡ Mode Éco activé — économie de données et d'énergie",
+    'toast.eco.off': '🔄 Mode Éco désactivé',
+    'toast.pdf.opening': '📄 Ouverture du dialogue PDF…',
+    'toast.copied': '🔗 Copié dans le presse-papiers',
+    'toast.copy.failed': '❌ Copie impossible',
+    'toast.calc.complete': '✅ Calcul terminé sur 5 dimensions',
+    'conf.verified': '✓ Vérifié',
+    'conf.estimated': '~ Estimé',
+    'conf.custom': '✎ Personnalisé',
+    'estbanner.estimated.template': 'Paramètres estimés (~{params}B détectés) — corrélation R²=0.89. Ajustez si vous avez des données exactes.',
+    'estbanner.custom': 'Paramètres saisis manuellement.',
+    'estbanner.default': 'Paramètres estimés — basés sur le nom du modèle (R²=0.89). Ajustez si vous avez des données exactes.',
+    "share.training.template": "🌍 {model} : {co2} kg CO₂ pendant l'entraînement.\nCalculé avec le Calculateur d'Empreinte Carbone IA — Díaz Familia (2026) R²=0.89",
+    "share.inference.template": "⚡ Inférence {model} : {gco2} CO₂ · {wh} Wh par requête.\nCalculé avec le Calculateur d'Empreinte Carbone IA — Díaz Familia (2026) R²=0.89",
+    "share.roi.template": "💰 ROI Carbone : Passer de {a} → {b} économise {co2} t CO₂/an · {usd} USD · {pct} de réduction.\nCalculé avec le Calculateur d'Empreinte Carbone IA — Díaz Familia (2026)",
     'btn.clear':           '🗑 Effacer',
     'results.eyebrow':     '📊 Résultats de l\'analyse environnementale pour :',
     'results.badge':       'Calculé maintenant',
@@ -2945,6 +3381,121 @@ const T = {
     'tab.roi': '💰 ROI Verde',
     'tab.badge.new': 'NOVO',
     'btn.pdf': '📄 Exportar PDF',
+    'infer.hero.title': '⚡ Calculadora de Impacto por Inferência',
+    'infer.hero.sub': 'Meça o custo ambiental real de cada consulta em produção. 80–90% do impacto da IA ocorre durante a inferência, não o treinamento.',
+    'infer.card.title': 'Selecione Modelo e Tipo de Consulta',
+    'infer.qtype.label': 'Tipo de consulta',
+    'infer.qt.short': 'Texto curto',
+    'infer.qt.short.sub': '~200 tokens',
+    'infer.qt.long': 'Texto longo',
+    'infer.qt.long.sub': '~1000 tokens',
+    'infer.qt.image': 'Imagem',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'Vídeo',
+    'infer.qt.video.sub': '5 segundos',
+    'infer.model.label': 'Modelo de IA',
+    'infer.model.custom': '✏️ Escrever outro modelo…',
+    'infer.custom.placeholder': 'Ex: GPT-5, Gemini 3, MeuModelo-70B…',
+    'infer.custom.hint': '🧠 Será estimado automaticamente com R²=0.89 — Díaz Familia (2026)',
+    'infer.qday.label': 'Consultas por dia',
+    'infer.cf.label': 'Fator carbono (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ Calcular Impacto por Inferência',
+    'infer.results.default': 'Resultados',
+    'infer.metric.gco2': 'g CO₂ / consulta',
+    'infer.metric.wh': 'Wh / consulta',
+    'infer.metric.water': 'ml água / consulta',
+    'infer.metric.day': 'kg CO₂ / dia',
+    'infer.metric.month': 'kg CO₂ / mês',
+    'infer.metric.year': 'ton CO₂ / ano',
+    'infer.scale.label': 'Escala vs Google Search (0.3 Wh) →',
+    'infer.src.default': 'Fonte: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'texto curto',
+    'infer.type.long': 'texto longo',
+    'infer.type.image': 'imagem',
+    'infer.type.video': 'vídeo',
+    'infer.title.template': '{model} · {type} · {n} consultas/dia',
+    'infer.title.custom.template': '{model} (estimado) · {n} consultas/dia',
+    'infer.ref.template': 'Uma consulta consome <strong>{wh}</strong> — equivale a <strong>{gx}× uma busca no Google</strong>. Com {n} consultas diárias: <strong>{year} ton CO₂/ano</strong>.',
+    'infer.ref.custom.template': '🧠 Modelo desconhecido estimado com <strong>smartEstimate()</strong> — ~{params}B parâmetros detectados. Wh/consulta ≈ {wh} Wh. Impacto anual: <strong>{year} ton CO₂</strong>. Metodologia Díaz Familia (2026) R²=0.89.',
+    'infer.src.template': 'Fonte: {src} · Fator carbono: {cf} kg CO₂/kWh',
+    'infer.src.custom': 'Estimativa automática — ajuste os parâmetros se tiver dados exatos',
+    'infer.toast.noname': '✏️ Escreva o nome do modelo primeiro',
+    'infer.toast.notavailable': '⚠️ Modelo não disponível',
+    'infer.toast.typenotavailable': '⚠️ Este tipo de consulta não está disponível para este modelo',
+    'infer.toast.estimated.template': '🧠 {model} estimado: ~{params}B params · {wh} Wh/consulta',
+    'roi.hero.title': '💰 Calculadora de ROI Verde',
+    'roi.hero.sub': 'Calcule a economia financeira e ambiental de migrar para um modelo mais eficiente. Justifique decisões técnicas com dados econômicos reais.',
+    'roi.card.title': 'Comparação de Modelos',
+    'roi.model.a.label': '❌ Modelo Atual (Ineficiente)',
+    'roi.model.b.label': '✅ Modelo Eficiente',
+    'roi.qday.label': 'Consultas por dia',
+    'roi.kwh.label': 'Preço eletricidade (USD/kWh)',
+    'roi.years.label': 'Horizonte de análise',
+    'roi.years.1': '1 ano',
+    'roi.years.2': '2 anos',
+    'roi.years.3': '3 anos',
+    'roi.years.5': '5 anos',
+    'roi.cf.label': 'Fator carbono (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 Calcular ROI Verde',
+    'roi.kpi.co2': 'ton CO₂ poupadas/ano',
+    'roi.kpi.mwh': 'MWh poupados/ano',
+    'roi.kpi.usd': 'USD poupados total',
+    'roi.kpi.pct': 'Redução de emissões',
+    'roi.chart.title': 'Comparação visual',
+    'roi.breakdown.title': 'Detalhamento financeiro e ambiental',
+    'roi.brow.co2a': 'CO₂ modelo atual (treinamento)',
+    'roi.brow.co2b': 'CO₂ modelo eficiente (treinamento)',
+    'roi.brow.kwh': 'kWh poupados/ano (inferência)',
+    'roi.brow.usdy': 'Economia USD/ano',
+    'roi.brow.usdt': 'Economia total',
+    'roi.brow.years.word': 'anos',
+    'roi.method': 'Metodologia: Díaz Familia (2026) R²=0.89 · Dados de inferência: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ Selecione modelos válidos',
+    'roi.equiv.template': '🌿 Poupar <strong>{co2} ton CO₂/ano</strong> ≡ 🌳 plantar <strong>{trees} árvores</strong> · ✈️ evitar <strong>{flights} voos</strong> transatlânticos.',
+    'roi.chart.label.training': 'Emissões treinamento (t CO₂)',
+    'roi.chart.label.savings': 'Economia acumulada (USD)',
+    'roi.chart.yaxis.co2': 'ton CO₂',
+    'roi.chart.year.word': 'Ano',
+    'roi.brow.usdy.suffix': '/ano',
+    'em.modal.desc': 'Dados de intensidade de carbono <strong style="color:var(--green-400)">em tempo real</strong> para 60+ países. Gratuito com cadastro — sua key fica somente no seu navegador.',
+    'em.step1': 'Acesse <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → conta gratuita',
+    'em.step2': 'Copie seu <strong>auth-token</strong> do painel',
+    'em.step3': 'Cole aqui ↓',
+    'em.input.placeholder': 'Cole seu auth-token aqui…',
+    'em.zone.label': 'Zona detectada:',
+    'em.btn.remove': 'Remover',
+    'em.btn.cancel': 'Cancelar',
+    'em.btn.connect': 'Conectar',
+    'em.toast.invalidkey': '⚠️ Cole uma key válida',
+    'em.toast.connected': '⚡ ElectricityMaps conectado — dados em tempo real',
+    'em.toast.removed': '🔑 API key removida — usando IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps indisponível — usando IEA 2025',
+    'em.zone.unsupported': '— substituto IEA 2025',
+    'em.title.attr': 'ElectricityMaps API — dados em tempo real',
+    'float.ready': 'Relatório pronto',
+    'float.ready.template': '📊 {model} calculado',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1,10',
+    'pue.leading': 'Anthropic / Leading — 1,20',
+    'pue.aws': 'AWS / Azure — 1,40',
+    'btn.share': 'Compartilhar',
+    'btn.clear.short': 'Limpar',
+    'toast.offline': '⚠️ Sem conexão — usando dados em cache',
+    'toast.eco.on': '⚡ Modo Eco ativado — economizando dados e energia',
+    'toast.eco.off': '🔄 Modo Eco desativado',
+    'toast.pdf.opening': '📄 Abrindo diálogo PDF…',
+    'toast.copied': '🔗 Copiado para a área de transferência',
+    'toast.copy.failed': '❌ Não foi possível copiar',
+    'toast.calc.complete': '✅ Cálculo concluído em 5 dimensões',
+    'conf.verified': '✓ Verificado',
+    'conf.estimated': '~ Estimado',
+    'conf.custom': '✎ Personalizado',
+    'estbanner.estimated.template': 'Parâmetros estimados (~{params}B detectados) — correlação R²=0.89. Ajuste se tiver dados exatos.',
+    'estbanner.custom': 'Parâmetros inseridos manualmente.',
+    'estbanner.default': 'Parâmetros estimados — baseados no nome do modelo (R²=0.89). Ajuste se tiver dados exatos.',
+    'share.training.template': '🌍 {model}: {co2} kg CO₂ durante o treinamento.\nCalculado com a Calculadora de Pegada de Carbono IA — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ Inferência {model}: {gco2} CO₂ · {wh} Wh por consulta.\nCalculado com a Calculadora de Pegada de Carbono IA — Díaz Familia (2026) R²=0.89',
+    'share.roi.template': '💰 ROI Carbono: Migrar de {a} → {b} economiza {co2} ton CO₂/ano · {usd} USD · {pct} redução.\nCalculado com a Calculadora de Pegada de Carbono IA — Díaz Familia (2026)',
     'btn.clear':           '🗑 Limpar',
     'results.eyebrow':     '📊 Resultados da análise ambiental para:',
     'results.badge':       'Calculado agora',
@@ -3017,6 +3568,121 @@ const T = {
     'tab.roi': '💰 Зелёный ROI',
     'tab.badge.new': 'НОВЫЙ',
     'btn.pdf': '📄 Экспорт PDF',
+    'infer.hero.title': '⚡ Калькулятор влияния инференса',
+    'infer.hero.sub': 'Измерьте реальную экологическую стоимость каждого запроса в продакшене. 80–90% влияния ИИ происходит во время инференса, а не обучения.',
+    'infer.card.title': 'Выберите модель и тип запроса',
+    'infer.qtype.label': 'Тип запроса',
+    'infer.qt.short': 'Короткий текст',
+    'infer.qt.short.sub': '~200 токенов',
+    'infer.qt.long': 'Длинный текст',
+    'infer.qt.long.sub': '~1000 токенов',
+    'infer.qt.image': 'Изображение',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'Видео',
+    'infer.qt.video.sub': '5 секунд',
+    'infer.model.label': 'Модель ИИ',
+    'infer.model.custom': '✏️ Указать другую модель…',
+    'infer.custom.placeholder': 'Напр.: GPT-5, Gemini 3, МояМодель-70B…',
+    'infer.custom.hint': '🧠 Будет оценено автоматически с R²=0.89 — Díaz Familia (2026)',
+    'infer.qday.label': 'Запросов в день',
+    'infer.cf.label': 'Фактор углерода (кг CO₂/кВтч)',
+    'infer.btn.calc': '⚡ Рассчитать влияние инференса',
+    'infer.results.default': 'Результаты',
+    'infer.metric.gco2': 'г CO₂ / запрос',
+    'infer.metric.wh': 'Вт·ч / запрос',
+    'infer.metric.water': 'мл воды / запрос',
+    'infer.metric.day': 'кг CO₂ / день',
+    'infer.metric.month': 'кг CO₂ / месяц',
+    'infer.metric.year': 'т CO₂ / год',
+    'infer.scale.label': 'Шкала vs Google Search (0.3 Вт·ч) →',
+    'infer.src.default': 'Источник: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'короткий текст',
+    'infer.type.long': 'длинный текст',
+    'infer.type.image': 'изображение',
+    'infer.type.video': 'видео',
+    'infer.title.template': '{model} · {type} · {n} запросов/день',
+    'infer.title.custom.template': '{model} (оценка) · {n} запросов/день',
+    'infer.ref.template': 'Один запрос потребляет <strong>{wh}</strong> — это эквивалентно <strong>{gx}× поиску в Google</strong>. С {n} запросами в день: <strong>{year} т CO₂/год</strong>.',
+    'infer.ref.custom.template': '🧠 Неизвестная модель оценена с помощью <strong>smartEstimate()</strong> — обнаружено ~{params}B параметров. Вт·ч/запрос ≈ {wh} Вт·ч. Годовое влияние: <strong>{year} т CO₂</strong>. Методология Díaz Familia (2026) R²=0.89.',
+    'infer.src.template': 'Источник: {src} · Фактор углерода: {cf} кг CO₂/кВтч',
+    'infer.src.custom': 'Автоматическая оценка — скорректируйте параметры, если у вас точные данные',
+    'infer.toast.noname': '✏️ Сначала укажите название модели',
+    'infer.toast.notavailable': '⚠️ Модель недоступна',
+    'infer.toast.typenotavailable': '⚠️ Этот тип запроса недоступен для данной модели',
+    'infer.toast.estimated.template': '🧠 {model} оценено: ~{params}B параметров · {wh} Вт·ч/запрос',
+    'roi.hero.title': '💰 Калькулятор зелёного ROI',
+    'roi.hero.sub': 'Рассчитайте финансовую и экологическую экономию от перехода на более эффективную модель. Обоснуйте технические решения реальными экономическими данными.',
+    'roi.card.title': 'Сравнение моделей',
+    'roi.model.a.label': '❌ Текущая модель (неэффективная)',
+    'roi.model.b.label': '✅ Эффективная модель',
+    'roi.qday.label': 'Запросов в день',
+    'roi.kwh.label': 'Цена электричества (USD/кВтч)',
+    'roi.years.label': 'Горизонт анализа',
+    'roi.years.1': '1 год',
+    'roi.years.2': '2 года',
+    'roi.years.3': '3 года',
+    'roi.years.5': '5 лет',
+    'roi.cf.label': 'Фактор углерода (кг CO₂/кВтч)',
+    'roi.btn.calc': '💰 Рассчитать зелёный ROI',
+    'roi.kpi.co2': 'т CO₂ сэкономлено/год',
+    'roi.kpi.mwh': 'МВт·ч сэкономлено/год',
+    'roi.kpi.usd': 'USD сэкономлено всего',
+    'roi.kpi.pct': 'Сокращение выбросов',
+    'roi.chart.title': 'Визуальное сравнение',
+    'roi.breakdown.title': 'Финансовая и экологическая детализация',
+    'roi.brow.co2a': 'CO₂ текущей модели (обучение)',
+    'roi.brow.co2b': 'CO₂ эффективной модели (обучение)',
+    'roi.brow.kwh': 'кВт·ч сэкономлено/год (инференс)',
+    'roi.brow.usdy': 'Экономия USD/год',
+    'roi.brow.usdt': 'Общая экономия',
+    'roi.brow.years.word': 'лет',
+    'roi.method': 'Методология: Díaz Familia (2026) R²=0.89 · Данные инференса: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ Выберите корректные модели',
+    'roi.equiv.template': '🌿 Экономия <strong>{co2} т CO₂/год</strong> ≡ 🌳 посадке <strong>{trees} деревьев</strong> · ✈️ избежанию <strong>{flights} трансатлантических рейсов</strong>.',
+    'roi.chart.label.training': 'Выбросы при обучении (т CO₂)',
+    'roi.chart.label.savings': 'Накопленная экономия (USD)',
+    'roi.chart.yaxis.co2': 'т CO₂',
+    'roi.chart.year.word': 'Год',
+    'roi.brow.usdy.suffix': '/год',
+    'em.modal.desc': 'Данные интенсивности углерода <strong style="color:var(--green-400)">в реальном времени</strong> для 60+ стран. Бесплатно при регистрации — ваш ключ хранится только в браузере.',
+    'em.step1': 'Перейдите на <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → бесплатный аккаунт',
+    'em.step2': 'Скопируйте ваш <strong>auth-token</strong> из панели управления',
+    'em.step3': 'Вставьте сюда ↓',
+    'em.input.placeholder': 'Вставьте ваш auth-token здесь…',
+    'em.zone.label': 'Обнаруженная зона:',
+    'em.btn.remove': 'Удалить',
+    'em.btn.cancel': 'Отмена',
+    'em.btn.connect': 'Подключить',
+    'em.toast.invalidkey': '⚠️ Вставьте корректный ключ',
+    'em.toast.connected': '⚡ ElectricityMaps подключён — данные в реальном времени',
+    'em.toast.removed': '🔑 API ключ удалён — используется IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps недоступен — используется IEA 2025',
+    'em.zone.unsupported': '— резерв IEA 2025',
+    'em.title.attr': 'ElectricityMaps API — данные в реальном времени',
+    'float.ready': 'Отчёт готов',
+    'float.ready.template': '📊 {model} рассчитано',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1.10',
+    'pue.leading': 'Anthropic / Leading — 1.20',
+    'pue.aws': 'AWS / Azure — 1.40',
+    'btn.share': 'Поделиться',
+    'btn.clear.short': 'Очистить',
+    'toast.offline': '⚠️ Нет соединения — используются кэшированные данные',
+    'toast.eco.on': '⚡ Эко-режим включён — экономия данных и энергии',
+    'toast.eco.off': '🔄 Эко-режим выключен',
+    'toast.pdf.opening': '📄 Открытие диалога PDF…',
+    'toast.copied': '🔗 Скопировано в буфер обмена',
+    'toast.copy.failed': '❌ Не удалось скопировать',
+    'toast.calc.complete': '✅ Расчёт завершён по 5 измерениям',
+    'conf.verified': '✓ Подтверждено',
+    'conf.estimated': '~ Оценка',
+    'conf.custom': '✎ Свой вариант',
+    'estbanner.estimated.template': 'Оценочные параметры (~{params}B обнаружено) — корреляция R²=0.89. Скорректируйте при наличии точных данных.',
+    'estbanner.custom': 'Параметры введены вручную.',
+    'estbanner.default': 'Оценочные параметры — на основе названия модели (R²=0.89). Скорректируйте при наличии точных данных.',
+    'share.training.template': '🌍 {model}: {co2} кг CO₂ при обучении.\nРассчитано с Калькулятором углеродного следа ИИ — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ Инференс {model}: {gco2} CO₂ · {wh} Вт·ч на запрос.\nРассчитано с Калькулятором углеродного следа ИИ — Díaz Familia (2026) R²=0.89',
+    'share.roi.template': '💰 Carbon ROI: Переход с {a} → {b} экономит {co2} т CO₂/год · {usd} USD · {pct} сокращение.\nРассчитано с Калькулятором углеродного следа ИИ — Díaz Familia (2026)',
     'btn.clear':           '🗑 Очистить',
     'results.eyebrow':     '📊 Результаты экологического анализа для:',
     'results.badge':       'Только что рассчитано',
@@ -3089,6 +3755,121 @@ const T = {
     'tab.roi': '💰 绿色ROI',
     'tab.badge.new': '新',
     'btn.pdf': '📄 导出PDF',
+    'infer.hero.title': '⚡ 推断影响计算器',
+    'infer.hero.sub': '衡量生产环境中每次查询的真实环境成本。AI 80–90% 的影响发生在推断阶段，而非训练阶段。',
+    'infer.card.title': '选择模型和查询类型',
+    'infer.qtype.label': '查询类型',
+    'infer.qt.short': '短文本',
+    'infer.qt.short.sub': '~200 tokens',
+    'infer.qt.long': '长文本',
+    'infer.qt.long.sub': '~1000 tokens',
+    'infer.qt.image': '图像',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': '视频',
+    'infer.qt.video.sub': '5 秒',
+    'infer.model.label': 'AI 模型',
+    'infer.model.custom': '✏️ 输入其他模型…',
+    'infer.custom.placeholder': '例如：GPT-5、Gemini 3、我的模型-70B…',
+    'infer.custom.hint': '🧠 将使用 R²=0.89 自动估算 — Díaz Familia (2026)',
+    'infer.qday.label': '每日查询数',
+    'infer.cf.label': '碳因子 (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ 计算推断影响',
+    'infer.results.default': '结果',
+    'infer.metric.gco2': 'g CO₂ / 查询',
+    'infer.metric.wh': 'Wh / 查询',
+    'infer.metric.water': 'ml 水 / 查询',
+    'infer.metric.day': 'kg CO₂ / 天',
+    'infer.metric.month': 'kg CO₂ / 月',
+    'infer.metric.year': '吨 CO₂ / 年',
+    'infer.scale.label': '对比 Google 搜索的规模 (0.3 Wh) →',
+    'infer.src.default': '来源：Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': '短文本',
+    'infer.type.long': '长文本',
+    'infer.type.image': '图像',
+    'infer.type.video': '视频',
+    'infer.title.template': '{model} · {type} · 每日 {n} 次查询',
+    'infer.title.custom.template': '{model}（估算）· 每日 {n} 次查询',
+    'infer.ref.template': '一次查询消耗 <strong>{wh}</strong> — 相当于 <strong>{gx}× 一次 Google 搜索</strong>。每日 {n} 次查询：<strong>{year} 吨 CO₂/年</strong>。',
+    'infer.ref.custom.template': '🧠 使用 <strong>smartEstimate()</strong> 估算的未知模型 — 检测到约 {params}B 参数。Wh/查询 ≈ {wh} Wh。年度影响：<strong>{year} 吨 CO₂</strong>。Díaz Familia (2026) 方法论 R²=0.89。',
+    'infer.src.template': '来源：{src} · 碳因子：{cf} kg CO₂/kWh',
+    'infer.src.custom': '自动估算 — 如有精确数据请调整参数',
+    'infer.toast.noname': '✏️ 请先输入模型名称',
+    'infer.toast.notavailable': '⚠️ 模型不可用',
+    'infer.toast.typenotavailable': '⚠️ 此查询类型不适用于该模型',
+    'infer.toast.estimated.template': '🧠 {model} 已估算：约 {params}B 参数 · {wh} Wh/查询',
+    'roi.hero.title': '💰 碳排放 ROI 计算器',
+    'roi.hero.sub': '计算迁移到更高效模型的财务和环境节省。用真实经济数据证明技术决策。',
+    'roi.card.title': '模型对比',
+    'roi.model.a.label': '❌ 当前模型（低效）',
+    'roi.model.b.label': '✅ 高效模型',
+    'roi.qday.label': '每日查询数',
+    'roi.kwh.label': '电价 (USD/kWh)',
+    'roi.years.label': '分析期限',
+    'roi.years.1': '1 年',
+    'roi.years.2': '2 年',
+    'roi.years.3': '3 年',
+    'roi.years.5': '5 年',
+    'roi.cf.label': '碳因子 (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 计算绿色 ROI',
+    'roi.kpi.co2': '每年节省吨 CO₂',
+    'roi.kpi.mwh': '每年节省 MWh',
+    'roi.kpi.usd': '总节省 USD',
+    'roi.kpi.pct': '减排比例',
+    'roi.chart.title': '可视化对比',
+    'roi.breakdown.title': '财务与环境明细',
+    'roi.brow.co2a': '当前模型 CO₂（训练）',
+    'roi.brow.co2b': '高效模型 CO₂（训练）',
+    'roi.brow.kwh': '每年节省 kWh（推断）',
+    'roi.brow.usdy': '每年节省 USD',
+    'roi.brow.usdt': '总节省',
+    'roi.brow.years.word': '年',
+    'roi.method': '方法论：Díaz Familia (2026) R²=0.89 · 推断数据：Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ 请选择有效模型',
+    'roi.equiv.template': '🌿 节省 <strong>{co2} 吨 CO₂/年</strong> ≡ 🌳 相当于种植 <strong>{trees} 棵树</strong> · ✈️ 避免 <strong>{flights} 次跨大西洋航班</strong>。',
+    'roi.chart.label.training': '训练排放 (t CO₂)',
+    'roi.chart.label.savings': '累计节省 (USD)',
+    'roi.chart.yaxis.co2': '吨 CO₂',
+    'roi.chart.year.word': '年',
+    'roi.brow.usdy.suffix': '/年',
+    'em.modal.desc': '<strong style="color:var(--green-400)">实时</strong>提供 60+ 国家的碳强度数据。注册即可免费使用 — 您的密钥仅保存在浏览器中。',
+    'em.step1': '访问 <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → 免费注册',
+    'em.step2': '从控制面板复制您的 <strong>auth-token</strong>',
+    'em.step3': '粘贴在此 ↓',
+    'em.input.placeholder': '在此粘贴您的 auth-token…',
+    'em.zone.label': '检测到的区域：',
+    'em.btn.remove': '删除',
+    'em.btn.cancel': '取消',
+    'em.btn.connect': '连接',
+    'em.toast.invalidkey': '⚠️ 请粘贴有效密钥',
+    'em.toast.connected': '⚡ ElectricityMaps 已连接 — 实时数据已启用',
+    'em.toast.removed': '🔑 API 密钥已删除 — 使用 IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps 不可用 — 使用 IEA 2025',
+    'em.zone.unsupported': '— IEA 2025 备用方案',
+    'em.title.attr': 'ElectricityMaps API — 实时数据',
+    'float.ready': '报告已就绪',
+    'float.ready.template': '📊 {model} 已计算',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1.10',
+    'pue.leading': 'Anthropic / Leading — 1.20',
+    'pue.aws': 'AWS / Azure — 1.40',
+    'btn.share': '分享',
+    'btn.clear.short': '清除',
+    'toast.offline': '⚠️ 无连接 — 使用缓存数据',
+    'toast.eco.on': '⚡ 节能模式已启用 — 节省数据和能源',
+    'toast.eco.off': '🔄 节能模式已关闭',
+    'toast.pdf.opening': '📄 正在打开 PDF 对话框…',
+    'toast.copied': '🔗 已复制到剪贴板',
+    'toast.copy.failed': '❌ 无法复制',
+    'toast.calc.complete': '✅ 已完成 5 个维度的计算',
+    'conf.verified': '✓ 已验证',
+    'conf.estimated': '~ 已估算',
+    'conf.custom': '✎ 自定义',
+    'estbanner.estimated.template': '估算参数（检测到约 {params}B）— R²=0.89 相关性。如有精确数据请调整。',
+    'estbanner.custom': '手动输入的参数。',
+    'estbanner.default': '估算参数 — 基于模型名称（R²=0.89）。如有精确数据请调整。',
+    'share.training.template': '🌍 {model}：训练期间产生 {co2} kg CO₂。\n使用 AI 碳足迹计算器计算 — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ 推断 {model}：每次查询 {gco2} CO₂ · {wh} Wh。\n使用 AI 碳足迹计算器计算 — Díaz Familia (2026) R²=0.89',
+    'share.roi.template': '💰 碳排放 ROI：从 {a} 迁移到 {b} 每年节省 {co2} 吨 CO₂ · {usd} USD · 减排 {pct}。\n使用 AI 碳足迹计算器计算 — Díaz Familia (2026)',
     'btn.clear':           '🗑 清除',
     'results.eyebrow':     '📊 环境分析结果，分析对象：',
     'results.badge':       '刚刚计算',
@@ -3159,6 +3940,121 @@ const T = {
     'tab.roi': '💰 グリーンROI',
     'tab.badge.new': '新機能',
     'btn.pdf': '📄 PDFを出力',
+    'infer.hero.title': '⚡ 推論インパクト計算機',
+    'infer.hero.sub': '本番環境での各クエリの実際の環境コストを測定します。AIの影響の80〜90%は推論時に発生し、トレーニング時ではありません。',
+    'infer.card.title': 'モデルとクエリタイプを選択',
+    'infer.qtype.label': 'クエリタイプ',
+    'infer.qt.short': '短いテキスト',
+    'infer.qt.short.sub': '~200トークン',
+    'infer.qt.long': '長いテキスト',
+    'infer.qt.long.sub': '~1000トークン',
+    'infer.qt.image': '画像',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': '動画',
+    'infer.qt.video.sub': '5秒',
+    'infer.model.label': 'AIモデル',
+    'infer.model.custom': '✏️ 別のモデルを入力…',
+    'infer.custom.placeholder': '例: GPT-5、Gemini 3、MyModel-70B…',
+    'infer.custom.hint': '🧠 R²=0.89で自動的に推定されます — Díaz Familia (2026)',
+    'infer.qday.label': '1日あたりのクエリ数',
+    'infer.cf.label': '炭素係数 (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ 推論インパクトを計算',
+    'infer.results.default': '結果',
+    'infer.metric.gco2': 'g CO₂ / クエリ',
+    'infer.metric.wh': 'Wh / クエリ',
+    'infer.metric.water': 'ml 水 / クエリ',
+    'infer.metric.day': 'kg CO₂ / 日',
+    'infer.metric.month': 'kg CO₂ / 月',
+    'infer.metric.year': 'ton CO₂ / 年',
+    'infer.scale.label': 'Google検索との比較 (0.3 Wh) →',
+    'infer.src.default': '出典: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': '短いテキスト',
+    'infer.type.long': '長いテキスト',
+    'infer.type.image': '画像',
+    'infer.type.video': '動画',
+    'infer.title.template': '{model} · {type} · 1日{n}クエリ',
+    'infer.title.custom.template': '{model}（推定）· 1日{n}クエリ',
+    'infer.ref.template': '1回のクエリは<strong>{wh}</strong>を消費します — <strong>Google検索の{gx}倍</strong>に相当します。1日{n}クエリの場合：<strong>年間{year}トンCO₂</strong>。',
+    'infer.ref.custom.template': '🧠 <strong>smartEstimate()</strong>で推定された未知のモデル — 約{params}Bパラメータを検出。Wh/クエリ ≈ {wh} Wh。年間インパクト：<strong>{year}トンCO₂</strong>。Díaz Familia (2026)手法 R²=0.89。',
+    'infer.src.template': '出典: {src} · 炭素係数: {cf} kg CO₂/kWh',
+    'infer.src.custom': '自動推定 — 正確なデータがある場合はパラメータを調整してください',
+    'infer.toast.noname': '✏️ まずモデル名を入力してください',
+    'infer.toast.notavailable': '⚠️ モデルが利用できません',
+    'infer.toast.typenotavailable': '⚠️ このクエリタイプはこのモデルでは利用できません',
+    'infer.toast.estimated.template': '🧠 {model}を推定：約{params}Bパラメータ · {wh} Wh/クエリ',
+    'roi.hero.title': '💰 カーボンROI計算機',
+    'roi.hero.sub': 'より効率的なモデルへの移行による財務的・環境的節約を計算します。実際の経済データで技術的決定を正当化します。',
+    'roi.card.title': 'モデル比較',
+    'roi.model.a.label': '❌ 現在のモデル（非効率）',
+    'roi.model.b.label': '✅ 効率的なモデル',
+    'roi.qday.label': '1日あたりのクエリ数',
+    'roi.kwh.label': '電気料金 (USD/kWh)',
+    'roi.years.label': '分析期間',
+    'roi.years.1': '1年',
+    'roi.years.2': '2年',
+    'roi.years.3': '3年',
+    'roi.years.5': '5年',
+    'roi.cf.label': '炭素係数 (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 グリーンROIを計算',
+    'roi.kpi.co2': '年間CO₂削減量（トン）',
+    'roi.kpi.mwh': '年間MWh節約',
+    'roi.kpi.usd': '総USD節約額',
+    'roi.kpi.pct': '排出削減率',
+    'roi.chart.title': 'ビジュアル比較',
+    'roi.breakdown.title': '財務・環境内訳',
+    'roi.brow.co2a': '現在のモデルCO₂（トレーニング）',
+    'roi.brow.co2b': '効率的なモデルCO₂（トレーニング）',
+    'roi.brow.kwh': '年間kWh節約（推論）',
+    'roi.brow.usdy': '年間USD節約',
+    'roi.brow.usdt': '総節約額',
+    'roi.brow.years.word': '年',
+    'roi.method': '手法: Díaz Familia (2026) R²=0.89 · 推論データ: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ 有効なモデルを選択してください',
+    'roi.equiv.template': '🌿 <strong>年間{co2}トンCO₂</strong>の節約 ≡ 🌳 <strong>{trees}本の木</strong>の植樹 · ✈️ <strong>{flights}回の大西洋横断便</strong>の回避に相当。',
+    'roi.chart.label.training': 'トレーニング排出量 (t CO₂)',
+    'roi.chart.label.savings': '累積節約額 (USD)',
+    'roi.chart.yaxis.co2': 'トンCO₂',
+    'roi.chart.year.word': '年',
+    'roi.brow.usdy.suffix': '/年',
+    'em.modal.desc': '60カ国以上の<strong style="color:var(--green-400)">リアルタイム</strong>炭素強度データ。登録すれば無料 — キーはブラウザにのみ保存されます。',
+    'em.step1': '<a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a>にアクセス → 無料アカウント',
+    'em.step2': 'ダッシュボードから<strong>auth-token</strong>をコピー',
+    'em.step3': 'ここに貼り付け ↓',
+    'em.input.placeholder': 'ここにauth-tokenを貼り付け…',
+    'em.zone.label': '検出されたゾーン:',
+    'em.btn.remove': '削除',
+    'em.btn.cancel': 'キャンセル',
+    'em.btn.connect': '接続',
+    'em.toast.invalidkey': '⚠️ 有効なキーを貼り付けてください',
+    'em.toast.connected': '⚡ ElectricityMaps接続済み — リアルタイムデータ有効',
+    'em.toast.removed': '🔑 APIキー削除済み — IEA 2025を使用',
+    'em.toast.fallback': '⚠️ ElectricityMaps利用不可 — IEA 2025を使用',
+    'em.zone.unsupported': '— IEA 2025フォールバック',
+    'em.title.attr': 'ElectricityMaps API — リアルタイムデータ',
+    'float.ready': 'レポート準備完了',
+    'float.ready.template': '📊 {model}を計算しました',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1.10',
+    'pue.leading': 'Anthropic / Leading — 1.20',
+    'pue.aws': 'AWS / Azure — 1.40',
+    'btn.share': '共有',
+    'btn.clear.short': 'クリア',
+    'toast.offline': '⚠️ 接続なし — キャッシュデータを使用中',
+    'toast.eco.on': '⚡ エコモード有効 — データとエネルギーを節約中',
+    'toast.eco.off': '🔄 エコモード無効',
+    'toast.pdf.opening': '📄 PDFダイアログを開いています…',
+    'toast.copied': '🔗 クリップボードにコピーしました',
+    'toast.copy.failed': '❌ コピーできませんでした',
+    'toast.calc.complete': '✅ 5つの次元での計算が完了しました',
+    'conf.verified': '✓ 検証済み',
+    'conf.estimated': '~ 推定',
+    'conf.custom': '✎ カスタム',
+    'estbanner.estimated.template': '推定パラメータ（約{params}B検出）— R²=0.89の相関。正確なデータがある場合は調整してください。',
+    'estbanner.custom': '手動で入力されたパラメータ。',
+    'estbanner.default': '推定パラメータ — モデル名に基づく（R²=0.89）。正確なデータがある場合は調整してください。',
+    'share.training.template': '🌍 {model}：トレーニング中に{co2} kg CO₂。\nAI炭素フットプリント計算機で計算 — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ 推論 {model}：クエリあたり{gco2} CO₂ · {wh} Wh。\nAI炭素フットプリント計算機で計算 — Díaz Familia (2026) R²=0.89',
+    'share.roi.template': '💰 カーボンROI：{a}から{b}への移行で年間{co2}トンCO₂ · {usd} USD · {pct}削減を節約。\nAI炭素フットプリント計算機で計算 — Díaz Familia (2026)',
     'btn.clear':           '🗑 クリア',
     'results.eyebrow':     '📊 環境分析結果（対象モデル）:',
     'results.badge':       '今計算完了',
@@ -3229,6 +4125,121 @@ const T = {
     'tab.roi': '💰 그린 ROI',
     'tab.badge.new': '신규',
     'btn.pdf': '📄 PDF 내보내기',
+    'infer.hero.title': '⚡ 추론 영향 계산기',
+    'infer.hero.sub': '프로덕션에서 각 쿼리의 실제 환경 비용을 측정합니다. AI 영향의 80–90%는 학습이 아닌 추론 중에 발생합니다.',
+    'infer.card.title': '모델 및 쿼리 유형 선택',
+    'infer.qtype.label': '쿼리 유형',
+    'infer.qt.short': '짧은 텍스트',
+    'infer.qt.short.sub': '~200 토큰',
+    'infer.qt.long': '긴 텍스트',
+    'infer.qt.long.sub': '~1000 토큰',
+    'infer.qt.image': '이미지',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': '비디오',
+    'infer.qt.video.sub': '5초',
+    'infer.model.label': 'AI 모델',
+    'infer.model.custom': '✏️ 다른 모델 입력…',
+    'infer.custom.placeholder': '예: GPT-5, Gemini 3, 내모델-70B…',
+    'infer.custom.hint': '🧠 R²=0.89로 자동 추정됩니다 — Díaz Familia (2026)',
+    'infer.qday.label': '일일 쿼리 수',
+    'infer.cf.label': '탄소 계수 (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ 추론 영향 계산',
+    'infer.results.default': '결과',
+    'infer.metric.gco2': 'g CO₂ / 쿼리',
+    'infer.metric.wh': 'Wh / 쿼리',
+    'infer.metric.water': 'ml 물 / 쿼리',
+    'infer.metric.day': 'kg CO₂ / 일',
+    'infer.metric.month': 'kg CO₂ / 월',
+    'infer.metric.year': '톤 CO₂ / 년',
+    'infer.scale.label': 'Google 검색 대비 규모 (0.3 Wh) →',
+    'infer.src.default': '출처: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': '짧은 텍스트',
+    'infer.type.long': '긴 텍스트',
+    'infer.type.image': '이미지',
+    'infer.type.video': '비디오',
+    'infer.title.template': '{model} · {type} · 일일 {n}건 쿼리',
+    'infer.title.custom.template': '{model} (추정) · 일일 {n}건 쿼리',
+    'infer.ref.template': '쿼리 1건은 <strong>{wh}</strong>를 소비합니다 — <strong>Google 검색의 {gx}배</strong>에 해당합니다. 일일 {n}건 쿼리 기준: <strong>연간 {year}톤 CO₂</strong>.',
+    'infer.ref.custom.template': '🧠 <strong>smartEstimate()</strong>로 추정된 알 수 없는 모델 — 약 {params}B 파라미터 감지됨. Wh/쿼리 ≈ {wh} Wh. 연간 영향: <strong>{year}톤 CO₂</strong>. Díaz Familia (2026) 방법론 R²=0.89.',
+    'infer.src.template': '출처: {src} · 탄소 계수: {cf} kg CO₂/kWh',
+    'infer.src.custom': '자동 추정 — 정확한 데이터가 있으면 파라미터를 조정하세요',
+    'infer.toast.noname': '✏️ 먼저 모델 이름을 입력하세요',
+    'infer.toast.notavailable': '⚠️ 모델을 사용할 수 없습니다',
+    'infer.toast.typenotavailable': '⚠️ 이 모델에는 이 쿼리 유형을 사용할 수 없습니다',
+    'infer.toast.estimated.template': '🧠 {model} 추정됨: 약 {params}B params · {wh} Wh/쿼리',
+    'roi.hero.title': '💰 탄소 ROI 계산기',
+    'roi.hero.sub': '더 효율적인 모델로 전환할 때의 재정 및 환경 절감을 계산합니다. 실제 경제 데이터로 기술적 결정을 입증하세요.',
+    'roi.card.title': '모델 비교',
+    'roi.model.a.label': '❌ 현재 모델 (비효율적)',
+    'roi.model.b.label': '✅ 효율적인 모델',
+    'roi.qday.label': '일일 쿼리 수',
+    'roi.kwh.label': '전기 요금 (USD/kWh)',
+    'roi.years.label': '분석 기간',
+    'roi.years.1': '1년',
+    'roi.years.2': '2년',
+    'roi.years.3': '3년',
+    'roi.years.5': '5년',
+    'roi.cf.label': '탄소 계수 (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 그린 ROI 계산',
+    'roi.kpi.co2': '연간 절감 CO₂(톤)',
+    'roi.kpi.mwh': '연간 절감 MWh',
+    'roi.kpi.usd': '총 절감 USD',
+    'roi.kpi.pct': '배출량 감소율',
+    'roi.chart.title': '시각적 비교',
+    'roi.breakdown.title': '재무 및 환경 세부 내역',
+    'roi.brow.co2a': '현재 모델 CO₂(학습)',
+    'roi.brow.co2b': '효율적 모델 CO₂(학습)',
+    'roi.brow.kwh': '연간 절감 kWh(추론)',
+    'roi.brow.usdy': '연간 USD 절감',
+    'roi.brow.usdt': '총 절감액',
+    'roi.brow.years.word': '년',
+    'roi.method': '방법론: Díaz Familia (2026) R²=0.89 · 추론 데이터: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ 유효한 모델을 선택하세요',
+    'roi.equiv.template': '🌿 <strong>연간 {co2}톤 CO₂</strong> 절감 ≡ 🌳 나무 <strong>{trees}그루</strong> 식재 · ✈️ 대서양 횡단 항공편 <strong>{flights}회</strong> 회피와 동일.',
+    'roi.chart.label.training': '학습 배출량 (t CO₂)',
+    'roi.chart.label.savings': '누적 절감액 (USD)',
+    'roi.chart.yaxis.co2': '톤 CO₂',
+    'roi.chart.year.word': '년',
+    'roi.brow.usdy.suffix': '/년',
+    'em.modal.desc': '60개국 이상의 <strong style="color:var(--green-400)">실시간</strong> 탄소 집약도 데이터. 가입하면 무료 — 키는 브라우저에만 저장됩니다.',
+    'em.step1': '<a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> 방문 → 무료 계정',
+    'em.step2': '대시보드에서 <strong>auth-token</strong> 복사',
+    'em.step3': '여기에 붙여넣기 ↓',
+    'em.input.placeholder': '여기에 auth-token을 붙여넣으세요…',
+    'em.zone.label': '감지된 지역:',
+    'em.btn.remove': '제거',
+    'em.btn.cancel': '취소',
+    'em.btn.connect': '연결',
+    'em.toast.invalidkey': '⚠️ 유효한 키를 붙여넣으세요',
+    'em.toast.connected': '⚡ ElectricityMaps 연결됨 — 실시간 데이터 활성화',
+    'em.toast.removed': '🔑 API 키 제거됨 — IEA 2025 사용 중',
+    'em.toast.fallback': '⚠️ ElectricityMaps 사용 불가 — IEA 2025 사용 중',
+    'em.zone.unsupported': '— IEA 2025 대체',
+    'em.title.attr': 'ElectricityMaps API — 실시간 데이터',
+    'float.ready': '보고서 준비됨',
+    'float.ready.template': '📊 {model} 계산됨',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1.10',
+    'pue.leading': 'Anthropic / Leading — 1.20',
+    'pue.aws': 'AWS / Azure — 1.40',
+    'btn.share': '공유',
+    'btn.clear.short': '지우기',
+    'toast.offline': '⚠️ 연결 없음 — 캐시된 데이터 사용 중',
+    'toast.eco.on': '⚡ 에코 모드 활성화됨 — 데이터 및 에너지 절약 중',
+    'toast.eco.off': '🔄 에코 모드 비활성화됨',
+    'toast.pdf.opening': '📄 PDF 대화상자 여는 중…',
+    'toast.copied': '🔗 클립보드에 복사됨',
+    'toast.copy.failed': '❌ 복사할 수 없음',
+    'toast.calc.complete': '✅ 5개 차원에서 계산 완료',
+    'conf.verified': '✓ 검증됨',
+    'conf.estimated': '~ 추정됨',
+    'conf.custom': '✎ 사용자 지정',
+    'estbanner.estimated.template': '추정 파라미터 (약 {params}B 감지됨) — R²=0.89 상관관계. 정확한 데이터가 있으면 조정하세요.',
+    'estbanner.custom': '수동으로 입력된 파라미터.',
+    'estbanner.default': '추정 파라미터 — 모델 이름 기반 (R²=0.89). 정확한 데이터가 있으면 조정하세요.',
+    'share.training.template': '🌍 {model}: 학습 중 {co2} kg CO₂.\nAI 탄소 발자국 계산기로 계산됨 — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ 추론 {model}: 쿼리당 {gco2} CO₂ · {wh} Wh.\nAI 탄소 발자국 계산기로 계산됨 — Díaz Familia (2026) R²=0.89',
+    'share.roi.template': '💰 Carbon ROI: {a}에서 {b}로 전환하면 연간 {co2}톤 CO₂ · {usd} USD · {pct} 절감.\nAI 탄소 발자국 계산기로 계산됨 — Díaz Familia (2026)',
     'btn.clear':           '🗑 지우기',
     'results.eyebrow':     '📊 환경 분석 결과 (대상 모델):',
     'results.badge':       '방금 계산됨',
@@ -3299,6 +4310,121 @@ const T = {
     'tab.roi': '💰 العائد الأخضر',
     'tab.badge.new': 'جديد',
     'btn.pdf': '📄 تصدير PDF',
+    'infer.hero.title': '⚡ حاسبة تأثير الاستنتاج',
+    'infer.hero.sub': 'قِس التكلفة البيئية الحقيقية لكل استعلام في الإنتاج. 80–90% من تأثير الذكاء الاصطناعي يحدث أثناء الاستنتاج، لا التدريب.',
+    'infer.card.title': 'اختر النموذج ونوع الاستعلام',
+    'infer.qtype.label': 'نوع الاستعلام',
+    'infer.qt.short': 'نص قصير',
+    'infer.qt.short.sub': '~200 رمز',
+    'infer.qt.long': 'نص طويل',
+    'infer.qt.long.sub': '~1000 رمز',
+    'infer.qt.image': 'صورة',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'فيديو',
+    'infer.qt.video.sub': '5 ثوانٍ',
+    'infer.model.label': 'نموذج الذكاء الاصطناعي',
+    'infer.model.custom': '✏️ كتابة نموذج آخر…',
+    'infer.custom.placeholder': 'مثال: GPT-5، Gemini 3، نموذجي-70B…',
+    'infer.custom.hint': '🧠 سيتم تقديره تلقائياً بـ R²=0.89 — Díaz Familia (2026)',
+    'infer.qday.label': 'الاستعلامات يومياً',
+    'infer.cf.label': 'عامل الكربون (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ احسب تأثير الاستنتاج',
+    'infer.results.default': 'النتائج',
+    'infer.metric.gco2': 'g CO₂ / استعلام',
+    'infer.metric.wh': 'Wh / استعلام',
+    'infer.metric.water': 'مل ماء / استعلام',
+    'infer.metric.day': 'kg CO₂ / يوم',
+    'infer.metric.month': 'kg CO₂ / شهر',
+    'infer.metric.year': 'طن CO₂ / سنة',
+    'infer.scale.label': 'المقياس مقابل بحث جوجل (0.3 Wh) ←',
+    'infer.src.default': 'المصدر: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'نص قصير',
+    'infer.type.long': 'نص طويل',
+    'infer.type.image': 'صورة',
+    'infer.type.video': 'فيديو',
+    'infer.title.template': '{model} · {type} · {n} استعلام/يوم',
+    'infer.title.custom.template': '{model} (مُقدَّر) · {n} استعلام/يوم',
+    'infer.ref.template': 'يستهلك الاستعلام الواحد <strong>{wh}</strong> — ما يعادل <strong>{gx}× بحث جوجل</strong>. مع {n} استعلام يومياً: <strong>{year} طن CO₂/سنة</strong>.',
+    'infer.ref.custom.template': '🧠 نموذج غير معروف تم تقديره بـ <strong>smartEstimate()</strong> — تم اكتشاف ~{params}B معامل. Wh/استعلام ≈ {wh} Wh. التأثير السنوي: <strong>{year} طن CO₂</strong>. منهجية Díaz Familia (2026) R²=0.89.',
+    'infer.src.template': 'المصدر: {src} · عامل الكربون: {cf} kg CO₂/kWh',
+    'infer.src.custom': 'تقدير تلقائي — اضبط المعاملات إذا كانت لديك بيانات دقيقة',
+    'infer.toast.noname': '✏️ اكتب اسم النموذج أولاً',
+    'infer.toast.notavailable': '⚠️ النموذج غير متوفر',
+    'infer.toast.typenotavailable': '⚠️ هذا نوع الاستعلام غير متوفر لهذا النموذج',
+    'infer.toast.estimated.template': '🧠 تم تقدير {model}: ~{params}B معامل · {wh} Wh/استعلام',
+    'roi.hero.title': '💰 حاسبة العائد الكربوني الأخضر',
+    'roi.hero.sub': 'احسب الوفورات المالية والبيئية من الانتقال إلى نموذج أكثر كفاءة. برّر القرارات التقنية ببيانات اقتصادية حقيقية.',
+    'roi.card.title': 'مقارنة النماذج',
+    'roi.model.a.label': '❌ النموذج الحالي (غير فعال)',
+    'roi.model.b.label': '✅ النموذج الفعال',
+    'roi.qday.label': 'الاستعلامات يومياً',
+    'roi.kwh.label': 'سعر الكهرباء (USD/kWh)',
+    'roi.years.label': 'أفق التحليل',
+    'roi.years.1': 'سنة واحدة',
+    'roi.years.2': 'سنتان',
+    'roi.years.3': '3 سنوات',
+    'roi.years.5': '5 سنوات',
+    'roi.cf.label': 'عامل الكربون (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 احسب العائد الأخضر',
+    'roi.kpi.co2': 'طن CO₂ موفّر/سنة',
+    'roi.kpi.mwh': 'MWh موفّر/سنة',
+    'roi.kpi.usd': 'إجمالي USD موفّر',
+    'roi.kpi.pct': 'تخفيض الانبعاثات',
+    'roi.chart.title': 'مقارنة بصرية',
+    'roi.breakdown.title': 'التفصيل المالي والبيئي',
+    'roi.brow.co2a': 'CO₂ النموذج الحالي (تدريب)',
+    'roi.brow.co2b': 'CO₂ النموذج الفعال (تدريب)',
+    'roi.brow.kwh': 'kWh موفّر/سنة (استنتاج)',
+    'roi.brow.usdy': 'وفورات USD/سنة',
+    'roi.brow.usdt': 'إجمالي الوفورات',
+    'roi.brow.years.word': 'سنوات',
+    'roi.method': 'المنهجية: Díaz Familia (2026) R²=0.89 · بيانات الاستنتاج: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ اختر نماذج صالحة',
+    'roi.equiv.template': '🌿 توفير <strong>{co2} طن CO₂/سنة</strong> ≡ 🌳 زراعة <strong>{trees} شجرة</strong> · ✈️ تجنّب <strong>{flights} رحلة</strong> عبر الأطلسي.',
+    'roi.chart.label.training': 'انبعاثات التدريب (t CO₂)',
+    'roi.chart.label.savings': 'الوفورات التراكمية (USD)',
+    'roi.chart.yaxis.co2': 'طن CO₂',
+    'roi.chart.year.word': 'سنة',
+    'roi.brow.usdy.suffix': '/سنة',
+    'em.modal.desc': 'بيانات كثافة الكربون <strong style="color:var(--green-400)">في الوقت الفعلي</strong> لأكثر من 60 دولة. مجاني عند التسجيل — مفتاحك يبقى فقط في متصفحك.',
+    'em.step1': 'انتقل إلى <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> ← حساب مجاني',
+    'em.step2': 'انسخ <strong>auth-token</strong> الخاص بك من لوحة التحكم',
+    'em.step3': 'الصقه هنا ←',
+    'em.input.placeholder': 'الصق auth-token هنا…',
+    'em.zone.label': 'المنطقة المكتشفة:',
+    'em.btn.remove': 'إزالة',
+    'em.btn.cancel': 'إلغاء',
+    'em.btn.connect': 'اتصال',
+    'em.toast.invalidkey': '⚠️ الصق مفتاحاً صالحاً',
+    'em.toast.connected': '⚡ تم توصيل ElectricityMaps — البيانات الفورية نشطة',
+    'em.toast.removed': '🔑 تم حذف مفتاح API — استخدام IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps غير متوفر — استخدام IEA 2025',
+    'em.zone.unsupported': '— احتياطي IEA 2025',
+    'em.title.attr': 'ElectricityMaps API — بيانات فورية',
+    'float.ready': 'التقرير جاهز',
+    'float.ready.template': '📊 تم حساب {model}',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1.10',
+    'pue.leading': 'Anthropic / Leading — 1.20',
+    'pue.aws': 'AWS / Azure — 1.40',
+    'btn.share': 'مشاركة',
+    'btn.clear.short': 'مسح',
+    'toast.offline': '⚠️ لا يوجد اتصال — استخدام البيانات المخزنة',
+    'toast.eco.on': '⚡ تم تفعيل الوضع الاقتصادي — توفير البيانات والطاقة',
+    'toast.eco.off': '🔄 تم إلغاء الوضع الاقتصادي',
+    'toast.pdf.opening': '📄 جارٍ فتح حوار PDF…',
+    'toast.copied': '🔗 تم النسخ إلى الحافظة',
+    'toast.copy.failed': '❌ تعذر النسخ',
+    'toast.calc.complete': '✅ اكتمل الحساب في 5 أبعاد',
+    'conf.verified': '✓ موثّق',
+    'conf.estimated': '~ مُقدَّر',
+    'conf.custom': '✎ مخصص',
+    'estbanner.estimated.template': 'معاملات مُقدَّرة (~{params}B تم اكتشافها) — ارتباط R²=0.89. عدّل إذا كانت لديك بيانات دقيقة.',
+    'estbanner.custom': 'معاملات أُدخلت يدوياً.',
+    'estbanner.default': 'معاملات مُقدَّرة — بناءً على اسم النموذج (R²=0.89). عدّل إذا كانت لديك بيانات دقيقة.',
+    'share.training.template': '🌍 {model}: {co2} kg CO₂ أثناء التدريب.\nتم الحساب بحاسبة البصمة الكربونية للذكاء الاصطناعي — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ استنتاج {model}: {gco2} CO₂ · {wh} Wh لكل استعلام.\nتم الحساب بحاسبة البصمة الكربونية للذكاء الاصطناعي — Díaz Familia (2026) R²=0.89',
+    'share.roi.template': '💰 العائد الكربوني: الانتقال من {a} ← {b} يوفر {co2} طن CO₂/سنة · {usd} USD · تخفيض {pct}.\nتم الحساب بحاسبة البصمة الكربونية للذكاء الاصطناعي — Díaz Familia (2026)',
     'btn.clear':           '🗑 مسح',
     'results.eyebrow':     '📊 نتائج التحليل البيئي لـ:',
     'results.badge':       'محسوب للتو',
@@ -3369,6 +4495,121 @@ const T = {
     'tab.roi': '💰 ROI ירוק',
     'tab.badge.new': 'חדש',
     'btn.pdf': '📄 ייצא PDF',
+    'infer.hero.title': '⚡ מחשבון השפעת ההסקה',
+    'infer.hero.sub': 'מדוד את העלות הסביבתית האמיתית של כל שאילתה בסביבת ייצור. 80–90% מההשפעה של AI מתרחשת בזמן ההסקה, לא האימון.',
+    'infer.card.title': 'בחר מודל וסוג שאילתה',
+    'infer.qtype.label': 'סוג שאילתה',
+    'infer.qt.short': 'טקסט קצר',
+    'infer.qt.short.sub': '~200 טוקנים',
+    'infer.qt.long': 'טקסט ארוך',
+    'infer.qt.long.sub': '~1000 טוקנים',
+    'infer.qt.image': 'תמונה',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'וידאו',
+    'infer.qt.video.sub': '5 שניות',
+    'infer.model.label': 'מודל AI',
+    'infer.model.custom': '✏️ הזן מודל אחר…',
+    'infer.custom.placeholder': 'לדוגמה: GPT-5, Gemini 3, המודל-שלי-70B…',
+    'infer.custom.hint': '🧠 יוערך אוטומטית עם R²=0.89 — Díaz Familia (2026)',
+    'infer.qday.label': 'שאילתות ביום',
+    'infer.cf.label': 'מקדם פחמן (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ חשב השפעת הסקה',
+    'infer.results.default': 'תוצאות',
+    'infer.metric.gco2': 'g CO₂ / שאילתה',
+    'infer.metric.wh': 'Wh / שאילתה',
+    'infer.metric.water': 'מ״ל מים / שאילתה',
+    'infer.metric.day': 'kg CO₂ / יום',
+    'infer.metric.month': 'kg CO₂ / חודש',
+    'infer.metric.year': 'טון CO₂ / שנה',
+    'infer.scale.label': 'קנה מידה לעומת חיפוש Google (0.3 Wh) ←',
+    'infer.src.default': 'מקור: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'טקסט קצר',
+    'infer.type.long': 'טקסט ארוך',
+    'infer.type.image': 'תמונה',
+    'infer.type.video': 'וידאו',
+    'infer.title.template': '{model} · {type} · {n} שאילתות/יום',
+    'infer.title.custom.template': '{model} (מוערך) · {n} שאילתות/יום',
+    'infer.ref.template': 'שאילתה אחת צורכת <strong>{wh}</strong> — שווה ל<strong>{gx}× חיפוש בגוגל</strong>. עם {n} שאילתות ביום: <strong>{year} טון CO₂/שנה</strong>.',
+    'infer.ref.custom.template': '🧠 מודל לא ידוע שהוערך עם <strong>smartEstimate()</strong> — זוהו ~{params}B פרמטרים. Wh/שאילתה ≈ {wh} Wh. השפעה שנתית: <strong>{year} טון CO₂</strong>. מתודולוגיית Díaz Familia (2026) R²=0.89.',
+    'infer.src.template': 'מקור: {src} · מקדם פחמן: {cf} kg CO₂/kWh',
+    'infer.src.custom': 'הערכה אוטומטית — התאם פרמטרים אם יש לך נתונים מדויקים',
+    'infer.toast.noname': '✏️ הזן שם מודל קודם',
+    'infer.toast.notavailable': '⚠️ המודל אינו זמין',
+    'infer.toast.typenotavailable': '⚠️ סוג שאילתה זה אינו זמין למודל זה',
+    'infer.toast.estimated.template': '🧠 {model} הוערך: ~{params}B פרמטרים · {wh} Wh/שאילתה',
+    'roi.hero.title': '💰 מחשבון ROI ירוק',
+    'roi.hero.sub': 'חשב את החיסכון הפיננסי והסביבתי במעבר למודל יעיל יותר. נמק החלטות טכניות עם נתונים כלכליים אמיתיים.',
+    'roi.card.title': 'השוואת מודלים',
+    'roi.model.a.label': '❌ מודל נוכחי (לא יעיל)',
+    'roi.model.b.label': '✅ מודל יעיל',
+    'roi.qday.label': 'שאילתות ביום',
+    'roi.kwh.label': 'מחיר חשמל (USD/kWh)',
+    'roi.years.label': 'אופק ניתוח',
+    'roi.years.1': 'שנה אחת',
+    'roi.years.2': 'שנתיים',
+    'roi.years.3': '3 שנים',
+    'roi.years.5': '5 שנים',
+    'roi.cf.label': 'מקדם פחמן (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 חשב ROI ירוק',
+    'roi.kpi.co2': 'טון CO₂ נחסך/שנה',
+    'roi.kpi.mwh': 'MWh נחסך/שנה',
+    'roi.kpi.usd': 'סה״כ USD נחסך',
+    'roi.kpi.pct': 'הפחתת פליטות',
+    'roi.chart.title': 'השוואה חזותית',
+    'roi.breakdown.title': 'פירוט פיננסי וסביבתי',
+    'roi.brow.co2a': 'CO₂ מודל נוכחי (אימון)',
+    'roi.brow.co2b': 'CO₂ מודל יעיל (אימון)',
+    'roi.brow.kwh': 'kWh נחסך/שנה (הסקה)',
+    'roi.brow.usdy': 'חיסכון USD/שנה',
+    'roi.brow.usdt': 'חיסכון כולל',
+    'roi.brow.years.word': 'שנים',
+    'roi.method': 'מתודולוגיה: Díaz Familia (2026) R²=0.89 · נתוני הסקה: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ בחר מודלים תקינים',
+    'roi.equiv.template': '🌿 חיסכון של <strong>{co2} טון CO₂/שנה</strong> ≡ 🌳 שתילת <strong>{trees} עצים</strong> · ✈️ הימנעות מ<strong>{flights} טיסות</strong> חוצות אטלנטיק.',
+    'roi.chart.label.training': 'פליטות אימון (t CO₂)',
+    'roi.chart.label.savings': 'חיסכון מצטבר (USD)',
+    'roi.chart.yaxis.co2': 'טון CO₂',
+    'roi.chart.year.word': 'שנה',
+    'roi.brow.usdy.suffix': '/שנה',
+    'em.modal.desc': 'נתוני עצימות פחמן <strong style="color:var(--green-400)">בזמן אמת</strong> ל-60+ מדינות. חינם בהרשמה — המפתח שלך נשאר רק בדפדפן שלך.',
+    'em.step1': 'גש אל <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> ← חשבון חינמי',
+    'em.step2': 'העתק את <strong>auth-token</strong> שלך מלוח הבקרה',
+    'em.step3': 'הדבק כאן ←',
+    'em.input.placeholder': 'הדבק כאן את ה-auth-token שלך…',
+    'em.zone.label': 'אזור שזוהה:',
+    'em.btn.remove': 'הסר',
+    'em.btn.cancel': 'בטל',
+    'em.btn.connect': 'התחבר',
+    'em.toast.invalidkey': '⚠️ הדבק מפתח תקין',
+    'em.toast.connected': '⚡ ElectricityMaps מחובר — נתוני זמן אמת פעילים',
+    'em.toast.removed': '🔑 מפתח API הוסר — משתמש ב-IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps לא זמין — משתמש ב-IEA 2025',
+    'em.zone.unsupported': '— גיבוי IEA 2025',
+    'em.title.attr': 'ElectricityMaps API — נתוני זמן אמת',
+    'float.ready': 'הדוח מוכן',
+    'float.ready.template': '📊 {model} חושב',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1.10',
+    'pue.leading': 'Anthropic / Leading — 1.20',
+    'pue.aws': 'AWS / Azure — 1.40',
+    'btn.share': 'שתף',
+    'btn.clear.short': 'נקה',
+    'toast.offline': '⚠️ אין חיבור — משתמש בנתונים מהמטמון',
+    'toast.eco.on': '⚡ מצב אקו הופעל — חוסך נתונים ואנרגיה',
+    'toast.eco.off': '🔄 מצב אקו כובה',
+    'toast.pdf.opening': '📄 פותח חלון PDF…',
+    'toast.copied': '🔗 הועתק ללוח',
+    'toast.copy.failed': '❌ לא ניתן להעתיק',
+    'toast.calc.complete': '✅ החישוב הושלם ב-5 מימדים',
+    'conf.verified': '✓ מאומת',
+    'conf.estimated': '~ מוערך',
+    'conf.custom': '✎ מותאם אישית',
+    'estbanner.estimated.template': 'פרמטרים מוערכים (~{params}B זוהו) — קורלציה R²=0.89. התאם אם יש לך נתונים מדויקים.',
+    'estbanner.custom': 'פרמטרים שהוזנו ידנית.',
+    'estbanner.default': 'פרמטרים מוערכים — מבוססים על שם המודל (R²=0.89). התאם אם יש לך נתונים מדויקים.',
+    'share.training.template': '🌍 {model}: {co2} kg CO₂ במהלך האימון.\nחושב עם מחשבון טביעת הרגל הפחמנית של AI — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ הסקה {model}: {gco2} CO₂ · {wh} Wh לשאילתה.\nחושב עם מחשבון טביעת הרגל הפחמנית של AI — Díaz Familia (2026) R²=0.89',
+    'share.roi.template': '💰 Carbon ROI: מעבר מ-{a} ל-{b} חוסך {co2} טון CO₂/שנה · {usd} USD · הפחתה של {pct}.\nחושב עם מחשבון טביעת הרגל הפחמנית של AI — Díaz Familia (2026)',
     'btn.clear':           '🗑 נקה',
     'results.eyebrow':     '📊 תוצאות הניתוח הסביבתי עבור:',
     'results.badge':       'חושב כעת',
@@ -3439,6 +4680,121 @@ const T = {
     'tab.roi': '💰 Yeşil ROI',
     'tab.badge.new': 'YENİ',
     'btn.pdf': '📄 PDF Aktar',
+    'infer.hero.title': '⚡ Çıkarım Etki Hesaplayıcısı',
+    "infer.hero.sub": "Üretimdeki her sorgunun gerçek çevresel maliyetini ölçün. AI etkisinin %80–90'ı eğitim sırasında değil, çıkarım sırasında gerçekleşir.",
+    'infer.card.title': 'Model ve Sorgu Türü Seçin',
+    'infer.qtype.label': 'Sorgu türü',
+    'infer.qt.short': 'Kısa metin',
+    'infer.qt.short.sub': '~200 token',
+    'infer.qt.long': 'Uzun metin',
+    'infer.qt.long.sub': '~1000 token',
+    'infer.qt.image': 'Görüntü',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'Video',
+    'infer.qt.video.sub': '5 saniye',
+    'infer.model.label': 'AI Modeli',
+    'infer.model.custom': '✏️ Başka bir model yaz…',
+    'infer.custom.placeholder': 'Örn: GPT-5, Gemini 3, ModelimBenim-70B…',
+    'infer.custom.hint': '🧠 R²=0.89 ile otomatik tahmin edilecek — Díaz Familia (2026)',
+    'infer.qday.label': 'Günlük sorgu sayısı',
+    'infer.cf.label': 'Karbon faktörü (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ Çıkarım Etkisini Hesapla',
+    'infer.results.default': 'Sonuçlar',
+    'infer.metric.gco2': 'g CO₂ / sorgu',
+    'infer.metric.wh': 'Wh / sorgu',
+    'infer.metric.water': 'ml su / sorgu',
+    'infer.metric.day': 'kg CO₂ / gün',
+    'infer.metric.month': 'kg CO₂ / ay',
+    'infer.metric.year': 'ton CO₂ / yıl',
+    'infer.scale.label': 'Google Aramaya göre ölçek (0.3 Wh) →',
+    'infer.src.default': 'Kaynak: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'kısa metin',
+    'infer.type.long': 'uzun metin',
+    'infer.type.image': 'görüntü',
+    'infer.type.video': 'video',
+    'infer.title.template': '{model} · {type} · günde {n} sorgu',
+    'infer.title.custom.template': '{model} (tahmini) · günde {n} sorgu',
+    'infer.ref.template': 'Bir sorgu <strong>{wh}</strong> tüketir — bu <strong>{gx}× bir Google aramasına</strong> eşdeğerdir. Günlük {n} sorgu ile: <strong>yılda {year} ton CO₂</strong>.',
+    'infer.ref.custom.template': '🧠 <strong>smartEstimate()</strong> ile tahmin edilen bilinmeyen model — ~{params}B parametre tespit edildi. Wh/sorgu ≈ {wh} Wh. Yıllık etki: <strong>{year} ton CO₂</strong>. Díaz Familia (2026) metodolojisi R²=0.89.',
+    'infer.src.template': 'Kaynak: {src} · Karbon faktörü: {cf} kg CO₂/kWh',
+    'infer.src.custom': 'Otomatik tahmin — kesin verileriniz varsa parametreleri ayarlayın',
+    'infer.toast.noname': '✏️ Önce model adını yazın',
+    'infer.toast.notavailable': '⚠️ Model mevcut değil',
+    'infer.toast.typenotavailable': '⚠️ Bu sorgu türü bu model için mevcut değil',
+    'infer.toast.estimated.template': '🧠 {model} tahmin edildi: ~{params}B params · {wh} Wh/sorgu',
+    'roi.hero.title': '💰 Karbon ROI Hesaplayıcısı',
+    'roi.hero.sub': 'Daha verimli bir modele geçişin finansal ve çevresel tasarruflarını hesaplayın. Teknik kararları gerçek ekonomik verilerle gerekçelendirin.',
+    'roi.card.title': 'Model Karşılaştırması',
+    'roi.model.a.label': '❌ Mevcut Model (Verimsiz)',
+    'roi.model.b.label': '✅ Verimli Model',
+    'roi.qday.label': 'Günlük sorgu sayısı',
+    'roi.kwh.label': 'Elektrik fiyatı (USD/kWh)',
+    'roi.years.label': 'Analiz ufku',
+    'roi.years.1': '1 yıl',
+    'roi.years.2': '2 yıl',
+    'roi.years.3': '3 yıl',
+    'roi.years.5': '5 yıl',
+    'roi.cf.label': 'Karbon faktörü (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 Yeşil ROI Hesapla',
+    'roi.kpi.co2': 'yılda tasarruf edilen ton CO₂',
+    'roi.kpi.mwh': 'yılda tasarruf edilen MWh',
+    'roi.kpi.usd': 'toplam tasarruf edilen USD',
+    'roi.kpi.pct': 'emisyon azaltımı',
+    'roi.chart.title': 'Görsel karşılaştırma',
+    'roi.breakdown.title': 'Finansal ve çevresel dökü',
+    'roi.brow.co2a': 'Mevcut model CO₂ (eğitim)',
+    'roi.brow.co2b': 'Verimli model CO₂ (eğitim)',
+    'roi.brow.kwh': 'yılda tasarruf edilen kWh (çıkarım)',
+    'roi.brow.usdy': 'Yıllık USD tasarrufu',
+    'roi.brow.usdt': 'Toplam tasarruf',
+    'roi.brow.years.word': 'yıl',
+    'roi.method': 'Metodoloji: Díaz Familia (2026) R²=0.89 · Çıkarım verileri: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ Geçerli modeller seçin',
+    'roi.equiv.template': '🌿 <strong>Yılda {co2} ton CO₂</strong> tasarrufu ≡ 🌳 <strong>{trees} ağaç</strong> dikmeye · ✈️ <strong>{flights} transatlantik uçuştan</strong> kaçınmaya eşdeğer.',
+    'roi.chart.label.training': 'Eğitim emisyonları (t CO₂)',
+    'roi.chart.label.savings': 'Birikimli tasarruf (USD)',
+    'roi.chart.yaxis.co2': 'ton CO₂',
+    'roi.chart.year.word': 'Yıl',
+    'roi.brow.usdy.suffix': '/yıl',
+    'em.modal.desc': '60+ ülke için <strong style="color:var(--green-400)">gerçek zamanlı</strong> karbon yoğunluğu verileri. Kayıt ile ücretsiz — anahtarınız yalnızca tarayıcınızda saklanır.',
+    'em.step1': '<a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> adresine gidin → ücretsiz hesap',
+    "em.step2": "Kontrol panelinden <strong>auth-token</strong>'inizi kopyalayın",
+    'em.step3': 'Buraya yapıştırın ↓',
+    "em.input.placeholder": "auth-token'inizi buraya yapıştırın…",
+    'em.zone.label': 'Algılanan bölge:',
+    'em.btn.remove': 'Kaldır',
+    'em.btn.cancel': 'İptal',
+    'em.btn.connect': 'Bağlan',
+    'em.toast.invalidkey': '⚠️ Geçerli bir anahtar yapıştırın',
+    'em.toast.connected': '⚡ ElectricityMaps bağlandı — gerçek zamanlı veri aktif',
+    'em.toast.removed': '🔑 API anahtarı kaldırıldı — IEA 2025 kullanılıyor',
+    'em.toast.fallback': '⚠️ ElectricityMaps kullanılamıyor — IEA 2025 kullanılıyor',
+    'em.zone.unsupported': '— IEA 2025 yedek',
+    'em.title.attr': 'ElectricityMaps API — gerçek zamanlı veri',
+    'float.ready': 'Rapor hazır',
+    'float.ready.template': '📊 {model} hesaplandı',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1,10',
+    'pue.leading': 'Anthropic / Leading — 1,20',
+    'pue.aws': 'AWS / Azure — 1,40',
+    'btn.share': 'Paylaş',
+    'btn.clear.short': 'Temizle',
+    'toast.offline': '⚠️ Bağlantı yok — önbellek verileri kullanılıyor',
+    'toast.eco.on': '⚡ Eko mod etkinleştirildi — veri ve enerji tasarrufu',
+    'toast.eco.off': '🔄 Eko mod devre dışı',
+    'toast.pdf.opening': '📄 PDF diyaloğu açılıyor…',
+    'toast.copied': '🔗 Panoya kopyalandı',
+    'toast.copy.failed': '❌ Kopyalanamadı',
+    'toast.calc.complete': '✅ 5 boyutta hesaplama tamamlandı',
+    'conf.verified': '✓ Doğrulandı',
+    'conf.estimated': '~ Tahmini',
+    'conf.custom': '✎ Özel',
+    'estbanner.estimated.template': 'Tahmini parametreler (~{params}B tespit edildi) — R²=0.89 korelasyonu. Kesin verileriniz varsa ayarlayın.',
+    'estbanner.custom': 'Manuel olarak girilen parametreler.',
+    'estbanner.default': 'Tahmini parametreler — model adına dayalı (R²=0.89). Kesin verileriniz varsa ayarlayın.',
+    'share.training.template': '🌍 {model}: eğitim sırasında {co2} kg CO₂.\nAI Karbon Ayak İzi Hesaplayıcısı ile hesaplandı — Díaz Familia (2026) R²=0.89',
+    'share.inference.template': '⚡ Çıkarım {model}: sorgu başına {gco2} CO₂ · {wh} Wh.\nAI Karbon Ayak İzi Hesaplayıcısı ile hesaplandı — Díaz Familia (2026) R²=0.89',
+    "share.roi.template": "💰 Karbon ROI: {a}'dan {b}'ye geçiş yılda {co2} ton CO₂ · {usd} USD tasarruf · %{pct} azaltım sağlar.\nAI Karbon Ayak İzi Hesaplayıcısı ile hesaplandı — Díaz Familia (2026)",
     'btn.clear':           '🗑 Temizle',
     'results.eyebrow':     '📊 Şu model için çevresel analiz sonuçları:',
     'results.badge':       'Az önce hesaplandı',
@@ -3547,29 +4903,29 @@ document.getElementById('fLocation').addEventListener('change', ()=>{
 <div class="em-overlay" id="emOverlay" onclick="if(event.target===this)closeEM()">
   <div class="em-modal">
     <h3>⚡ ElectricityMaps API</h3>
-    <p>Datos de intensidad de carbono <strong style="color:var(--green-400)">en tiempo real</strong> para 60+ países. Gratis con registro — tu key se guarda solo en tu navegador.</p>
+    <p data-i18n="em.modal.desc">Datos de intensidad de carbono <strong style="color:var(--green-400)">en tiempo real</strong> para 60+ países. Gratis con registro — tu key se guarda solo en tu navegador.</p>
     <div class="em-steps">
       <ol>
-        <li>Ve a <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → cuenta gratuita</li>
-        <li>Copia tu <strong>auth-token</strong> del dashboard</li>
-        <li>Pégalo aquí ↓</li>
+        <li data-i18n="em.step1">Ve a <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → cuenta gratuita</li>
+        <li data-i18n="em.step2">Copia tu <strong>auth-token</strong> del dashboard</li>
+        <li data-i18n="em.step3">Pégalo aquí ↓</li>
       </ol>
     </div>
-    <input class="em-input" id="emInput" type="password" placeholder="Pega tu auth-token aquí…" autocomplete="off">
-    <div class="em-zone">🌐 Zona detectada: <span id="emZoneDisplay">—</span></div>
+    <input class="em-input" id="emInput" type="password" data-i18n-placeholder="em.input.placeholder" placeholder="Pega tu auth-token aquí…" autocomplete="off">
+    <div class="em-zone">🌐 <span data-i18n="em.zone.label">Zona detectada:</span> <span id="emZoneDisplay">—</span></div>
     <div class="em-btns">
-      <button class="em-remove" id="emRemoveBtn" onclick="removeEMKey()" style="display:none">🗑 Eliminar</button>
-      <button class="em-cancel" onclick="closeEM()">Cancelar</button>
-      <button class="em-save" onclick="saveEMKey()">⚡ Conectar</button>
+      <button class="em-remove" id="emRemoveBtn" onclick="removeEMKey()" style="display:none">🗑 <span data-i18n="em.btn.remove">Eliminar</span></button>
+      <button class="em-cancel" onclick="closeEM()" data-i18n="em.btn.cancel">Cancelar</button>
+      <button class="em-save" onclick="saveEMKey()">⚡ <span data-i18n="em.btn.connect">Conectar</span></button>
     </div>
   </div>
 </div>
 
 <!-- ═══ FLOATING EXPORT BAR ═══ -->
 <div class="float-bar" id="floatBar">
-  <span class="float-lbl" id="floatLbl">Reporte listo</span>
-  <button class="fbtn fbtn-pdf" onclick="exportPDF()">📄 PDF</button>
-  <button class="fbtn fbtn-share" onclick="shareResult()">🔗 Compartir</button>
+  <span class="float-lbl" id="floatLbl" data-i18n="float.ready">Reporte listo</span>
+  <button class="fbtn fbtn-pdf" onclick="exportPDF()">📄 <span data-i18n="btn.pdf.short">PDF</span></button>
+  <button class="fbtn fbtn-share" onclick="shareResult()">🔗 <span data-i18n="btn.share">Compartir</span></button>
   <button class="fbtn fbtn-close" onclick="document.getElementById('floatBar').classList.remove('show')">✕</button>
 </div>
 
