@@ -21,7 +21,7 @@ that legally restrict others from doing anything the license permits.
 
 Attribution requirement (required citation format):
 
-  Díaz Familia, E. (2026). Calculadora de Huella de Carbono en Modelos de IA (v1.1).
+  Díaz Familia, E. (2026). Calculadora de Huella de Carbono en Modelos de IA (v1.2).
   Módulos: Entrenamiento · Inferencia · ROI Verde.
   Metodología científica Díaz Familia (2026) — Correlación R²=0.89.
   Datos de inferencia: Jegham et al. arXiv:2505.09598 (2025).
@@ -40,13 +40,13 @@ Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🌿 Calculadora de Huella de Carbono en Modelos de IA — v1.1
+🌿 Calculadora de Huella de Carbono en Modelos de IA — v1.2
 
 Este trabajo representa una contribución científica original al campo de la
 inteligencia artificial sostenible, desarrollada de forma independiente y con
 el objetivo de democratizar el acceso a metodologías de medición ambiental.
 
-Módulos incluidos en esta versión (v1.1):
+Módulos incluidos en esta versión (v1.2):
   🌫️ Módulo de Entrenamiento
      Impacto ambiental del ciclo de entrenamiento de modelos de IA en 5 dimensiones:
      CO₂, energía, agua, residuos electrónicos y minerales críticos.
@@ -65,10 +65,12 @@ Módulos incluidos en esta versión (v1.1):
   📄 Exportación PDF y Compartir
      Generación de reportes PDF con nombre del modelo en el archivo.
      Web Share API para compartir resultados desde dispositivos móviles.
+     Disponible de forma independiente en los 3 módulos (Entrenamiento,
+     Inferencia, ROI Verde).
 
   🌍 Sistema multiidioma completo (11 idiomas)
      Español, English, Français, Português, Русский, 中文, 日本語,
-     한국어, العربية, עברית, Türkçe — 79 claves traducidas por idioma.
+     한국어, العربية, עברית, Türkçe — 139 claves traducidas por idioma, auditadas al 100%.
      Soporte RTL para árabe y hebreo. Soporte CJK para chino, japonés y coreano.
 
   ⚡ ElectricityMaps API
