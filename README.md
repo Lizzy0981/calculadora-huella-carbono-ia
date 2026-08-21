@@ -6,11 +6,11 @@
 [![Methodology](https://img.shields.io/badge/Metodología-Díaz_Familia_2026-purple?style=for-the-badge&logo=academia)](https://lizzy0981.github.io/paper/)
 [![R² Score](https://img.shields.io/badge/Correlación-R²%3D0.89-blue?style=for-the-badge&logo=chartdotjs)](https://lizzy0981.github.io/paper/)
 [![Models](https://img.shields.io/badge/Modelos_IA-65%2B-orange?style=for-the-badge&logo=openai)](https://github.com/Lizzy0981/calculadora-huella-carbono-ia)
-[![Languages](https://img.shields.io/badge/Idiomas-11-success?style=for-the-badge&logo=google-translate)](https://github.com/Lizzy0981/calculadora-huella-carbono-ia)
-[![Tabs](https://img.shields.io/badge/Módulos-3_Pestañas-cyan?style=for-the-badge&logo=databricks)](https://lizzy0981.github.io/calculadora-huella-carbono-ia/)
+[![Languages](https://img.shields.io/badge/Idiomas-14-success?style=for-the-badge&logo=google-translate)](https://github.com/Lizzy0981/calculadora-huella-carbono-ia)
+[![Tabs](https://img.shields.io/badge/Módulos-5_Pestañas-cyan?style=for-the-badge&logo=databricks)](https://lizzy0981.github.io/calculadora-huella-carbono-ia/)
 [![License](https://img.shields.io/badge/Licencia-CC_BY_4.0-yellow?style=for-the-badge&logo=creativecommons)](LICENSE)
 
-Herramienta científica interactiva para calcular y analizar el **impacto ambiental completo** de modelos de inteligencia artificial en **3 módulos especializados**: entrenamiento, inferencia y ROI verde — cubriendo 5 dimensiones: carbono, energía, agua, residuos electrónicos y minerales críticos.
+Herramienta científica interactiva para calcular y analizar el **impacto ambiental completo** de modelos de inteligencia artificial en **5 módulos especializados**: entrenamiento, inferencia, ROI verde, dashboard de tendencias y planificador carbon-aware — cubriendo 5 dimensiones: carbono, energía, agua, residuos electrónicos y minerales críticos.
 
 Basada en la metodología científica original **Díaz Familia (2026)** con correlación estadística **R²=0.89** entre parámetros y emisiones CO₂. La **primera y única calculadora** capaz de estimar la huella de carbono de **cualquier modelo de IA** en entrenamiento e inferencia — incluso modelos que no existen aún.
 
@@ -22,18 +22,18 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 🌿 ┌──────────────────────────────────────────────────────────────────────┐ 🌿
 ⚡ │   🌍 CALCULADORA DE HUELLA DE CARBONO DE IA — Díaz Familia 2026     │ ⚡
 🧠 │                                                                      │ 🧠
-🔬 │  [ 🌫️ Entrenamiento ]  [ ⚡ Inferencia NUEVO ]  [ 💰 ROI Verde NUEVO]│ 🔬
+🔬 │ [🌫️ Entren.] [⚡ Inferencia] [💰 ROI Verde] [📊 Tendencias NUEVO] [🌤️ Planif.]│ 🔬
 📊 │                                                                      │ 📊
 🌱 │  🧮 5 Dimensiones Científicas    🤖 65+ Modelos de IA               │ 🌱
 💧 │  ⚡ ElectricityMaps Live API      🧠 Estimación Universal             │ 💧
-🔮 │  🌍 11 Idiomas · RTL · CJK        🏆 Rating A+ → F                  │ 🔮
+🔮 │  🌍 14 Idiomas · RTL · CJK        🏆 Rating A+ → F                  │ 🔮
 📄 │  📄 Exportar PDF · 🔗 Compartir  🔑 ElectricityMaps API             │ 📄
 🌈 └──────────────────────────────────────────────────────────────────────┘ 🌈
 ```
 
 ![Calculadora de Huella de Carbono - Interfaz Principal](assets/screenshot-calculadora.svg)
 
-*Interfaz principal con sistema de pestañas: Entrenamiento · Inferencia · ROI Verde.*
+*Interfaz principal con sistema de pestañas: Entrenamiento · Inferencia · ROI Verde · Tendencias · Planificador Verde.*
 
 ![Análisis Comparativo - Gráficos Interactivos](assets/screenshot-graficos.svg)
 
@@ -51,10 +51,12 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 
 ## ✨ Características Revolucionarias
 
-### 🗂️ **Sistema de 3 Pestañas — Módulos Especializados**
+### 🗂️ **Sistema de 5 Pestañas — Módulos Especializados**
 - 🌫️ **Pestaña Entrenamiento** — calculadora original de impacto de entrenamiento de modelos
 - ⚡ **Pestaña Inferencia** — impacto ambiental por consulta individual en producción
 - 💰 **Pestaña ROI Verde** — análisis financiero y ambiental de migrar a modelos eficientes
+- 📊 **Pestaña Tendencias** — dashboard con evolución del CO₂ por año, empresa y categoría sobre los 65+ modelos
+- 🌤️ **Pestaña Planificador Verde** — ranking de regiones por intensidad de carbono y calculadora de ahorro por migración de carga de trabajo
 - 🔄 **Navegación instantánea** — cambio de pestaña sin recargar, scroll automático al inicio
 
 ### ⚡ **Calculadora de Inferencia — Datos Científicos Reales**
@@ -75,7 +77,22 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 - 📋 **Desglose financiero completo** — por año y por período total de análisis
 - 🔢 **Horizonte ajustable** — análisis a 1, 2, 3 o 5 años
 
-### 📄 **Exportación PDF y Compartir — Disponible en los 3 Módulos**
+### 📊 **Dashboard de Tendencias — Análisis Histórico (NUEVO v1.3)**
+- 📈 **Evolución del CO₂ por año** — gráfica de burbujas (Chart.js) con eje Y logarítmico, tamaño de burbuja = e-waste generado
+- 🏢 **Huella promedio por empresa** — ranking horizontal de las 12 empresas con menor huella promedio
+- 🔍 **Filtros combinables** — por categoría (LLM, Imagen, Video, Audio, Código, Visión) y por empresa
+- 🧮 **4 KPIs de panorama general** — modelos analizados, CO₂ promedio, año y empresa más eficientes
+- 🏆 **Rankings Top 10** — modelos más eficientes y de mayor huella, con rating A+ → F
+- 🗓️ **Campo `year` en los 65+ modelos** — año de lanzamiento (aproximado; algunos son proyecciones) que alimenta el análisis temporal
+
+### 🌤️ **Planificador de Carbono (Carbon-Aware Scheduler) — NUEVO v1.3**
+- 🌍 **Ranking de 16 regiones** por intensidad de carbono (IEA 2025), con overlay opcional de datos en vivo vía ElectricityMaps
+- 🟢 **Región más limpia destacada** automáticamente en cada actualización
+- 🧮 **Calculadora de ahorro potencial** — compara tu región actual vs. la más limpia disponible para una carga de trabajo en kWh
+- 🌳 **Equivalencias ambientales** — árboles equivalentes por año según el CO₂ ahorrado
+- 💡 **Buenas prácticas de carbon-aware computing** — recomendaciones generales (no un pronóstico horario en tiempo real)
+
+### 📄 **Exportación PDF y Compartir — Disponible en los 3 Módulos de Entrenamiento**
 - 📄 **Botón PDF independiente** en Entrenamiento, Inferencia y ROI Verde — cada uno genera su propio reporte con nombre de archivo único
 - 📲 **Barra flotante profesional** — aparece automáticamente tras calcular en el módulo de Entrenamiento, con PDF + Compartir
 - 🔗 **Web Share API** — comparte directamente desde móvil o copia al portapapeles, con texto contextual según el módulo (CO₂ entrenamiento, Wh/consulta, o ahorro ROI)
@@ -105,8 +122,8 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 - 📋 **Tabla comparativa** con escala visual proporcional
 
 ### 🌍 **Sistema Multiidioma Profesional — 100% Completo**
-- 🌐 **11 idiomas completos** — ES, EN, FR, PT, RU, ZH, JA, KO, AR, HE, TR
-- ✅ **139/139 claves traducidas** en cada idioma, incluyendo pestañas, inferencia, ROI y modal ElectricityMaps
+- 🌐 **14 idiomas completos** — ES, EN, FR, PT, RU, ZH, JA, KO, AR, HE, TR, DE, IT, ID
+- ✅ **261/261 claves traducidas** en cada idioma, incluyendo las 5 pestañas (Entrenamiento, Inferencia, ROI Verde, Tendencias, Planificador Verde) y el modal ElectricityMaps
 - ↔️ **RTL/LTR automático** — árabe y hebreo con dirección correcta
 - 💾 **Persistencia automática** en localStorage
 - ⚡ **Cambio instantáneo** sin recargar la página
@@ -243,7 +260,7 @@ Ajuste Instruct = 1.15   (RLHF / instruction-tuned)
 ```javascript
 ⚡ HTML5 + CSS3 + JS ES6+    // Sin frameworks — máximo rendimiento y control
 📊 Chart.js 4.4.0           // Gráficas comparativas + dual-axis ROI
-🌐 i18n propio (data-i18n)  // 11 idiomas · 139 claves · RTL + CJK completo
+🌐 i18n propio (data-i18n)  // 14 idiomas · 261 claves · RTL + CJK completo
 📱 Mobile-First Responsive  // 320px → 4K soportado
 📄 CSS @media print         // Exportación PDF optimizada con nombre de archivo
 🎨 CSS Custom Properties    // Design tokens · gradiente animado · cards con color
@@ -315,7 +332,7 @@ Ajuste Instruct = 1.15   (RLHF / instruction-tuned)
 ## 🚀 Deployment Automático
 
 ### 📋 **Checklist Pre-Deploy**
-- ✅ `index.html` completo y autocontenido — 3 módulos + 11 idiomas + 65+ modelos
+- ✅ `index.html` completo y autocontenido — 5 módulos + 14 idiomas + 65+ modelos
 - ✅ `assets/` con favicons y screenshots actualizados
 - ✅ `.github/workflows/deploy.yml` configurado para GitHub Actions
 - ✅ `vercel.json` con headers de seguridad y cache listos
@@ -350,7 +367,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 
 ```
 📂 calculadora-huella-carbono-ia/
-├── 📄 index.html                     # 🧮 App completa autocontenida (3 módulos)
+├── 📄 index.html                     # 🧮 App completa autocontenida (5 módulos)
 ├── 📄 README.md                      # 📖 Documentación completa
 ├── 📄 LICENSE                        # ⚖️ CC BY 4.0
 ├── 📄 .gitignore                     # 🚫 API keys y archivos temp excluidos
@@ -367,7 +384,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
     └── 📄 screenshot-graficos.*     # 📊 Vista módulo ROI comparativo
 ```
 
-> 💡 **Archivo único autocontenido** — Todo el motor científico, 3 módulos, 11 idiomas (139 claves cada uno, auditadas al 100%), 65+ modelos, APIs y sistema de PDF/Share en un solo `index.html`. Sin build steps, sin node_modules, sin compilación.
+> 💡 **Archivo único autocontenido** — Todo el motor científico, 5 módulos, 14 idiomas (261 claves cada uno, auditadas al 100%), 65+ modelos, APIs y sistema de PDF/Share en un solo `index.html`. Sin build steps, sin node_modules, sin compilación.
 
 ---
 
@@ -380,7 +397,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 🔍 SEO:              93/100   // Meta tags optimizados
 💡 Best Practices:   98/100   // HTML5 semántico moderno
 📱 PWA:              91/100   // Service Worker + offline
-🌐 i18n:             100%     // 11 idiomas · 139/139 claves por idioma
+🌐 i18n:             100%     // 14 idiomas · 261/261 claves por idioma
 ```
 
 ### 📈 **Métricas Técnicas**
@@ -411,7 +428,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - [x] 🔗 Botón Compartir (Web Share API + fallback portapapeles)
 - [x] 📲 Barra flotante PDF/Compartir tras calcular
 - [x] ⚡ ElectricityMaps API — 60+ países en tiempo real
-- [x] 🌍 11 idiomas completos — 139/139 claves auditadas y verificadas en los 3 módulos
+- [x] 🌍 11 idiomas completos — 139/139 claves auditadas y verificadas en los 3 módulos originales
 - [x] 🐛 Corrección de botones PDF/Compartir/Limpiar en Inferencia y ROI Verde (no funcionaban)
 - [x] ✏️ Campo de modelo personalizado en Inferencia con `smartEstimate()` integrado
 - [x] 🔍 Auditoría completa de JavaScript — validación de sintaxis y funciones huérfanas
@@ -420,11 +437,17 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - [x] 🚀 Auto-deploy GitHub Actions + Vercel + Netlify
 - [x] 📱 PWA con Service Worker y modo offline
 
+### ✅ **Completado — v1.3 · Agosto 2026**
+- [x] 📊 **Dashboard de Tendencias** — nueva pestaña con evolución del CO₂ por año (gráfica de burbujas logarítmica), huella promedio por empresa, filtros por categoría/empresa y rankings Top 10
+- [x] 🗓️ **Campo `year`** añadido a los 65+ modelos de `MODELS_DB` (año de lanzamiento aproximado) para habilitar el análisis temporal
+- [x] 🌤️ **Carbon-Aware Scheduler** — nueva pestaña con ranking de 16 regiones por intensidad de carbono, overlay de datos en vivo (ElectricityMaps) y calculadora de ahorro potencial por migración de carga de trabajo
+- [x] 🌍 **3 idiomas nuevos** — Alemán (DE), Italiano (IT) e Indonesio (ID), sumando 14 idiomas completos
+- [x] ✅ **261/261 claves traducidas** en cada uno de los 14 idiomas, incluyendo las 5 pestañas
+- [x] 🛡️ **Robustez ante fallos de Chart.js** — si la CDN de gráficas no carga, el Dashboard de Tendencias sigue mostrando KPIs y tablas en vez de romperse por completo
+
 ### 🔜 **Próximas Versiones**
 - [ ] 🔗 **API pública REST** — para integrar la calculadora en proyectos externos
 - [ ] 🗄️ **Base de datos expandida** — 200+ modelos con datos verificados
-- [ ] 📊 **Dashboard de tendencias** — por empresa, año y categoría
-- [ ] 🌍 **Carbon-Aware Scheduler** — recomendación de horarios sostenibles
 
 ---
 
@@ -473,7 +496,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 💰 Financial Risk AI       # Modelos de riesgo, predicciones financieras, ROI
 ☁️ Cloud Computing         # OCI (certificada), APIs, deployment automático
 📝 Scientific Research     # Papers científicos, metodología validada, R²=0.89
-🌍 Multilingual Systems    # 11 idiomas, RTL/LTR, CJK, 139 claves i18n
+🌍 Multilingual Systems    # 14 idiomas, RTL/LTR, CJK, 261 claves i18n
 ```
 
 ---
@@ -504,7 +527,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 🌫️ ENTRENAMIENTO: Calcula la huella de CUALQUIER modelo — incluso sin existir aún
 ⚡ INFERENCIA:    Mide el costo ambiental real de cada consulta en producción
 💰 ROI VERDE:     Justifica el cambio a modelos eficientes con datos económicos reales
-🌍 Disponible en 11 idiomas — accesible para el mundo entero
+🌍 Disponible en 14 idiomas — accesible para el mundo entero
 📚 Cita el paper científico y esta herramienta en tus publicaciones
 ```
 
@@ -527,9 +550,9 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 ```
 🌿 ┌──────────────────────────────────────────────────────────────────┐ 🌿
 ⚡ │              🔬 SCIENTIFICALLY VALIDATED — R²=0.89 🔬            │ ⚡
-🧠 │         🌫️ TRAINING · ⚡ INFERENCE · 💰 GREEN ROI — 3 MODULES   │ 🧠
+🧠 │         🌫️ TRAINING · ⚡ INFERENCE · 💰 ROI · 📊 TRENDS · 🌤️ SCHEDULER — 5 MODULES   │ 🧠
 📄 │              📄 PDF EXPORT · 🔗 SHARE · 📲 FLOATING BAR          │ 📄
-📊 │           🌍 GLOBALLY ACCESSIBLE — 11 LANGUAGES · 139 KEYS       │ 📊
+📊 │           🌍 GLOBALLY ACCESSIBLE — 14 LANGUAGES · 261 KEYS       │ 📊
 🌱 │        ⚡ REAL-TIME DATA — ELECTRICITYMAPS API · 60+ COUNTRIES    │ 🌱
 💧 │     🤖 UNIVERSAL ESTIMATION — ANY AI MODEL — smartEstimate()     │ 💧
 🔮 │  🚀 AUTO-DEPLOY — GITHUB PAGES · VERCEL · NETLIFY — ~30 SECONDS  │ 🔮

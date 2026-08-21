@@ -1174,6 +1174,13 @@ body {
 .roi-equiv strong { color:#a78bfa; }
 .roi-method { margin-top:14px; font-family:var(--font-mono); font-size:9px; color:rgba(255,255,255,.18); text-align:center; line-height:1.8; }
 
+/* ── Trends & Scheduler modules ── */
+.sched-tips { list-style:none; padding:0; margin:0 0 16px; display:flex; flex-direction:column; gap:10px; }
+.sched-tips li { padding:12px 16px; background:rgba(6,192,224,.05); border:1px solid rgba(6,192,224,.15); border-radius:10px; font-size:12.5px; color:var(--text-secondary); line-height:1.6; }
+.sched-region-badge { display:inline-flex; align-items:center; gap:5px; font-family:var(--font-mono); font-size:9px; font-weight:700; padding:2px 7px; border-radius:6px; }
+.sched-region-badge.live { background:rgba(0,232,122,.15); color:var(--green-400); }
+.sched-region-badge.iea { background:rgba(255,255,255,.06); color:var(--text-muted); }
+
 /* ══════════════════════════════════════════════
    DESIGN IMPROVEMENTS
    ══════════════════════════════════════════════ */
@@ -1268,6 +1275,9 @@ body {
           <div class="lang-option" data-lang="ar" onclick="setLang('ar',event)"><span class="lang-flag">🇸🇦</span><span class="lang-name">العربية</span></div>
           <div class="lang-option" data-lang="he" onclick="setLang('he',event)"><span class="lang-flag">🇮🇱</span><span class="lang-name">עברית</span></div>
           <div class="lang-option" data-lang="tr" onclick="setLang('tr',event)"><span class="lang-flag">🇹🇷</span><span class="lang-name">Türkçe</span></div>
+          <div class="lang-option" data-lang="de" onclick="setLang('de',event)"><span class="lang-flag">🇩🇪</span><span class="lang-name">Deutsch</span></div>
+          <div class="lang-option" data-lang="it" onclick="setLang('it',event)"><span class="lang-flag">🇮🇹</span><span class="lang-name">Italiano</span></div>
+          <div class="lang-option" data-lang="id" onclick="setLang('id',event)"><span class="lang-flag">🇮🇩</span><span class="lang-name">Bahasa Indonesia</span></div>
         </div>
       </div>
     </div>
@@ -1311,6 +1321,14 @@ body {
     </button>
     <button class="tab-btn" onclick="switchTab('roi')" id="tbn-roi">
       💰 <span data-i18n="tab.roi">ROI Verde</span>
+      <span class="tbadge" data-i18n="tab.badge.new">NUEVO</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('trends')" id="tbn-trends">
+      📊 <span data-i18n="tab.trends">Tendencias</span>
+      <span class="tbadge" data-i18n="tab.badge.new">NUEVO</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('scheduler')" id="tbn-scheduler">
+      🌤️ <span data-i18n="tab.scheduler">Planificador Verde</span>
       <span class="tbadge" data-i18n="tab.badge.new">NUEVO</span>
     </button>
   </div>
@@ -1681,6 +1699,143 @@ body {
     </div>
   </div><!-- /panel-roi -->
 
+  <div id="panel-trends" class="tab-panel">
+    <div class="roi-hero">
+      <div class="roi-hero-title" data-i18n="trends.hero.title">📊 Dashboard de Tendencias</div>
+      <p class="roi-hero-sub" data-i18n="trends.hero.sub">Analiza la evolución de la huella de carbono de la IA en el tiempo, por empresa y por categoría, usando los 65+ modelos de la base de datos.</p>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">🧮</div><span data-i18n="trends.kpi.title">Panorama General</span></div>
+      <div class="roi-kpis" id="trendsKpis">
+        <div class="roi-kpi g"><div class="roi-kpi-val" id="tkModels">—</div><div class="roi-kpi-lbl" data-i18n="trends.kpi.models">Modelos analizados</div></div>
+        <div class="roi-kpi b"><div class="roi-kpi-val" id="tkAvg">—</div><div class="roi-kpi-lbl" data-i18n="trends.kpi.avg">CO₂ promedio (kg)</div></div>
+        <div class="roi-kpi y"><div class="roi-kpi-val" id="tkBestYear">—</div><div class="roi-kpi-lbl" data-i18n="trends.kpi.bestyear">Año más eficiente (prom.)</div></div>
+        <div class="roi-kpi p"><div class="roi-kpi-val" id="tkBestCompany">—</div><div class="roi-kpi-lbl" data-i18n="trends.kpi.bestcompany">Empresa más eficiente (prom.)</div></div>
+      </div>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">🔍</div><span data-i18n="trends.filters.title">Filtros</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px">
+        <div class="form-group">
+          <label class="section-label" for="trendCategory" data-i18n="trends.filter.category">Categoría</label>
+          <select class="form-select" id="trendCategory" onchange="renderTrends()">
+            <option value="all" data-i18n-opt="trends.filter.all">Todas</option>
+            <option value="LLM">LLM</option>
+            <option value="Image" data-i18n-opt="trends.cat.image">Imagen</option>
+            <option value="Video" data-i18n-opt="trends.cat.video">Video</option>
+            <option value="Audio" data-i18n-opt="trends.cat.audio">Audio</option>
+            <option value="Code" data-i18n-opt="trends.cat.code">Código</option>
+            <option value="Vision" data-i18n-opt="trends.cat.vision">Visión</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="section-label" for="trendCompany" data-i18n="trends.filter.company">Empresa</label>
+          <select class="form-select" id="trendCompany" onchange="renderTrends()">
+            <option value="all" data-i18n-opt="trends.filter.all">Todas</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">📈</div><span data-i18n="trends.chart.scatter.title">Evolución del CO₂ de entrenamiento por año</span></div>
+      <div class="roi-chart-wrap"><canvas id="trendScatterChart"></canvas></div>
+      <div class="roi-method" data-i18n="trends.chart.scatter.note">Cada punto es un modelo (eje Y logarítmico). El tamaño de la burbuja representa el e-waste generado.</div>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">🏢</div><span data-i18n="trends.chart.company.title">Huella promedio por empresa</span></div>
+      <div class="roi-chart-wrap"><canvas id="trendCompanyChart"></canvas></div>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">🏆</div><span data-i18n="trends.table.best.title">Top 10 modelos más eficientes</span></div>
+      <div style="overflow-x:auto">
+        <table class="compare-table" id="trendsBestTable">
+          <thead><tr>
+            <th data-i18n="table.model">Modelo</th><th data-i18n="trends.table.year">Año</th><th data-i18n="table.co2">CO₂ (kg)</th><th data-i18n="table.rating">Rating</th>
+          </tr></thead>
+          <tbody id="trendsBestBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">⚠️</div><span data-i18n="trends.table.worst.title">Top 10 mayor huella de carbono</span></div>
+      <div style="overflow-x:auto">
+        <table class="compare-table" id="trendsWorstTable">
+          <thead><tr>
+            <th data-i18n="table.model">Modelo</th><th data-i18n="trends.table.year">Año</th><th data-i18n="table.co2">CO₂ (kg)</th><th data-i18n="table.rating">Rating</th>
+          </tr></thead>
+          <tbody id="trendsWorstBody"></tbody>
+        </table>
+      </div>
+      <div class="roi-method" data-i18n="trends.method">Datos: base propia de 65+ modelos (entrenamiento) · Metodología Díaz Familia (2026) R²=0.89. Años de lanzamiento aproximados; algunos modelos son proyecciones.</div>
+    </div>
+  </div><!-- /panel-trends -->
+
+  <div id="panel-scheduler" class="tab-panel">
+    <div class="roi-hero">
+      <div class="roi-hero-title" data-i18n="sched.hero.title">🌤️ Planificador de Carbono (Carbon-Aware Scheduler)</div>
+      <p class="roi-hero-sub" data-i18n="sched.hero.sub">Descubre qué región tiene la matriz eléctrica más limpia ahora mismo y estima cuánto CO₂ te ahorrarías moviendo tu carga de trabajo de IA.</p>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">🌍</div><span data-i18n="sched.ranking.title">Ranking de regiones por intensidad de carbono</span></div>
+      <div class="btn-row" style="margin-bottom:16px">
+        <button class="btn-secondary" onclick="refreshSchedulerLive()" id="btnSchedLive">⚡ <span data-i18n="sched.btn.live">Actualizar con datos en vivo</span></button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="compare-table" id="schedTable">
+          <thead><tr>
+            <th data-i18n="sched.table.region">Región</th>
+            <th data-i18n="sched.table.factor">kg CO₂/kWh</th>
+            <th data-i18n="sched.table.source">Fuente</th>
+            <th data-i18n="table.scale">Escala</th>
+          </tr></thead>
+          <tbody id="schedBody"></tbody>
+        </table>
+      </div>
+      <div class="roi-method" data-i18n="sched.ranking.note">🟢 = región más limpia disponible ahora mismo. Los datos en vivo requieren tu clave gratuita de ElectricityMaps (botón ⚡ en la barra superior).</div>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">🧮</div><span data-i18n="sched.calc.title">Calculadora de ahorro potencial</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px">
+        <div class="form-group">
+          <label class="section-label" for="schedCurrentRegion" data-i18n="sched.calc.current">Tu región actual</label>
+          <select class="form-select" id="schedCurrentRegion"></select>
+        </div>
+        <div class="form-group">
+          <label class="section-label" for="schedKwh" data-i18n="sched.calc.kwh">Energía a ejecutar (kWh)</label>
+          <input type="number" class="form-input" id="schedKwh" value="50000" min="1">
+        </div>
+      </div>
+      <div class="btn-row" style="margin-bottom:20px">
+        <button class="btn-primary" onclick="calcSchedulerSavings()" style="flex:1;background:linear-gradient(135deg,#06c0e0,#0891b2);box-shadow:0 4px 20px rgba(8,145,178,.25)">🌤️ <span data-i18n="sched.calc.btn">Calcular ahorro potencial</span></button>
+      </div>
+      <div class="roi-kpis" id="schedResults" style="display:none">
+        <div class="roi-kpi g"><div class="roi-kpi-val" id="schedGreenest">—</div><div class="roi-kpi-lbl" data-i18n="sched.kpi.greenest">Región más limpia</div></div>
+        <div class="roi-kpi b"><div class="roi-kpi-val" id="schedSavingsKg">—</div><div class="roi-kpi-lbl" data-i18n="sched.kpi.savings">kg CO₂ ahorrados</div></div>
+        <div class="roi-kpi p"><div class="roi-kpi-val" id="schedSavingsPct">—</div><div class="roi-kpi-lbl" data-i18n="sched.kpi.pct">Reducción posible</div></div>
+        <div class="roi-kpi y"><div class="roi-kpi-val" id="schedTrees">—</div><div class="roi-kpi-lbl" data-i18n="sched.kpi.trees">Árboles equivalentes/año</div></div>
+      </div>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-title"><div class="icon">💡</div><span data-i18n="sched.tips.title">Buenas prácticas de carbon-aware computing</span></div>
+      <ul class="sched-tips" id="schedTips">
+        <li data-i18n="sched.tip1">Programa entrenamientos largos y no urgentes en regiones u horarios con mayor generación renovable cuando sea posible.</li>
+        <li data-i18n="sched.tip2">Prioriza datacenters en países con matrices limpias (hidro, nuclear, eólica) para cargas de entrenamiento intensivo.</li>
+        <li data-i18n="sched.tip3">Para inferencia en producción, considera el balanceo geográfico de tráfico hacia regiones más limpias cuando la latencia lo permita.</li>
+        <li data-i18n="sched.tip4">Verifica siempre la intensidad de carbono real de tu proveedor cloud — este planificador es una guía, no un reemplazo del dato en tiempo real.</li>
+      </ul>
+      <div class="roi-method" data-i18n="sched.method">Fuente de factores por región: IEA (2025) · Datos en vivo: ElectricityMaps API. El planificador ofrece orientación general, no un pronóstico horario en tiempo real.</div>
+    </div>
+  </div><!-- /panel-scheduler -->
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-links">
@@ -1723,72 +1878,72 @@ const WATER_INTENSITY = 1.8;
 
 /* ─── MODEL DATABASE (50 models with 5 dimensions) ─── */
 const MODELS_DB = [
-  { id:'gpt4',      name:'GPT-4',              co2:1820000, energy:4550000, water:8190000,  ewaste:4765,  minerals:238,  company:'OpenAI',        category:'LLM',   gpus:25000, power:0.7, hours:2000, pue:1.3, loc:0.4,   verified:false },
-  { id:'gpt4o',     name:'GPT-4o',             co2:1456000, energy:3640000, water:6552000,  ewaste:3812,  minerals:191,  company:'OpenAI',        category:'LLM',   gpus:20000, power:0.7, hours:1800, pue:1.3, loc:0.4,   verified:false },
-  { id:'gpt4omini', name:'GPT-4o mini',        co2:  91000, energy: 227500, water: 409500,  ewaste: 191,  minerals:9.5,  company:'OpenAI',        category:'LLM',   gpus:2048,  power:0.4, hours:400,  pue:1.3, loc:0.4,   verified:false },
-  { id:'o1',        name:'o1',                 co2:2730000, energy:6825000, water:12285000, ewaste:7148,  minerals:357,  company:'OpenAI',        category:'LLM',   gpus:30000, power:0.7, hours:2200, pue:1.3, loc:0.4,   verified:false },
-  { id:'o3mini',    name:'o3-mini',            co2: 182000, energy: 455000, water:  819000, ewaste: 477,  minerals: 24,  company:'OpenAI',        category:'LLM',   gpus:4096,  power:0.4, hours:600,  pue:1.3, loc:0.4,   verified:false },
-  { id:'gpt3',      name:'GPT-3',              co2:1713600, energy:3427200, water:6168960,  ewaste:3090,  minerals:155,  company:'OpenAI',        category:'LLM',   gpus:10000, power:0.3, hours:816,  pue:1.4, loc:0.5,   verified:true  },
-  { id:'gpt2',      name:'GPT-2',              co2:    910, energy:   1820, water:    3276, ewaste:   2,  minerals:0.1,  company:'OpenAI',        category:'LLM',   gpus:32,    power:0.3, hours:168,  pue:1.4, loc:0.5,   verified:true  },
-  { id:'claude3o',  name:'Claude 3 Opus',      co2: 182000, energy: 455000, water:  819000, ewaste: 477,  minerals: 24,  company:'Anthropic',     category:'LLM',   gpus:2048,  power:0.4, hours:480,  pue:1.2, loc:0.3,   verified:false },
-  { id:'claudes',   name:'Claude Sonnet',      co2:  18200, energy:  60667, water:  109200, ewaste:  48,  minerals:2.4,  company:'Anthropic',     category:'LLM',   gpus:1024,  power:0.4, hours:120,  pue:1.2, loc:0.3,   verified:true  },
-  { id:'claude35s', name:'Claude 3.5 Sonnet',  co2:  22118, energy:  73728, water:  132710, ewaste:  48,  minerals:2.4,  company:'Anthropic',     category:'LLM',   gpus:1024,  power:0.4, hours:150,  pue:1.2, loc:0.3,   verified:false },
-  { id:'claudeh',   name:'Claude Haiku',       co2:   3640, energy:  12133, water:   21840, ewaste: 9.6,  minerals:0.5,  company:'Anthropic',     category:'LLM',   gpus:256,   power:0.4, hours:80,   pue:1.2, loc:0.3,   verified:false },
-  { id:'gemultra',  name:'Gemini Ultra',       co2: 910000, energy:2275000, water:4095000,  ewaste:2383,  minerals:119,  company:'Google',        category:'LLM',   gpus:16384, power:0.4, hours:1200, pue:1.1, loc:0.3,   verified:false },
-  { id:'gempro',    name:'Gemini Pro',         co2:  45500, energy: 151667, water:  273000, ewaste: 120,  minerals:  6,  company:'Google',        category:'LLM',   gpus:1024,  power:0.4, hours:300,  pue:1.1, loc:0.3,   verified:false },
-  { id:'bard',      name:'Bard / Gemini',      co2:  62335, energy: 207783, water:  374010, ewaste: 192,  minerals:9.6,  company:'Google',        category:'LLM',   gpus:2048,  power:0.4, hours:200,  pue:1.1, loc:0.3,   verified:true  },
-  { id:'palm2',     name:'PaLM 2',             co2: 455000, energy:1137500, water:2047500,  ewaste:1192,  minerals: 60,  company:'Google',        category:'LLM',   gpus:8192,  power:0.4, hours:960,  pue:1.1, loc:0.3,   verified:false },
-  { id:'gemma27b',  name:'Gemma 2 27B',        co2:  18200, energy:  60667, water:  109200, ewaste:  48,  minerals:2.4,  company:'Google',        category:'LLM',   gpus:1024,  power:0.4, hours:120,  pue:1.1, loc:0.3,   verified:false },
-  { id:'gemma2b',   name:'Gemma 2B',           co2:   1820, energy:   6067, water:   10920, ewaste: 4.8,  minerals:0.2,  company:'Google',        category:'LLM',   gpus:256,   power:0.4, hours:60,   pue:1.1, loc:0.3,   verified:false },
-  { id:'t5xxl',     name:'T5-XXL',             co2:   5460, energy:  13650, water:   24570, ewaste:  14,  minerals:0.7,  company:'Google',        category:'LLM',   gpus:128,   power:0.3, hours:336,  pue:1.4, loc:0.5,   verified:true  },
-  { id:'llama3_70', name:'LLaMA 3 70B',        co2:  54600, energy: 182000, water:  327600, ewaste: 143,  minerals:7.2,  company:'Meta',          category:'LLM',   gpus:2048,  power:0.4, hours:280,  pue:1.4, loc:0.386, verified:true  },
-  { id:'llama3_8',  name:'LLaMA 3 8B',         co2:   8190, energy:  27300, water:   49140, ewaste:  21,  minerals:1.1,  company:'Meta',          category:'LLM',   gpus:512,   power:0.4, hours:120,  pue:1.4, loc:0.386, verified:true  },
-  { id:'llama31_405',name:'LLaMA 3.1 405B',    co2: 272000, energy: 680000, water: 1224000, ewaste: 715,  minerals: 36,  company:'Meta',          category:'LLM',   gpus:8192,  power:0.4, hours:576,  pue:1.4, loc:0.386, verified:false },
-  { id:'llama32_3', name:'LLaMA 3.2 3B',       co2:   2730, energy:   9100, water:   16380, ewaste: 7.2,  minerals:0.4,  company:'Meta',          category:'LLM',   gpus:256,   power:0.4, hours:72,   pue:1.4, loc:0.386, verified:false },
-  { id:'llama2_70', name:'LLaMA 2 70B',        co2:  68250, energy: 227500, water:  409500, ewaste: 179,  minerals:  9,  company:'Meta',          category:'LLM',   gpus:2048,  power:0.4, hours:350,  pue:1.4, loc:0.5,   verified:true  },
-  { id:'codellama',  name:'CodeLlama 34B',     co2:  27300, energy:  91000, water:  163800, ewaste:  72,  minerals:3.6,  company:'Meta',          category:'Code',  gpus:1024,  power:0.4, hours:180,  pue:1.4, loc:0.386, verified:false },
-  { id:'mistral7',   name:'Mistral 7B',        co2:   3185, energy:  10617, water:   19110, ewaste: 8.3,  minerals:0.4,  company:'Mistral AI',    category:'LLM',   gpus:512,   power:0.4, hours:55,   pue:1.4, loc:0.3,   verified:true  },
-  { id:'mistralm',   name:'Mixtral 8×7B',      co2:  25480, energy:  84933, water:  152880, ewaste:  66,  minerals:3.3,  company:'Mistral AI',    category:'LLM',   gpus:1024,  power:0.4, hours:220,  pue:1.4, loc:0.3,   verified:false },
-  { id:'deepseek',   name:'DeepSeek-R1',       co2:  72800, energy: 182000, water:  327600, ewaste: 143,  minerals:7.2,  company:'DeepSeek',      category:'LLM',   gpus:2048,  power:0.7, hours:100,  pue:1.4, loc:0.7,   verified:true  },
-  { id:'falcon180',  name:'Falcon 180B',       co2: 227500, energy: 569000, water: 1024200, ewaste: 572,  minerals: 29,  company:'TII',           category:'LLM',   gpus:4096,  power:0.4, hours:480,  pue:1.4, loc:0.4,   verified:false },
-  { id:'falcon40',   name:'Falcon 40B',        co2:  54600, energy: 136500, water:  245700, ewaste: 143,  minerals:7.2,  company:'TII',           category:'LLM',   gpus:1024,  power:0.4, hours:360,  pue:1.4, loc:0.4,   verified:false },
-  { id:'commandrp',  name:'Command R+',        co2:  91000, energy: 227500, water:  409500, ewaste: 238,  minerals: 12,  company:'Cohere',        category:'LLM',   gpus:2048,  power:0.4, hours:300,  pue:1.3, loc:0.4,   verified:false },
-  { id:'commandr',   name:'Command R',         co2:  27300, energy:  68250, water:  122850, ewaste:  71,  minerals:3.6,  company:'Cohere',        category:'LLM',   gpus:1024,  power:0.4, hours:180,  pue:1.3, loc:0.4,   verified:false },
-  { id:'grok1',      name:'Grok-1',            co2: 364000, energy: 910000, water: 1638000, ewaste: 954,  minerals: 48,  company:'xAI',           category:'LLM',   gpus:8192,  power:0.4, hours:768,  pue:1.4, loc:0.386, verified:false },
-  { id:'grok2',      name:'Grok-2',            co2: 728000, energy:1820000, water: 3276000, ewaste:1908,  minerals: 95,  company:'xAI',           category:'LLM',   gpus:16384, power:0.4, hours:768,  pue:1.4, loc:0.386, verified:false },
-  { id:'qwen2',      name:'Qwen 2',            co2:  36400, energy: 121333, water:  218400, ewaste:  95,  minerals:4.8,  company:'Alibaba',       category:'LLM',   gpus:1024,  power:0.4, hours:250,  pue:1.3, loc:0.7,   verified:false },
-  { id:'qwen25_72',  name:'Qwen 2.5 72B',      co2:  54600, energy: 182000, water:  327600, ewaste: 143,  minerals:7.2,  company:'Alibaba',       category:'LLM',   gpus:2048,  power:0.4, hours:280,  pue:1.3, loc:0.7,   verified:false },
-  { id:'yi34',       name:'Yi-34B',            co2:  36400, energy: 121333, water:  218400, ewaste:  95,  minerals:4.8,  company:'01.AI',         category:'LLM',   gpus:1024,  power:0.4, hours:250,  pue:1.3, loc:0.7,   verified:false },
-  { id:'vicuna13',   name:'Vicuna 13B',         co2:   9100, energy:  30333, water:   54600, ewaste:  24,  minerals:1.2,  company:'LMSYS',         category:'LLM',   gpus:512,   power:0.4, hours:120,  pue:1.4, loc:0.386, verified:false },
-  { id:'starcoder2', name:'StarCoder2 15B',     co2:  10920, energy:  36400, water:   65520, ewaste:  29,  minerals:1.4,  company:'HuggingFace',   category:'Code',  gpus:512,   power:0.4, hours:144,  pue:1.4, loc:0.4,   verified:false },
-  { id:'titantext',  name:'Titan Text (AWS)',   co2:  45500, energy: 151667, water:  273000, ewaste: 120,  minerals:  6,  company:'Amazon',        category:'LLM',   gpus:2048,  power:0.4, hours:300,  pue:1.3, loc:0.4,   verified:false },
-  { id:'phi3',       name:'Phi-3 Mini',         co2:   1820, energy:   6067, water:   10920, ewaste: 4.8,  minerals:0.2,  company:'Microsoft',     category:'LLM',   gpus:256,   power:0.4, hours:60,   pue:1.2, loc:0.386, verified:false },
-  { id:'phi2',       name:'Phi-2',              co2:    910, energy:   3033, water:    5460, ewaste: 2.4,  minerals:0.1,  company:'Microsoft',     category:'LLM',   gpus:128,   power:0.4, hours:48,   pue:1.2, loc:0.386, verified:false },
-  { id:'copilot',    name:'GitHub Copilot',     co2:  28665, energy:  57330, water:  103194, ewaste:  63,  minerals:3.2,  company:'Microsoft',     category:'Code',  gpus:512,   power:0.3, hours:168,  pue:1.4, loc:0.5,   verified:false },
-  { id:'bert',       name:'BERT-Large',         co2:   7741, energy:  15482, water:   27872, ewaste:17.3,  minerals:0.9,  company:'Google',        category:'LLM',   gpus:64,    power:0.3, hours:96,   pue:1.4, loc:0.5,   verified:true  },
-  { id:'dalle3',     name:'DALL-E 3',           co2: 160160, energy: 533867, water:  960960, ewaste: 419,  minerals: 21,  company:'OpenAI',        category:'Image', gpus:4096,  power:0.7, hours:100,  pue:1.3, loc:0.386, verified:false },
-  { id:'sd',         name:'Stable Diffusion',   co2:   3913, energy:   7826, water:   14087, ewaste: 8.7,  minerals:0.4,  company:'Stability AI',  category:'Image', gpus:256,   power:0.3, hours:150,  pue:1.4, loc:0.5,   verified:true  },
-  { id:'sdxl',       name:'Stable Diffusion XL',co2:  18200, energy:  36400, water:   65520, ewaste:  40,  minerals:  2,  company:'Stability AI',  category:'Image', gpus:512,   power:0.3, hours:360,  pue:1.4, loc:0.5,   verified:false },
-  { id:'flux1',      name:'FLUX.1',             co2:  27300, energy:  54600, water:   98280, ewaste:  60,  minerals:  3,  company:'Black Forest',  category:'Image', gpus:512,   power:0.4, hours:360,  pue:1.4, loc:0.4,   verified:false },
-  { id:'midjourney', name:'Midjourney',         co2:  45500, energy:  91000, water:  163800, ewaste: 101,  minerals:5.1,  company:'Midjourney',    category:'Image', gpus:256,   power:0.3, hours:150,  pue:1.4, loc:0.5,   verified:false },
-  { id:'whisper',    name:'Whisper Large v3',   co2:   3640, energy:  12133, water:   21840, ewaste: 9.6,  minerals:0.5,  company:'OpenAI',        category:'Audio', gpus:256,   power:0.4, hours:80,   pue:1.3, loc:0.4,   verified:false },
-  { id:'clip',       name:'CLIP ViT-L/14',      co2:   2730, energy:   9100, water:   16380, ewaste: 7.2,  minerals:0.4,  company:'OpenAI',        category:'Vision',gpus:256,   power:0.3, hours:120,  pue:1.3, loc:0.4,   verified:false },
+  { id:'gpt4',      name:'GPT-4',              co2:1820000, energy:4550000, water:8190000,  ewaste:4765,  minerals:238,  company:'OpenAI',        category:'LLM',   gpus:25000, power:0.7, hours:2000, pue:1.3, loc:0.4,   verified:false, year:2023 },
+  { id:'gpt4o',     name:'GPT-4o',             co2:1456000, energy:3640000, water:6552000,  ewaste:3812,  minerals:191,  company:'OpenAI',        category:'LLM',   gpus:20000, power:0.7, hours:1800, pue:1.3, loc:0.4,   verified:false, year:2024 },
+  { id:'gpt4omini', name:'GPT-4o mini',        co2:  91000, energy: 227500, water: 409500,  ewaste: 191,  minerals:9.5,  company:'OpenAI',        category:'LLM',   gpus:2048,  power:0.4, hours:400,  pue:1.3, loc:0.4,   verified:false, year:2024 },
+  { id:'o1',        name:'o1',                 co2:2730000, energy:6825000, water:12285000, ewaste:7148,  minerals:357,  company:'OpenAI',        category:'LLM',   gpus:30000, power:0.7, hours:2200, pue:1.3, loc:0.4,   verified:false, year:2024 },
+  { id:'o3mini',    name:'o3-mini',            co2: 182000, energy: 455000, water:  819000, ewaste: 477,  minerals: 24,  company:'OpenAI',        category:'LLM',   gpus:4096,  power:0.4, hours:600,  pue:1.3, loc:0.4,   verified:false, year:2025 },
+  { id:'gpt3',      name:'GPT-3',              co2:1713600, energy:3427200, water:6168960,  ewaste:3090,  minerals:155,  company:'OpenAI',        category:'LLM',   gpus:10000, power:0.3, hours:816,  pue:1.4, loc:0.5,   verified:true, year:2020  },
+  { id:'gpt2',      name:'GPT-2',              co2:    910, energy:   1820, water:    3276, ewaste:   2,  minerals:0.1,  company:'OpenAI',        category:'LLM',   gpus:32,    power:0.3, hours:168,  pue:1.4, loc:0.5,   verified:true, year:2019  },
+  { id:'claude3o',  name:'Claude 3 Opus',      co2: 182000, energy: 455000, water:  819000, ewaste: 477,  minerals: 24,  company:'Anthropic',     category:'LLM',   gpus:2048,  power:0.4, hours:480,  pue:1.2, loc:0.3,   verified:false, year:2024 },
+  { id:'claudes',   name:'Claude Sonnet',      co2:  18200, energy:  60667, water:  109200, ewaste:  48,  minerals:2.4,  company:'Anthropic',     category:'LLM',   gpus:1024,  power:0.4, hours:120,  pue:1.2, loc:0.3,   verified:true, year:2023  },
+  { id:'claude35s', name:'Claude 3.5 Sonnet',  co2:  22118, energy:  73728, water:  132710, ewaste:  48,  minerals:2.4,  company:'Anthropic',     category:'LLM',   gpus:1024,  power:0.4, hours:150,  pue:1.2, loc:0.3,   verified:false, year:2024 },
+  { id:'claudeh',   name:'Claude Haiku',       co2:   3640, energy:  12133, water:   21840, ewaste: 9.6,  minerals:0.5,  company:'Anthropic',     category:'LLM',   gpus:256,   power:0.4, hours:80,   pue:1.2, loc:0.3,   verified:false, year:2024 },
+  { id:'gemultra',  name:'Gemini Ultra',       co2: 910000, energy:2275000, water:4095000,  ewaste:2383,  minerals:119,  company:'Google',        category:'LLM',   gpus:16384, power:0.4, hours:1200, pue:1.1, loc:0.3,   verified:false, year:2023 },
+  { id:'gempro',    name:'Gemini Pro',         co2:  45500, energy: 151667, water:  273000, ewaste: 120,  minerals:  6,  company:'Google',        category:'LLM',   gpus:1024,  power:0.4, hours:300,  pue:1.1, loc:0.3,   verified:false, year:2023 },
+  { id:'bard',      name:'Bard / Gemini',      co2:  62335, energy: 207783, water:  374010, ewaste: 192,  minerals:9.6,  company:'Google',        category:'LLM',   gpus:2048,  power:0.4, hours:200,  pue:1.1, loc:0.3,   verified:true, year:2023  },
+  { id:'palm2',     name:'PaLM 2',             co2: 455000, energy:1137500, water:2047500,  ewaste:1192,  minerals: 60,  company:'Google',        category:'LLM',   gpus:8192,  power:0.4, hours:960,  pue:1.1, loc:0.3,   verified:false, year:2023 },
+  { id:'gemma27b',  name:'Gemma 2 27B',        co2:  18200, energy:  60667, water:  109200, ewaste:  48,  minerals:2.4,  company:'Google',        category:'LLM',   gpus:1024,  power:0.4, hours:120,  pue:1.1, loc:0.3,   verified:false, year:2024 },
+  { id:'gemma2b',   name:'Gemma 2B',           co2:   1820, energy:   6067, water:   10920, ewaste: 4.8,  minerals:0.2,  company:'Google',        category:'LLM',   gpus:256,   power:0.4, hours:60,   pue:1.1, loc:0.3,   verified:false, year:2024 },
+  { id:'t5xxl',     name:'T5-XXL',             co2:   5460, energy:  13650, water:   24570, ewaste:  14,  minerals:0.7,  company:'Google',        category:'LLM',   gpus:128,   power:0.3, hours:336,  pue:1.4, loc:0.5,   verified:true, year:2019  },
+  { id:'llama3_70', name:'LLaMA 3 70B',        co2:  54600, energy: 182000, water:  327600, ewaste: 143,  minerals:7.2,  company:'Meta',          category:'LLM',   gpus:2048,  power:0.4, hours:280,  pue:1.4, loc:0.386, verified:true, year:2024  },
+  { id:'llama3_8',  name:'LLaMA 3 8B',         co2:   8190, energy:  27300, water:   49140, ewaste:  21,  minerals:1.1,  company:'Meta',          category:'LLM',   gpus:512,   power:0.4, hours:120,  pue:1.4, loc:0.386, verified:true, year:2024  },
+  { id:'llama31_405',name:'LLaMA 3.1 405B',    co2: 272000, energy: 680000, water: 1224000, ewaste: 715,  minerals: 36,  company:'Meta',          category:'LLM',   gpus:8192,  power:0.4, hours:576,  pue:1.4, loc:0.386, verified:false, year:2024 },
+  { id:'llama32_3', name:'LLaMA 3.2 3B',       co2:   2730, energy:   9100, water:   16380, ewaste: 7.2,  minerals:0.4,  company:'Meta',          category:'LLM',   gpus:256,   power:0.4, hours:72,   pue:1.4, loc:0.386, verified:false, year:2024 },
+  { id:'llama2_70', name:'LLaMA 2 70B',        co2:  68250, energy: 227500, water:  409500, ewaste: 179,  minerals:  9,  company:'Meta',          category:'LLM',   gpus:2048,  power:0.4, hours:350,  pue:1.4, loc:0.5,   verified:true, year:2023  },
+  { id:'codellama',  name:'CodeLlama 34B',     co2:  27300, energy:  91000, water:  163800, ewaste:  72,  minerals:3.6,  company:'Meta',          category:'Code',  gpus:1024,  power:0.4, hours:180,  pue:1.4, loc:0.386, verified:false, year:2023 },
+  { id:'mistral7',   name:'Mistral 7B',        co2:   3185, energy:  10617, water:   19110, ewaste: 8.3,  minerals:0.4,  company:'Mistral AI',    category:'LLM',   gpus:512,   power:0.4, hours:55,   pue:1.4, loc:0.3,   verified:true, year:2023  },
+  { id:'mistralm',   name:'Mixtral 8×7B',      co2:  25480, energy:  84933, water:  152880, ewaste:  66,  minerals:3.3,  company:'Mistral AI',    category:'LLM',   gpus:1024,  power:0.4, hours:220,  pue:1.4, loc:0.3,   verified:false, year:2023 },
+  { id:'deepseek',   name:'DeepSeek-R1',       co2:  72800, energy: 182000, water:  327600, ewaste: 143,  minerals:7.2,  company:'DeepSeek',      category:'LLM',   gpus:2048,  power:0.7, hours:100,  pue:1.4, loc:0.7,   verified:true, year:2025  },
+  { id:'falcon180',  name:'Falcon 180B',       co2: 227500, energy: 569000, water: 1024200, ewaste: 572,  minerals: 29,  company:'TII',           category:'LLM',   gpus:4096,  power:0.4, hours:480,  pue:1.4, loc:0.4,   verified:false, year:2023 },
+  { id:'falcon40',   name:'Falcon 40B',        co2:  54600, energy: 136500, water:  245700, ewaste: 143,  minerals:7.2,  company:'TII',           category:'LLM',   gpus:1024,  power:0.4, hours:360,  pue:1.4, loc:0.4,   verified:false, year:2023 },
+  { id:'commandrp',  name:'Command R+',        co2:  91000, energy: 227500, water:  409500, ewaste: 238,  minerals: 12,  company:'Cohere',        category:'LLM',   gpus:2048,  power:0.4, hours:300,  pue:1.3, loc:0.4,   verified:false, year:2024 },
+  { id:'commandr',   name:'Command R',         co2:  27300, energy:  68250, water:  122850, ewaste:  71,  minerals:3.6,  company:'Cohere',        category:'LLM',   gpus:1024,  power:0.4, hours:180,  pue:1.3, loc:0.4,   verified:false, year:2024 },
+  { id:'grok1',      name:'Grok-1',            co2: 364000, energy: 910000, water: 1638000, ewaste: 954,  minerals: 48,  company:'xAI',           category:'LLM',   gpus:8192,  power:0.4, hours:768,  pue:1.4, loc:0.386, verified:false, year:2023 },
+  { id:'grok2',      name:'Grok-2',            co2: 728000, energy:1820000, water: 3276000, ewaste:1908,  minerals: 95,  company:'xAI',           category:'LLM',   gpus:16384, power:0.4, hours:768,  pue:1.4, loc:0.386, verified:false, year:2024 },
+  { id:'qwen2',      name:'Qwen 2',            co2:  36400, energy: 121333, water:  218400, ewaste:  95,  minerals:4.8,  company:'Alibaba',       category:'LLM',   gpus:1024,  power:0.4, hours:250,  pue:1.3, loc:0.7,   verified:false, year:2024 },
+  { id:'qwen25_72',  name:'Qwen 2.5 72B',      co2:  54600, energy: 182000, water:  327600, ewaste: 143,  minerals:7.2,  company:'Alibaba',       category:'LLM',   gpus:2048,  power:0.4, hours:280,  pue:1.3, loc:0.7,   verified:false, year:2024 },
+  { id:'yi34',       name:'Yi-34B',            co2:  36400, energy: 121333, water:  218400, ewaste:  95,  minerals:4.8,  company:'01.AI',         category:'LLM',   gpus:1024,  power:0.4, hours:250,  pue:1.3, loc:0.7,   verified:false, year:2023 },
+  { id:'vicuna13',   name:'Vicuna 13B',         co2:   9100, energy:  30333, water:   54600, ewaste:  24,  minerals:1.2,  company:'LMSYS',         category:'LLM',   gpus:512,   power:0.4, hours:120,  pue:1.4, loc:0.386, verified:false, year:2023 },
+  { id:'starcoder2', name:'StarCoder2 15B',     co2:  10920, energy:  36400, water:   65520, ewaste:  29,  minerals:1.4,  company:'HuggingFace',   category:'Code',  gpus:512,   power:0.4, hours:144,  pue:1.4, loc:0.4,   verified:false, year:2024 },
+  { id:'titantext',  name:'Titan Text (AWS)',   co2:  45500, energy: 151667, water:  273000, ewaste: 120,  minerals:  6,  company:'Amazon',        category:'LLM',   gpus:2048,  power:0.4, hours:300,  pue:1.3, loc:0.4,   verified:false, year:2023 },
+  { id:'phi3',       name:'Phi-3 Mini',         co2:   1820, energy:   6067, water:   10920, ewaste: 4.8,  minerals:0.2,  company:'Microsoft',     category:'LLM',   gpus:256,   power:0.4, hours:60,   pue:1.2, loc:0.386, verified:false, year:2024 },
+  { id:'phi2',       name:'Phi-2',              co2:    910, energy:   3033, water:    5460, ewaste: 2.4,  minerals:0.1,  company:'Microsoft',     category:'LLM',   gpus:128,   power:0.4, hours:48,   pue:1.2, loc:0.386, verified:false, year:2023 },
+  { id:'copilot',    name:'GitHub Copilot',     co2:  28665, energy:  57330, water:  103194, ewaste:  63,  minerals:3.2,  company:'Microsoft',     category:'Code',  gpus:512,   power:0.3, hours:168,  pue:1.4, loc:0.5,   verified:false, year:2021 },
+  { id:'bert',       name:'BERT-Large',         co2:   7741, energy:  15482, water:   27872, ewaste:17.3,  minerals:0.9,  company:'Google',        category:'LLM',   gpus:64,    power:0.3, hours:96,   pue:1.4, loc:0.5,   verified:true, year:2019  },
+  { id:'dalle3',     name:'DALL-E 3',           co2: 160160, energy: 533867, water:  960960, ewaste: 419,  minerals: 21,  company:'OpenAI',        category:'Image', gpus:4096,  power:0.7, hours:100,  pue:1.3, loc:0.386, verified:false, year:2023 },
+  { id:'sd',         name:'Stable Diffusion',   co2:   3913, energy:   7826, water:   14087, ewaste: 8.7,  minerals:0.4,  company:'Stability AI',  category:'Image', gpus:256,   power:0.3, hours:150,  pue:1.4, loc:0.5,   verified:true, year:2022  },
+  { id:'sdxl',       name:'Stable Diffusion XL',co2:  18200, energy:  36400, water:   65520, ewaste:  40,  minerals:  2,  company:'Stability AI',  category:'Image', gpus:512,   power:0.3, hours:360,  pue:1.4, loc:0.5,   verified:false, year:2023 },
+  { id:'flux1',      name:'FLUX.1',             co2:  27300, energy:  54600, water:   98280, ewaste:  60,  minerals:  3,  company:'Black Forest',  category:'Image', gpus:512,   power:0.4, hours:360,  pue:1.4, loc:0.4,   verified:false, year:2024 },
+  { id:'midjourney', name:'Midjourney',         co2:  45500, energy:  91000, water:  163800, ewaste: 101,  minerals:5.1,  company:'Midjourney',    category:'Image', gpus:256,   power:0.3, hours:150,  pue:1.4, loc:0.5,   verified:false, year:2022 },
+  { id:'whisper',    name:'Whisper Large v3',   co2:   3640, energy:  12133, water:   21840, ewaste: 9.6,  minerals:0.5,  company:'OpenAI',        category:'Audio', gpus:256,   power:0.4, hours:80,   pue:1.3, loc:0.4,   verified:false, year:2023 },
+  { id:'clip',       name:'CLIP ViT-L/14',      co2:   2730, energy:   9100, water:   16380, ewaste: 7.2,  minerals:0.4,  company:'OpenAI',        category:'Vision',gpus:256,   power:0.3, hours:120,  pue:1.3, loc:0.4,   verified:false, year:2021 },
   // ── 2025 New Models ──
-  { id:'o3',        name:'o3',               co2:5460000, energy:13650000, water:24570000, ewaste:14322, minerals:716, company:'OpenAI',       category:'LLM',   gpus:50000, power:0.7, hours:2800, pue:1.3, loc:0.4,   verified:false },
-  { id:'gpt45',     name:'GPT-4.5',          co2:3640000, energy:9100000,  water:16380000, ewaste:9546,  minerals:477, company:'OpenAI',       category:'LLM',   gpus:40000, power:0.7, hours:2300, pue:1.3, loc:0.4,   verified:false },
-  { id:'claude35h', name:'Claude 3.5 Haiku', co2:   5460, energy:  18200,  water:   32760, ewaste:  14,  minerals:0.7, company:'Anthropic',    category:'LLM',   gpus:512,   power:0.4, hours:96,   pue:1.2, loc:0.3,   verified:false },
-  { id:'gemini2f',  name:'Gemini 2.0 Flash', co2:  36400, energy: 121333,  water:  218400, ewaste:  95,  minerals:4.8, company:'Google',       category:'LLM',   gpus:1024,  power:0.4, hours:250,  pue:1.1, loc:0.3,   verified:false },
-  { id:'gemini2u',  name:'Gemini 2.0 Ultra', co2:1365000, energy:3412500,  water:6142500,  ewaste:3578,  minerals:179, company:'Google',       category:'LLM',   gpus:24576, power:0.4, hours:1200, pue:1.1, loc:0.3,   verified:false },
-  { id:'llama4m',   name:'LLaMA 4 Maverick', co2: 182000, energy: 455000,  water:  819000, ewaste: 477,  minerals: 24, company:'Meta',         category:'LLM',   gpus:4096,  power:0.4, hours:384,  pue:1.4, loc:0.386, verified:false },
-  { id:'llama4s',   name:'LLaMA 4 Scout',    co2:  45500, energy: 151667,  water:  273000, ewaste: 120,  minerals:  6, company:'Meta',         category:'LLM',   gpus:1024,  power:0.4, hours:300,  pue:1.4, loc:0.386, verified:false },
-  { id:'dseekv3',   name:'DeepSeek-V3',      co2:  54600, energy: 136500,  water:  245700, ewaste: 143,  minerals:7.2, company:'DeepSeek',     category:'LLM',   gpus:2048,  power:0.7, hours:70,   pue:1.4, loc:0.7,   verified:true  },
-  { id:'dseekr2',   name:'DeepSeek-R2',      co2: 109200, energy: 273000,  water:  491400, ewaste: 286,  minerals: 14, company:'DeepSeek',     category:'LLM',   gpus:4096,  power:0.7, hours:140,  pue:1.4, loc:0.7,   verified:false },
-  { id:'qwen3_72',  name:'Qwen3 72B',        co2:  63700, energy: 212333,  water:  382200, ewaste: 167,  minerals:8.4, company:'Alibaba',      category:'LLM',   gpus:2048,  power:0.4, hours:320,  pue:1.3, loc:0.7,   verified:false },
-  { id:'mistral3',  name:'Mistral 3',        co2:   5460, energy:  18200,  water:   32760, ewaste:  14,  minerals:0.7, company:'Mistral AI',   category:'LLM',   gpus:512,   power:0.4, hours:96,   pue:1.4, loc:0.3,   verified:false },
-  { id:'phi4',      name:'Phi-4',            co2:   7280, energy:  24267,  water:   43680, ewaste:  19,  minerals:1.0, company:'Microsoft',    category:'LLM',   gpus:512,   power:0.4, hours:144,  pue:1.2, loc:0.386, verified:false },
-  { id:'nemotron',  name:'Nemotron-70B',     co2:  81900, energy: 273000,  water:  491400, ewaste: 215,  minerals: 11, company:'NVIDIA',       category:'LLM',   gpus:2048,  power:0.7, hours:120,  pue:1.3, loc:0.386, verified:false },
-  { id:'sora',      name:'Sora',             co2: 910000, energy:2275000,  water:4095000,  ewaste:2383,  minerals:119, company:'OpenAI',       category:'Video', gpus:16384, power:0.7, hours:1100, pue:1.3, loc:0.4,   verified:false },
-  { id:'flux1p',    name:'FLUX.1 Pro',       co2:  45500, energy:  91000,  water:  163800, ewaste: 101,  minerals:5.1, company:'Black Forest', category:'Image', gpus:512,   power:0.4, hours:600,  pue:1.4, loc:0.4,   verified:false },
+  { id:'o3',        name:'o3',               co2:5460000, energy:13650000, water:24570000, ewaste:14322, minerals:716, company:'OpenAI',       category:'LLM',   gpus:50000, power:0.7, hours:2800, pue:1.3, loc:0.4,   verified:false, year:2025 },
+  { id:'gpt45',     name:'GPT-4.5',          co2:3640000, energy:9100000,  water:16380000, ewaste:9546,  minerals:477, company:'OpenAI',       category:'LLM',   gpus:40000, power:0.7, hours:2300, pue:1.3, loc:0.4,   verified:false, year:2025 },
+  { id:'claude35h', name:'Claude 3.5 Haiku', co2:   5460, energy:  18200,  water:   32760, ewaste:  14,  minerals:0.7, company:'Anthropic',    category:'LLM',   gpus:512,   power:0.4, hours:96,   pue:1.2, loc:0.3,   verified:false, year:2024 },
+  { id:'gemini2f',  name:'Gemini 2.0 Flash', co2:  36400, energy: 121333,  water:  218400, ewaste:  95,  minerals:4.8, company:'Google',       category:'LLM',   gpus:1024,  power:0.4, hours:250,  pue:1.1, loc:0.3,   verified:false, year:2025 },
+  { id:'gemini2u',  name:'Gemini 2.0 Ultra', co2:1365000, energy:3412500,  water:6142500,  ewaste:3578,  minerals:179, company:'Google',       category:'LLM',   gpus:24576, power:0.4, hours:1200, pue:1.1, loc:0.3,   verified:false, year:2025 },
+  { id:'llama4m',   name:'LLaMA 4 Maverick', co2: 182000, energy: 455000,  water:  819000, ewaste: 477,  minerals: 24, company:'Meta',         category:'LLM',   gpus:4096,  power:0.4, hours:384,  pue:1.4, loc:0.386, verified:false, year:2025 },
+  { id:'llama4s',   name:'LLaMA 4 Scout',    co2:  45500, energy: 151667,  water:  273000, ewaste: 120,  minerals:  6, company:'Meta',         category:'LLM',   gpus:1024,  power:0.4, hours:300,  pue:1.4, loc:0.386, verified:false, year:2025 },
+  { id:'dseekv3',   name:'DeepSeek-V3',      co2:  54600, energy: 136500,  water:  245700, ewaste: 143,  minerals:7.2, company:'DeepSeek',     category:'LLM',   gpus:2048,  power:0.7, hours:70,   pue:1.4, loc:0.7,   verified:true, year:2024  },
+  { id:'dseekr2',   name:'DeepSeek-R2',      co2: 109200, energy: 273000,  water:  491400, ewaste: 286,  minerals: 14, company:'DeepSeek',     category:'LLM',   gpus:4096,  power:0.7, hours:140,  pue:1.4, loc:0.7,   verified:false, year:2025 },
+  { id:'qwen3_72',  name:'Qwen3 72B',        co2:  63700, energy: 212333,  water:  382200, ewaste: 167,  minerals:8.4, company:'Alibaba',      category:'LLM',   gpus:2048,  power:0.4, hours:320,  pue:1.3, loc:0.7,   verified:false, year:2025 },
+  { id:'mistral3',  name:'Mistral 3',        co2:   5460, energy:  18200,  water:   32760, ewaste:  14,  minerals:0.7, company:'Mistral AI',   category:'LLM',   gpus:512,   power:0.4, hours:96,   pue:1.4, loc:0.3,   verified:false, year:2025 },
+  { id:'phi4',      name:'Phi-4',            co2:   7280, energy:  24267,  water:   43680, ewaste:  19,  minerals:1.0, company:'Microsoft',    category:'LLM',   gpus:512,   power:0.4, hours:144,  pue:1.2, loc:0.386, verified:false, year:2024 },
+  { id:'nemotron',  name:'Nemotron-70B',     co2:  81900, energy: 273000,  water:  491400, ewaste: 215,  minerals: 11, company:'NVIDIA',       category:'LLM',   gpus:2048,  power:0.7, hours:120,  pue:1.3, loc:0.386, verified:false, year:2024 },
+  { id:'sora',      name:'Sora',             co2: 910000, energy:2275000,  water:4095000,  ewaste:2383,  minerals:119, company:'OpenAI',       category:'Video', gpus:16384, power:0.7, hours:1100, pue:1.3, loc:0.4,   verified:false, year:2024 },
+  { id:'flux1p',    name:'FLUX.1 Pro',       co2:  45500, energy:  91000,  water:  163800, ewaste: 101,  minerals:5.1, company:'Black Forest', category:'Image', gpus:512,   power:0.4, hours:600,  pue:1.4, loc:0.4,   verified:false, year:2024 },
 ];
 
 /* ─── APP STATE ─── */
@@ -2005,11 +2160,13 @@ function showEstBanner(paramB){
 
 /* ── Tab System ── */
 function switchTab(tab){
-  ['training','inference','roi'].forEach(t=>{
+  ['training','inference','roi','trends','scheduler'].forEach(t=>{
     document.getElementById('panel-'+t)?.classList.toggle('active',t===tab);
     document.getElementById('tbn-'+t)?.classList.toggle('active',t===tab);
   });
   window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='trends')    initTrends();
+  if(tab==='scheduler') initScheduler();
 }
 
 /* ── PDF & Share ── */
@@ -2744,6 +2901,248 @@ function buildTable(r){
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   MÓDULO 4 — DASHBOARD DE TENDENCIAS
+   Analiza MODELS_DB por año, empresa y categoría (Chart.js)
+   ═══════════════════════════════════════════════════════════════ */
+let _trendScatterChart=null, _trendCompanyChart=null, _trendsInit=false;
+
+function initTrends(){
+  if(!_trendsInit){
+    const companies=[...new Set(MODELS_DB.map(m=>m.company))].sort();
+    const sel=document.getElementById('trendCompany');
+    companies.forEach(c=>{
+      const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o);
+    });
+    _trendsInit=true;
+  }
+  renderTrends();
+}
+
+function _trendFiltered(){
+  const cat=document.getElementById('trendCategory').value;
+  const co =document.getElementById('trendCompany').value;
+  return MODELS_DB.filter(m=>(cat==='all'||m.category===cat)&&(co==='all'||m.company===co));
+}
+
+function renderTrends(){
+  const data=_trendFiltered();
+  if(!data.length) return;
+
+  const fmtS=n=>n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':n.toFixed(0);
+  document.getElementById('tkModels').textContent=data.length;
+  const avg=data.reduce((s,m)=>s+m.co2,0)/data.length;
+  document.getElementById('tkAvg').textContent=fmtS(avg);
+
+  const byYear={};
+  data.forEach(m=>{ (byYear[m.year]=byYear[m.year]||[]).push(m.co2); });
+  let bestYear='—',bestYearAvg=Infinity;
+  Object.keys(byYear).forEach(y=>{
+    const a=byYear[y].reduce((s,v)=>s+v,0)/byYear[y].length;
+    if(a<bestYearAvg){bestYearAvg=a;bestYear=y;}
+  });
+  document.getElementById('tkBestYear').textContent=bestYear;
+
+  const byCompany={};
+  data.forEach(m=>{ (byCompany[m.company]=byCompany[m.company]||[]).push(m.co2); });
+  let bestCo='—',bestCoAvg=Infinity;
+  Object.keys(byCompany).forEach(c=>{
+    const a=byCompany[c].reduce((s,v)=>s+v,0)/byCompany[c].length;
+    if(a<bestCoAvg){bestCoAvg=a;bestCo=c;}
+  });
+  document.getElementById('tkBestCompany').textContent=bestCo;
+
+  // Charts depend on Chart.js (loaded from CDN); if it fails to load (offline,
+  // ad-blocker, CDN outage) the KPIs and tables above must still work.
+  if(typeof Chart!=='undefined'){
+    try{ buildTrendScatterChart(data); }catch(e){ console.error('trendScatterChart failed:',e); }
+    try{ buildTrendCompanyChart(byCompany); }catch(e){ console.error('trendCompanyChart failed:',e); }
+  }
+  buildTrendsTables(data);
+}
+
+function buildTrendScatterChart(data){
+  if(_trendScatterChart) _trendScatterChart.destroy();
+  const catColors={LLM:'#00e87a',Image:'#fbbf24',Video:'#f87171',Audio:'#22d3ee',Code:'#a78bfa',Vision:'#60a5fa'};
+  const cats=[...new Set(data.map(m=>m.category))];
+  const datasets=cats.map(cat=>{
+    const pts=data.filter(m=>m.category===cat);
+    return {
+      label:cat,
+      data:pts.map(m=>({x:m.year,y:m.co2,r:Math.max(4,Math.min(22,Math.sqrt(m.ewaste)/3)),name:m.name})),
+      backgroundColor:(catColors[cat]||'#94a3b8')+'55',
+      borderColor:catColors[cat]||'#94a3b8',
+      borderWidth:1.5,
+    };
+  });
+  const ctx=document.getElementById('trendScatterChart').getContext('2d');
+  _trendScatterChart=new Chart(ctx,{
+    type:'bubble',
+    data:{datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{color:'#7db896',font:{size:10},boxWidth:10}},
+        tooltip:{
+          backgroundColor:'rgba(9,20,16,0.95)',borderColor:'rgba(0,232,122,0.3)',borderWidth:1,
+          titleColor:'#d4edde',bodyColor:'#7db896',
+          callbacks:{
+            title:ctx=>ctx[0].raw.name,
+            label:ctx=>`${ctx.raw.x} · ${Math.round(ctx.raw.y).toLocaleString('es')} kg CO₂`
+          }
+        }
+      },
+      scales:{
+        x:{title:{display:true,text:t('trends.axis.year'),color:'#5a9470'},ticks:{color:'#5a9470',stepSize:1},grid:{color:'rgba(0,232,122,0.05)'}},
+        y:{type:'logarithmic',title:{display:true,text:'CO₂ (kg, log)',color:'#5a9470'},ticks:{color:'#5a9470',callback:v=>{const l=Math.log10(v);return Number.isInteger(l)?v.toLocaleString('es'):'';}},grid:{color:'rgba(0,232,122,0.05)'}}
+      }
+    }
+  });
+}
+
+function buildTrendCompanyChart(byCompany){
+  if(_trendCompanyChart) _trendCompanyChart.destroy();
+  const rows=Object.keys(byCompany).map(c=>({
+    name:c, avg:byCompany[c].reduce((s,v)=>s+v,0)/byCompany[c].length
+  })).sort((a,b)=>a.avg-b.avg).slice(0,12);
+  const ctx=document.getElementById('trendCompanyChart').getContext('2d');
+  _trendCompanyChart=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:rows.map(r=>r.name),
+      datasets:[{
+        data:rows.map(r=>r.avg),
+        backgroundColor:'rgba(0,232,122,.18)',
+        borderColor:'#00e87a', borderWidth:1.5, borderRadius:6, borderSkipped:false,
+      }]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{
+        callbacks:{label:ctx=>'  '+Math.round(ctx.parsed.x).toLocaleString('es')+' kg CO₂ (prom.)'}
+      }},
+      scales:{
+        x:{grid:{color:'rgba(0,232,122,0.05)'},ticks:{color:'#5a9470',font:{family:"'JetBrains Mono',monospace",size:10},callback:v=>v>=1e6?v/1e6+'M':v>=1e3?v/1e3+'K':v}},
+        y:{grid:{display:false},ticks:{color:'#7db896',font:{size:11}}}
+      }
+    }
+  });
+}
+
+function buildTrendsTables(data){
+  const sorted=[...data].sort((a,b)=>a.co2-b.co2);
+  const best=sorted.slice(0,10);
+  const worst=sorted.slice(-10).reverse();
+  const fmtS=n=>n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':n.toFixed(0);
+  const fill=(id,rows)=>{
+    const tbody=document.getElementById(id); tbody.innerHTML='';
+    rows.forEach(m=>{
+      const rating=getRating(m.co2);
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${m.name}</td><td>${m.year}</td><td>${fmtS(m.co2)}</td><td><span style="color:${rating.color};font-weight:700">${rating.label}</span></td>`;
+      tbody.appendChild(tr);
+    });
+  };
+  fill('trendsBestBody',best);
+  fill('trendsWorstBody',worst);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MÓDULO 5 — CARBON-AWARE SCHEDULER
+   Ranking de regiones (IEA 2025 + ElectricityMaps en vivo)
+   y calculadora de ahorro potencial por migración de región
+   ═══════════════════════════════════════════════════════════════ */
+const REGION_FACTORS=[
+  {cc:'IS',flag:'🇮🇸',name:'Islandia',factor:0.012},
+  {cc:'NO',flag:'🇳🇴',name:'Noruega',factor:0.026},
+  {cc:'SE',flag:'🇸🇪',name:'Suecia',factor:0.045},
+  {cc:'FR',flag:'🇫🇷',name:'Francia',factor:0.058},
+  {cc:'BR',flag:'🇧🇷',name:'Brasil',factor:0.074},
+  {cc:'CA',flag:'🇨🇦',name:'Canadá',factor:0.150},
+  {cc:'GB',flag:'🇬🇧',name:'Reino Unido',factor:0.233},
+  {cc:'DO',flag:'🇩🇴',name:'Rep. Dominicana',factor:0.276},
+  {cc:'EU',flag:'🇪🇺',name:'Europa (prom.)',factor:0.300},
+  {cc:'DE',flag:'🇩🇪',name:'Alemania',factor:0.350},
+  {cc:'US',flag:'🇺🇸',name:'EE.UU.',factor:0.386},
+  {cc:'JP',flag:'🇯🇵',name:'Japón',factor:0.471},
+  {cc:'AU',flag:'🇦🇺',name:'Australia',factor:0.550},
+  {cc:'IN',flag:'🇮🇳',name:'India',factor:0.630},
+  {cc:'CN',flag:'🇨🇳',name:'China',factor:0.700},
+  {cc:'PL',flag:'🇵🇱',name:'Polonia',factor:0.810},
+];
+let _schedInit=false, _schedLiveData={};
+
+function initScheduler(){
+  if(!_schedInit){
+    const selCur=document.getElementById('schedCurrentRegion');
+    REGION_FACTORS.forEach(r=>{
+      const o=document.createElement('option');
+      o.value=r.cc; o.textContent=`${r.flag} ${r.name} — ${r.factor} kg/kWh`;
+      if(r.cc==='US') o.selected=true;
+      selCur.appendChild(o);
+    });
+    _schedInit=true;
+  }
+  renderSchedulerTable();
+}
+
+function renderSchedulerTable(){
+  const rows=[...REGION_FACTORS].sort((a,b)=>(_schedLiveData[a.cc]??a.factor)-(_schedLiveData[b.cc]??b.factor));
+  const max=Math.max(...rows.map(r=>_schedLiveData[r.cc]??r.factor));
+  const tbody=document.getElementById('schedBody'); tbody.innerHTML='';
+  rows.forEach((r,i)=>{
+    const val=_schedLiveData[r.cc]??r.factor;
+    const isLive=_schedLiveData[r.cc]!==undefined;
+    const pct=max>0?(val/max*100):0;
+    const tr=document.createElement('tr');
+    if(i===0) tr.className='highlight';
+    tr.innerHTML=`
+      <td>${i===0?'🟢 ':''}${r.flag} ${r.name}</td>
+      <td>${val.toFixed(3)}</td>
+      <td><span class="sched-region-badge ${isLive?'live':'iea'}">${isLive?'⚡ LIVE':'IEA 2025'}</span></td>
+      <td class="compare-bar-cell">
+        <div class="compare-bar"><div class="compare-bar-fill" style="width:${pct}%;background:${i===0?'#00e87a':'#5a9470'}"></div></div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function refreshSchedulerLive(){
+  if(!EM_KEY){ toast(t('sched.toast.nokey'),'error',3500); return; }
+  const btn=document.getElementById('btnSchedLive');
+  btn.disabled=true; const orig=btn.innerHTML; btn.innerHTML='⏳ …';
+  const targets=REGION_FACTORS.filter(r=>EM_ZONES[r.cc]);
+  await Promise.all(targets.map(async r=>{
+    try{
+      const val=await fetchEM(EM_ZONES[r.cc]);
+      if(typeof val==='number') _schedLiveData[r.cc]=val/1000; // gCO₂/kWh -> kg/kWh
+    }catch(e){ /* se conserva el valor IEA de respaldo para esta región */ }
+  }));
+  btn.disabled=false; btn.innerHTML=orig;
+  renderSchedulerTable();
+  toast(t('sched.toast.updated'),'success',2500);
+}
+
+function calcSchedulerSavings(){
+  const curCC=document.getElementById('schedCurrentRegion').value;
+  const kwh=parseFloat(document.getElementById('schedKwh').value)||0;
+  const cur=REGION_FACTORS.find(r=>r.cc===curCC);
+  if(!cur||kwh<=0) return;
+  const curFactor=_schedLiveData[curCC]??cur.factor;
+  const greenest=[...REGION_FACTORS].sort((a,b)=>(_schedLiveData[a.cc]??a.factor)-(_schedLiveData[b.cc]??b.factor))[0];
+  const greenFactor=_schedLiveData[greenest.cc]??greenest.factor;
+  const co2Cur=kwh*curFactor;
+  const co2Green=kwh*greenFactor;
+  const savedKg=Math.max(0,co2Cur-co2Green);
+  const pct=co2Cur>0?(savedKg/co2Cur*100):0;
+
+  document.getElementById('schedGreenest').textContent=`${greenest.flag} ${greenest.name}`;
+  document.getElementById('schedSavingsKg').textContent=savedKg.toLocaleString('es',{maximumFractionDigits:0});
+  document.getElementById('schedSavingsPct').textContent=pct.toFixed(1)+'%';
+  document.getElementById('schedTrees').textContent=Math.round(savedKg/EQUIV.TREE_YEAR).toLocaleString('es');
+  document.getElementById('schedResults').style.display='grid';
+}
+
+/* ═══════════════════════════════════════════════════════════════
    SISTEMA DE TRADUCCIÓN COMPLETO — 11 idiomas
    Cada clave cubre TODOS los textos visibles de la página
    ═══════════════════════════════════════════════════════════════ */
@@ -2965,6 +3364,57 @@ const T = {
     /* Footer */
     'footer.paper':        '📄 Paper científico',
     'footer.copy':         '© 2026 Elizabeth Díaz Familia · Metodología: Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': 'Tendencias',
+    'tab.scheduler': 'Planificador Verde',
+    'trends.hero.title': '📊 Dashboard de Tendencias',
+    'trends.hero.sub': 'Analiza la evolución de la huella de carbono de la IA en el tiempo, por empresa y por categoría, usando los 65+ modelos de la base de datos.',
+    'trends.kpi.title': 'Panorama General',
+    'trends.kpi.models': 'Modelos analizados',
+    'trends.kpi.avg': 'CO₂ promedio (kg)',
+    'trends.kpi.bestyear': 'Año más eficiente (prom.)',
+    'trends.kpi.bestcompany': 'Empresa más eficiente (prom.)',
+    'trends.filters.title': 'Filtros',
+    'trends.filter.category': 'Categoría',
+    'trends.filter.company': 'Empresa',
+    'trends.filter.all': 'Todas',
+    'trends.cat.image': 'Imagen',
+    'trends.cat.video': 'Video',
+    'trends.cat.audio': 'Audio',
+    'trends.cat.code': 'Código',
+    'trends.cat.vision': 'Visión',
+    'trends.chart.scatter.title': 'Evolución del CO₂ de entrenamiento por año',
+    'trends.chart.scatter.note': 'Cada punto es un modelo (eje Y logarítmico). El tamaño de la burbuja representa el e-waste generado.',
+    'trends.chart.company.title': 'Huella promedio por empresa',
+    'trends.table.best.title': 'Top 10 modelos más eficientes',
+    'trends.table.worst.title': 'Top 10 mayor huella de carbono',
+    'trends.table.year': 'Año',
+    'trends.method': 'Datos: base propia de 65+ modelos (entrenamiento) · Metodología Díaz Familia (2026) R²=0.89. Años de lanzamiento aproximados; algunos modelos son proyecciones.',
+    'trends.axis.year': 'Año',
+    'sched.hero.title': '🌤️ Planificador de Carbono (Carbon-Aware Scheduler)',
+    'sched.hero.sub': 'Descubre qué región tiene la matriz eléctrica más limpia ahora mismo y estima cuánto CO₂ te ahorrarías moviendo tu carga de trabajo de IA.',
+    'sched.ranking.title': 'Ranking de regiones por intensidad de carbono',
+    'sched.btn.live': 'Actualizar con datos en vivo',
+    'sched.table.region': 'Región',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': 'Fuente',
+    'sched.ranking.note': '🟢 = región más limpia disponible ahora mismo. Los datos en vivo requieren tu clave gratuita de ElectricityMaps (botón ⚡ en la barra superior).',
+    'sched.calc.title': 'Calculadora de ahorro potencial',
+    'sched.calc.current': 'Tu región actual',
+    'sched.calc.kwh': 'Energía a ejecutar (kWh)',
+    'sched.calc.btn': 'Calcular ahorro potencial',
+    'sched.kpi.greenest': 'Región más limpia',
+    'sched.kpi.savings': 'kg CO₂ ahorrados',
+    'sched.kpi.pct': 'Reducción posible',
+    'sched.kpi.trees': 'Árboles equivalentes/año',
+    'sched.tips.title': 'Buenas prácticas de carbon-aware computing',
+    'sched.tip1': 'Programa entrenamientos largos y no urgentes en regiones u horarios con mayor generación renovable cuando sea posible.',
+    'sched.tip2': 'Prioriza datacenters en países con matrices limpias (hidro, nuclear, eólica) para cargas de entrenamiento intensivo.',
+    'sched.tip3': 'Para inferencia en producción, considera el balanceo geográfico de tráfico hacia regiones más limpias cuando la latencia lo permita.',
+    'sched.tip4': 'Verifica siempre la intensidad de carbono real de tu proveedor cloud — este planificador es una guía, no un reemplazo del dato en tiempo real.',
+    'sched.method': 'Fuente de factores por región: IEA (2025) · Datos en vivo: ElectricityMaps API. El planificador ofrece orientación general, no un pronóstico horario en tiempo real.',
+    'sched.toast.nokey': '⚠️ Conecta tu clave de ElectricityMaps primero (botón ⚡ arriba)',
+    'sched.toast.updated': '⚡ Datos en vivo actualizados',
   },
 
   en: {
@@ -3153,6 +3603,57 @@ const T = {
     'toast.cleared':'🗑 Data cleared','toast.preset':'✓ Parameters loaded',
     'footer.paper':'📄 Scientific paper',
     'footer.copy':'© 2026 Elizabeth Díaz Familia · Methodology: Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': 'Trends',
+    'tab.scheduler': 'Green Scheduler',
+    'trends.hero.title': '📊 Trends Dashboard',
+    'trends.hero.sub': 'Analyze how AI\'s carbon footprint evolves over time, by company and by category, using the 65+ models in the database.',
+    'trends.kpi.title': 'Overview',
+    'trends.kpi.models': 'Models analyzed',
+    'trends.kpi.avg': 'Average CO₂ (kg)',
+    'trends.kpi.bestyear': 'Most efficient year (avg.)',
+    'trends.kpi.bestcompany': 'Most efficient company (avg.)',
+    'trends.filters.title': 'Filters',
+    'trends.filter.category': 'Category',
+    'trends.filter.company': 'Company',
+    'trends.filter.all': 'All',
+    'trends.cat.image': 'Image',
+    'trends.cat.video': 'Video',
+    'trends.cat.audio': 'Audio',
+    'trends.cat.code': 'Code',
+    'trends.cat.vision': 'Vision',
+    'trends.chart.scatter.title': 'Training CO₂ evolution by year',
+    'trends.chart.scatter.note': 'Each point is a model (logarithmic Y axis). Bubble size represents e-waste generated.',
+    'trends.chart.company.title': 'Average footprint by company',
+    'trends.table.best.title': 'Top 10 most efficient models',
+    'trends.table.worst.title': 'Top 10 highest carbon footprint',
+    'trends.table.year': 'Year',
+    'trends.method': 'Data: proprietary database of 65+ models (training) · Díaz Familia (2026) methodology R²=0.89. Release years are approximate; some models are projections.',
+    'trends.axis.year': 'Year',
+    'sched.hero.title': '🌤️ Carbon-Aware Scheduler',
+    'sched.hero.sub': 'Discover which region has the cleanest power grid right now and estimate how much CO₂ you\'d save by moving your AI workload.',
+    'sched.ranking.title': 'Region ranking by carbon intensity',
+    'sched.btn.live': 'Update with live data',
+    'sched.table.region': 'Region',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': 'Source',
+    'sched.ranking.note': '🟢 = cleanest region available right now. Live data requires your free ElectricityMaps key (⚡ button in the top bar).',
+    'sched.calc.title': 'Potential savings calculator',
+    'sched.calc.current': 'Your current region',
+    'sched.calc.kwh': 'Energy to run (kWh)',
+    'sched.calc.btn': 'Calculate potential savings',
+    'sched.kpi.greenest': 'Cleanest region',
+    'sched.kpi.savings': 'kg CO₂ saved',
+    'sched.kpi.pct': 'Possible reduction',
+    'sched.kpi.trees': 'Equivalent trees/year',
+    'sched.tips.title': 'Carbon-aware computing best practices',
+    'sched.tip1': 'Schedule long, non-urgent training runs in regions or time windows with higher renewable generation when possible.',
+    'sched.tip2': 'Prioritize datacenters in countries with clean grids (hydro, nuclear, wind) for intensive training workloads.',
+    'sched.tip3': 'For production inference, consider geographically balancing traffic toward cleaner regions when latency allows it.',
+    'sched.tip4': 'Always verify the actual carbon intensity from your cloud provider — this scheduler is a guide, not a replacement for real-time data.',
+    'sched.method': 'Regional factor source: IEA (2025) · Live data: ElectricityMaps API. This scheduler offers general guidance, not a real-time hourly forecast.',
+    'sched.toast.nokey': '⚠️ Connect your ElectricityMaps key first (⚡ button above)',
+    'sched.toast.updated': '⚡ Live data updated',
   },
 
   fr: {
@@ -3340,6 +3841,57 @@ const T = {
     'toast.cleared':'🗑 Données effacées','toast.preset':'✓ Paramètres chargés',
     'footer.paper':'📄 Article scientifique',
     'footer.copy':'© 2026 Elizabeth Díaz Familia · Méthodologie : Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': 'Tendances',
+    'tab.scheduler': 'Planificateur Vert',
+    'trends.hero.title': '📊 Tableau de bord des tendances',
+    'trends.hero.sub': 'Analysez l\'évolution de l\'empreinte carbone de l\'IA dans le temps, par entreprise et par catégorie, à partir des 65+ modèles de la base de données.',
+    'trends.kpi.title': 'Vue d\'ensemble',
+    'trends.kpi.models': 'Modèles analysés',
+    'trends.kpi.avg': 'CO₂ moyen (kg)',
+    'trends.kpi.bestyear': 'Année la plus efficace (moy.)',
+    'trends.kpi.bestcompany': 'Entreprise la plus efficace (moy.)',
+    'trends.filters.title': 'Filtres',
+    'trends.filter.category': 'Catégorie',
+    'trends.filter.company': 'Entreprise',
+    'trends.filter.all': 'Toutes',
+    'trends.cat.image': 'Image',
+    'trends.cat.video': 'Vidéo',
+    'trends.cat.audio': 'Audio',
+    'trends.cat.code': 'Code',
+    'trends.cat.vision': 'Vision',
+    'trends.chart.scatter.title': 'Évolution du CO₂ d\'entraînement par année',
+    'trends.chart.scatter.note': 'Chaque point représente un modèle (axe Y logarithmique). La taille de la bulle représente les déchets électroniques générés.',
+    'trends.chart.company.title': 'Empreinte moyenne par entreprise',
+    'trends.table.best.title': 'Top 10 des modèles les plus efficaces',
+    'trends.table.worst.title': 'Top 10 de la plus forte empreinte carbone',
+    'trends.table.year': 'Année',
+    'trends.method': 'Données : base propriétaire de 65+ modèles (entraînement) · Méthodologie Díaz Familia (2026) R²=0.89. Années de sortie approximatives ; certains modèles sont des projections.',
+    'trends.axis.year': 'Année',
+    'sched.hero.title': '🌤️ Planificateur sensible au carbone',
+    'sched.hero.sub': 'Découvrez quelle région a le réseau électrique le plus propre en ce moment et estimez combien de CO₂ vous économiseriez en déplaçant votre charge de travail IA.',
+    'sched.ranking.title': 'Classement des régions par intensité carbone',
+    'sched.btn.live': 'Mettre à jour avec des données en direct',
+    'sched.table.region': 'Région',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': 'Source',
+    'sched.ranking.note': '🟢 = région la plus propre disponible actuellement. Les données en direct nécessitent votre clé ElectricityMaps gratuite (bouton ⚡ dans la barre supérieure).',
+    'sched.calc.title': 'Calculateur d\'économies potentielles',
+    'sched.calc.current': 'Votre région actuelle',
+    'sched.calc.kwh': 'Énergie à exécuter (kWh)',
+    'sched.calc.btn': 'Calculer les économies potentielles',
+    'sched.kpi.greenest': 'Région la plus propre',
+    'sched.kpi.savings': 'kg CO₂ économisés',
+    'sched.kpi.pct': 'Réduction possible',
+    'sched.kpi.trees': 'Arbres équivalents/an',
+    'sched.tips.title': 'Bonnes pratiques du calcul sensible au carbone',
+    'sched.tip1': 'Planifiez les entraînements longs et non urgents dans des régions ou des créneaux horaires avec une production renouvelable plus élevée lorsque c\'est possible.',
+    'sched.tip2': 'Privilégiez les datacenters dans les pays à réseaux propres (hydro, nucléaire, éolien) pour les charges d\'entraînement intensif.',
+    'sched.tip3': 'Pour l\'inférence en production, envisagez d\'équilibrer géographiquement le trafic vers des régions plus propres lorsque la latence le permet.',
+    'sched.tip4': 'Vérifiez toujours l\'intensité carbone réelle de votre fournisseur cloud — ce planificateur est un guide, pas un remplacement des données en temps réel.',
+    'sched.method': 'Source des facteurs régionaux : IEA (2025) · Données en direct : API ElectricityMaps. Ce planificateur offre une orientation générale, pas une prévision horaire en temps réel.',
+    'sched.toast.nokey': '⚠️ Connectez d\'abord votre clé ElectricityMaps (bouton ⚡ ci-dessus)',
+    'sched.toast.updated': '⚡ Données en direct mises à jour',
   },
 
   pt: {
@@ -3527,6 +4079,57 @@ const T = {
     'toast.cleared':'🗑 Dados limpos','toast.preset':'✓ Parâmetros carregados',
     'footer.paper':'📄 Artigo científico',
     'footer.copy':'© 2026 Elizabeth Díaz Familia · Metodologia: Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': 'Tendências',
+    'tab.scheduler': 'Planejador Verde',
+    'trends.hero.title': '📊 Painel de Tendências',
+    'trends.hero.sub': 'Analise a evolução da pegada de carbono da IA ao longo do tempo, por empresa e por categoria, usando os 65+ modelos da base de dados.',
+    'trends.kpi.title': 'Panorama Geral',
+    'trends.kpi.models': 'Modelos analisados',
+    'trends.kpi.avg': 'CO₂ médio (kg)',
+    'trends.kpi.bestyear': 'Ano mais eficiente (méd.)',
+    'trends.kpi.bestcompany': 'Empresa mais eficiente (méd.)',
+    'trends.filters.title': 'Filtros',
+    'trends.filter.category': 'Categoria',
+    'trends.filter.company': 'Empresa',
+    'trends.filter.all': 'Todas',
+    'trends.cat.image': 'Imagem',
+    'trends.cat.video': 'Vídeo',
+    'trends.cat.audio': 'Áudio',
+    'trends.cat.code': 'Código',
+    'trends.cat.vision': 'Visão',
+    'trends.chart.scatter.title': 'Evolução do CO₂ de treinamento por ano',
+    'trends.chart.scatter.note': 'Cada ponto é um modelo (eixo Y logarítmico). O tamanho da bolha representa o e-waste gerado.',
+    'trends.chart.company.title': 'Pegada média por empresa',
+    'trends.table.best.title': 'Top 10 modelos mais eficientes',
+    'trends.table.worst.title': 'Top 10 maior pegada de carbono',
+    'trends.table.year': 'Ano',
+    'trends.method': 'Dados: base própria de 65+ modelos (treinamento) · Metodologia Díaz Familia (2026) R²=0.89. Anos de lançamento aproximados; alguns modelos são projeções.',
+    'trends.axis.year': 'Ano',
+    'sched.hero.title': '🌤️ Planejador Sensível ao Carbono',
+    'sched.hero.sub': 'Descubra qual região tem a matriz elétrica mais limpa agora e estime quanto CO₂ você economizaria ao mover sua carga de trabalho de IA.',
+    'sched.ranking.title': 'Ranking de regiões por intensidade de carbono',
+    'sched.btn.live': 'Atualizar com dados ao vivo',
+    'sched.table.region': 'Região',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': 'Fonte',
+    'sched.ranking.note': '🟢 = região mais limpa disponível agora. Os dados ao vivo exigem sua chave gratuita do ElectricityMaps (botão ⚡ na barra superior).',
+    'sched.calc.title': 'Calculadora de economia potencial',
+    'sched.calc.current': 'Sua região atual',
+    'sched.calc.kwh': 'Energia a executar (kWh)',
+    'sched.calc.btn': 'Calcular economia potencial',
+    'sched.kpi.greenest': 'Região mais limpa',
+    'sched.kpi.savings': 'kg CO₂ economizados',
+    'sched.kpi.pct': 'Redução possível',
+    'sched.kpi.trees': 'Árvores equivalentes/ano',
+    'sched.tips.title': 'Boas práticas de carbon-aware computing',
+    'sched.tip1': 'Programe treinamentos longos e não urgentes em regiões ou horários com maior geração renovável, quando possível.',
+    'sched.tip2': 'Priorize datacenters em países com matrizes limpas (hidrelétrica, nuclear, eólica) para cargas de treinamento intensivo.',
+    'sched.tip3': 'Para inferência em produção, considere balancear geograficamente o tráfego para regiões mais limpas quando a latência permitir.',
+    'sched.tip4': 'Sempre verifique a intensidade de carbono real do seu provedor de nuvem — este planejador é um guia, não um substituto do dado em tempo real.',
+    'sched.method': 'Fonte dos fatores regionais: IEA (2025) · Dados ao vivo: API ElectricityMaps. Este planejador oferece orientação geral, não uma previsão horária em tempo real.',
+    'sched.toast.nokey': '⚠️ Conecte sua chave do ElectricityMaps primeiro (botão ⚡ acima)',
+    'sched.toast.updated': '⚡ Dados ao vivo atualizados',
   },
 
   ru: {
@@ -3714,6 +4317,57 @@ const T = {
     'toast.cleared':'🗑 Данные очищены','toast.preset':'✓ Параметры загружены',
     'footer.paper':'📄 Научная статья',
     'footer.copy':'© 2026 Элизабет Диас Фамилия · Методология: Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': 'Тенденции',
+    'tab.scheduler': 'Зелёный планировщик',
+    'trends.hero.title': '📊 Панель тенденций',
+    'trends.hero.sub': 'Анализируйте эволюцию углеродного следа ИИ во времени, по компаниям и категориям, используя более 65 моделей из базы данных.',
+    'trends.kpi.title': 'Общая картина',
+    'trends.kpi.models': 'Проанализировано моделей',
+    'trends.kpi.avg': 'Средний CO₂ (кг)',
+    'trends.kpi.bestyear': 'Самый эффективный год (сред.)',
+    'trends.kpi.bestcompany': 'Самая эффективная компания (сред.)',
+    'trends.filters.title': 'Фильтры',
+    'trends.filter.category': 'Категория',
+    'trends.filter.company': 'Компания',
+    'trends.filter.all': 'Все',
+    'trends.cat.image': 'Изображение',
+    'trends.cat.video': 'Видео',
+    'trends.cat.audio': 'Аудио',
+    'trends.cat.code': 'Код',
+    'trends.cat.vision': 'Компьютерное зрение',
+    'trends.chart.scatter.title': 'Динамика CO₂ обучения по годам',
+    'trends.chart.scatter.note': 'Каждая точка — модель (логарифмическая ось Y). Размер пузырька отражает объём образующихся э-отходов.',
+    'trends.chart.company.title': 'Средний след по компаниям',
+    'trends.table.best.title': 'Топ-10 самых эффективных моделей',
+    'trends.table.worst.title': 'Топ-10 с наибольшим углеродным следом',
+    'trends.table.year': 'Год',
+    'trends.method': 'Данные: собственная база из 65+ моделей (обучение) · Методология Díaz Familia (2026) R²=0.89. Годы выпуска приблизительны; некоторые модели являются прогнозами.',
+    'trends.axis.year': 'Год',
+    'sched.hero.title': '🌤️ Углеродно-осознанный планировщик',
+    'sched.hero.sub': 'Узнайте, в каком регионе сейчас самая чистая энергосистема, и оцените, сколько CO₂ вы сэкономите, перенеся туда свою рабочую нагрузку ИИ.',
+    'sched.ranking.title': 'Рейтинг регионов по углеродоёмкости',
+    'sched.btn.live': 'Обновить с помощью данных в реальном времени',
+    'sched.table.region': 'Регион',
+    'sched.table.factor': 'кг CO₂/кВт·ч',
+    'sched.table.source': 'Источник',
+    'sched.ranking.note': '🟢 = самый чистый регион на данный момент. Для данных в реальном времени нужен бесплатный ключ ElectricityMaps (кнопка ⚡ в верхней панели).',
+    'sched.calc.title': 'Калькулятор потенциальной экономии',
+    'sched.calc.current': 'Ваш текущий регион',
+    'sched.calc.kwh': 'Энергия для выполнения (кВт·ч)',
+    'sched.calc.btn': 'Рассчитать потенциальную экономию',
+    'sched.kpi.greenest': 'Самый чистый регион',
+    'sched.kpi.savings': 'кг CO₂ сэкономлено',
+    'sched.kpi.pct': 'Возможное сокращение',
+    'sched.kpi.trees': 'Эквивалент деревьев/год',
+    'sched.tips.title': 'Лучшие практики углеродно-осознанных вычислений',
+    'sched.tip1': 'По возможности планируйте длительное, не срочное обучение моделей в регионах или временных окнах с более высокой выработкой возобновляемой энергии.',
+    'sched.tip2': 'Отдавайте предпочтение дата-центрам в странах с чистой энергосистемой (ГЭС, АЭС, ветер) для интенсивных задач обучения.',
+    'sched.tip3': 'Для инференса в продакшене рассмотрите географическое распределение трафика в более чистые регионы, если это допускает задержка.',
+    'sched.tip4': 'Всегда проверяйте фактическую углеродоёмкость у вашего облачного провайдера — этот планировщик является ориентиром, а не заменой данных в реальном времени.',
+    'sched.method': 'Источник региональных коэффициентов: МЭА (2025) · Данные в реальном времени: ElectricityMaps API. Этот планировщик даёт общие рекомендации, а не почасовой прогноз в реальном времени.',
+    'sched.toast.nokey': '⚠️ Сначала подключите ключ ElectricityMaps (кнопка ⚡ выше)',
+    'sched.toast.updated': '⚡ Данные в реальном времени обновлены',
   },
 
   zh: {
@@ -3899,6 +4553,57 @@ const T = {
     'toast.cleared':'🗑 数据已清除','toast.preset':'✓ 参数已加载',
     'footer.paper':'📄 科学论文',
     'footer.copy':'© 2026 伊丽莎白·迪亚斯·法米利亚 · 方法论：Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': '趋势',
+    'tab.scheduler': '绿色调度器',
+    'trends.hero.title': '📊 趋势仪表盘',
+    'trends.hero.sub': '使用数据库中的65+个模型，分析人工智能碳足迹随时间、公司和类别的演变。',
+    'trends.kpi.title': '总体概览',
+    'trends.kpi.models': '已分析模型数',
+    'trends.kpi.avg': '平均CO₂（千克）',
+    'trends.kpi.bestyear': '平均最高效年份',
+    'trends.kpi.bestcompany': '平均最高效公司',
+    'trends.filters.title': '筛选条件',
+    'trends.filter.category': '类别',
+    'trends.filter.company': '公司',
+    'trends.filter.all': '全部',
+    'trends.cat.image': '图像',
+    'trends.cat.video': '视频',
+    'trends.cat.audio': '音频',
+    'trends.cat.code': '代码',
+    'trends.cat.vision': '视觉',
+    'trends.chart.scatter.title': '训练CO₂排放逐年变化',
+    'trends.chart.scatter.note': '每个点代表一个模型（Y轴为对数刻度）。气泡大小代表产生的电子垃圾量。',
+    'trends.chart.company.title': '各公司平均碳足迹',
+    'trends.table.best.title': '最高效的10个模型',
+    'trends.table.worst.title': '碳足迹最高的10个模型',
+    'trends.table.year': '年份',
+    'trends.method': '数据来源：65+模型专有数据库（训练）· Díaz Familia（2026）方法论 R²=0.89。发布年份为近似值；部分模型为预测。',
+    'trends.axis.year': '年份',
+    'sched.hero.title': '🌤️ 碳感知调度器',
+    'sched.hero.sub': '了解当前哪个地区的电网最清洁，并估算迁移AI工作负载可节省多少CO₂。',
+    'sched.ranking.title': '按碳强度排名的地区',
+    'sched.btn.live': '使用实时数据更新',
+    'sched.table.region': '地区',
+    'sched.table.factor': '千克CO₂/千瓦时',
+    'sched.table.source': '来源',
+    'sched.ranking.note': '🟢 = 当前可用的最清洁地区。实时数据需要您的免费ElectricityMaps密钥（顶部栏的⚡按钮）。',
+    'sched.calc.title': '潜在节省计算器',
+    'sched.calc.current': '您当前所在地区',
+    'sched.calc.kwh': '待运行能耗（千瓦时）',
+    'sched.calc.btn': '计算潜在节省量',
+    'sched.kpi.greenest': '最清洁地区',
+    'sched.kpi.savings': '节省的CO₂（千克）',
+    'sched.kpi.pct': '可能减少的比例',
+    'sched.kpi.trees': '相当于树木数量/年',
+    'sched.tips.title': '碳感知计算最佳实践',
+    'sched.tip1': '尽可能将长时间、非紧急的训练任务安排在可再生能源发电量较高的地区或时段。',
+    'sched.tip2': '对于高强度训练负载，优先选择电网清洁（水电、核能、风能）国家的数据中心。',
+    'sched.tip3': '对于生产环境推理，在延迟允许的情况下，考虑将流量按地理位置均衡分配到更清洁的地区。',
+    'sched.tip4': '请始终核实您云服务商的实际碳强度——此调度器仅供参考，不能替代实时数据。',
+    'sched.method': '地区系数来源：国际能源署（IEA，2025）· 实时数据：ElectricityMaps API。此调度器仅提供一般性指导，并非实时逐时预测。',
+    'sched.toast.nokey': '⚠️ 请先连接您的ElectricityMaps密钥（上方⚡按钮）',
+    'sched.toast.updated': '⚡ 实时数据已更新',
   },
 
   ja: {
@@ -4084,6 +4789,57 @@ const T = {
     'toast.cleared':'🗑 データがクリアされました','toast.preset':'✓ パラメータを読み込みました',
     'footer.paper':'📄 科学論文',
     'footer.copy':'© 2026 エリザベス・ディアス・ファミリア · 方法論: Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': 'トレンド',
+    'tab.scheduler': 'グリーンスケジューラー',
+    'trends.hero.title': '📊 トレンドダッシュボード',
+    'trends.hero.sub': 'データベースの65以上のモデルを使用して、AIのカーボンフットプリントが時間・企業・カテゴリー別にどう変化するかを分析します。',
+    'trends.kpi.title': '全体概要',
+    'trends.kpi.models': '分析済みモデル数',
+    'trends.kpi.avg': '平均CO₂（kg）',
+    'trends.kpi.bestyear': '最も効率的な年（平均）',
+    'trends.kpi.bestcompany': '最も効率的な企業（平均）',
+    'trends.filters.title': 'フィルター',
+    'trends.filter.category': 'カテゴリー',
+    'trends.filter.company': '企業',
+    'trends.filter.all': 'すべて',
+    'trends.cat.image': '画像',
+    'trends.cat.video': '動画',
+    'trends.cat.audio': '音声',
+    'trends.cat.code': 'コード',
+    'trends.cat.vision': 'ビジョン',
+    'trends.chart.scatter.title': '年別トレーニングCO₂の推移',
+    'trends.chart.scatter.note': '各点は1つのモデル（Y軸は対数）。バブルの大きさは発生した電子廃棄物量を表します。',
+    'trends.chart.company.title': '企業別平均フットプリント',
+    'trends.table.best.title': '最も効率的なモデル トップ10',
+    'trends.table.worst.title': 'カーボンフットプリントが最も大きいモデル トップ10',
+    'trends.table.year': '年',
+    'trends.method': 'データ：65以上のモデルの独自データベース（トレーニング）・Díaz Familia（2026）手法 R²=0.89。発売年は概算であり、一部のモデルは予測です。',
+    'trends.axis.year': '年',
+    'sched.hero.title': '🌤️ カーボンアウェア・スケジューラー',
+    'sched.hero.sub': '現在最もクリーンな電力網を持つ地域を見つけ、AIワークロードを移動することでどれだけCO₂を削減できるか見積もります。',
+    'sched.ranking.title': '炭素強度による地域ランキング',
+    'sched.btn.live': 'ライブデータで更新',
+    'sched.table.region': '地域',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': '出典',
+    'sched.ranking.note': '🟢 = 現在利用可能な最もクリーンな地域。ライブデータには無料のElectricityMapsキーが必要です（上部バーの⚡ボタン）。',
+    'sched.calc.title': '潜在的な削減量計算機',
+    'sched.calc.current': '現在の地域',
+    'sched.calc.kwh': '実行するエネルギー量（kWh）',
+    'sched.calc.btn': '潜在的な削減量を計算',
+    'sched.kpi.greenest': '最もクリーンな地域',
+    'sched.kpi.savings': '削減されたCO₂（kg）',
+    'sched.kpi.pct': '可能な削減率',
+    'sched.kpi.trees': '相当する木の本数/年',
+    'sched.tips.title': 'カーボンアウェア・コンピューティングのベストプラクティス',
+    'sched.tip1': '可能な場合、長時間かつ緊急でないトレーニングは再生可能エネルギー発電量の多い地域や時間帯にスケジュールしてください。',
+    'sched.tip2': '集中的なトレーニング負荷には、クリーンな電力網（水力・原子力・風力）を持つ国のデータセンターを優先してください。',
+    'sched.tip3': '本番環境での推論では、レイテンシが許す場合、よりクリーンな地域へのトラフィックの地理的分散を検討してください。',
+    'sched.tip4': '必ずクラウドプロバイダーの実際の炭素強度を確認してください — このスケジューラーはガイドであり、リアルタイムデータの代替にはなりません。',
+    'sched.method': '地域係数の出典：IEA（2025）・ライブデータ：ElectricityMaps API。このスケジューラーは一般的な指針を提供するものであり、リアルタイムの時間単位予報ではありません。',
+    'sched.toast.nokey': '⚠️ 先にElectricityMapsキーを接続してください（上の⚡ボタン）',
+    'sched.toast.updated': '⚡ ライブデータを更新しました',
   },
 
   ko: {
@@ -4269,6 +5025,57 @@ const T = {
     'toast.cleared':'🗑 데이터 지워짐','toast.preset':'✓ 매개변수 로드됨',
     'footer.paper':'📄 과학 논문',
     'footer.copy':'© 2026 엘리자베스 디아스 파밀리아 · 방법론: Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': '트렌드',
+    'tab.scheduler': '그린 스케줄러',
+    'trends.hero.title': '📊 트렌드 대시보드',
+    'trends.hero.sub': '데이터베이스의 65개 이상 모델을 사용하여 시간, 기업, 카테고리별 AI 탄소 발자국의 변화를 분석하세요.',
+    'trends.kpi.title': '개요',
+    'trends.kpi.models': '분석된 모델',
+    'trends.kpi.avg': '평균 CO₂ (kg)',
+    'trends.kpi.bestyear': '가장 효율적인 연도 (평균)',
+    'trends.kpi.bestcompany': '가장 효율적인 기업 (평균)',
+    'trends.filters.title': '필터',
+    'trends.filter.category': '카테고리',
+    'trends.filter.company': '기업',
+    'trends.filter.all': '전체',
+    'trends.cat.image': '이미지',
+    'trends.cat.video': '비디오',
+    'trends.cat.audio': '오디오',
+    'trends.cat.code': '코드',
+    'trends.cat.vision': '비전',
+    'trends.chart.scatter.title': '연도별 훈련 CO₂ 변화',
+    'trends.chart.scatter.note': '각 점은 하나의 모델입니다 (Y축 로그 스케일). 버블 크기는 발생한 전자 폐기물량을 나타냅니다.',
+    'trends.chart.company.title': '기업별 평균 발자국',
+    'trends.table.best.title': '가장 효율적인 모델 상위 10',
+    'trends.table.worst.title': '탄소 발자국이 가장 큰 모델 상위 10',
+    'trends.table.year': '연도',
+    'trends.method': '데이터: 65개 이상 모델의 자체 데이터베이스 (훈련) · Díaz Familia (2026) 방법론 R²=0.89. 출시 연도는 근사치이며 일부 모델은 예측치입니다.',
+    'trends.axis.year': '연도',
+    'sched.hero.title': '🌤️ 탄소 인식 스케줄러',
+    'sched.hero.sub': '지금 어느 지역의 전력망이 가장 깨끗한지 확인하고, AI 워크로드를 이전하면 얼마나 많은 CO₂를 절감할 수 있는지 추정하세요.',
+    'sched.ranking.title': '탄소 집약도별 지역 순위',
+    'sched.btn.live': '실시간 데이터로 업데이트',
+    'sched.table.region': '지역',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': '출처',
+    'sched.ranking.note': '🟢 = 현재 이용 가능한 가장 깨끗한 지역입니다. 실시간 데이터는 무료 ElectricityMaps 키가 필요합니다 (상단 바의 ⚡ 버튼).',
+    'sched.calc.title': '잠재적 절감 계산기',
+    'sched.calc.current': '현재 지역',
+    'sched.calc.kwh': '실행할 에너지 (kWh)',
+    'sched.calc.btn': '잠재적 절감량 계산',
+    'sched.kpi.greenest': '가장 깨끗한 지역',
+    'sched.kpi.savings': '절감된 CO₂ (kg)',
+    'sched.kpi.pct': '가능한 감축률',
+    'sched.kpi.trees': '상당하는 나무/년',
+    'sched.tips.title': '탄소 인식 컴퓨팅 모범 사례',
+    'sched.tip1': '가능하다면 길고 긴급하지 않은 훈련 작업은 재생에너지 발전량이 높은 지역이나 시간대에 예약하세요.',
+    'sched.tip2': '집약적인 훈련 워크로드에는 청정 전력망(수력, 원자력, 풍력)을 갖춘 국가의 데이터센터를 우선하세요.',
+    'sched.tip3': '프로덕션 추론의 경우, 지연 시간이 허용된다면 트래픽을 더 깨끗한 지역으로 지리적으로 분산하는 것을 고려하세요.',
+    'sched.tip4': '항상 클라우드 제공업체의 실제 탄소 집약도를 확인하세요 — 이 스케줄러는 가이드일 뿐 실시간 데이터를 대체하지 않습니다.',
+    'sched.method': '지역 계수 출처: IEA (2025) · 실시간 데이터: ElectricityMaps API. 이 스케줄러는 일반적인 가이드를 제공하며 실시간 시간별 예보를 대체하지 않습니다.',
+    'sched.toast.nokey': '⚠️ 먼저 ElectricityMaps 키를 연결하세요 (위의 ⚡ 버튼)',
+    'sched.toast.updated': '⚡ 실시간 데이터 업데이트됨',
   },
 
   ar: {
@@ -4454,6 +5261,57 @@ const T = {
     'toast.cleared':'🗑 تم مسح البيانات','toast.preset':'✓ تم تحميل المعاملات',
     'footer.paper':'📄 الورقة العلمية',
     'footer.copy':'© 2026 إليزابيث دياز فاميليا · المنهجية: Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': 'الاتجاهات',
+    'tab.scheduler': 'المُجدوِل الأخضر',
+    'trends.hero.title': '📊 لوحة الاتجاهات',
+    'trends.hero.sub': 'حلّل تطور البصمة الكربونية للذكاء الاصطناعي عبر الزمن، حسب الشركة والفئة، باستخدام أكثر من 65 نموذجًا في قاعدة البيانات.',
+    'trends.kpi.title': 'نظرة عامة',
+    'trends.kpi.models': 'النماذج التي تم تحليلها',
+    'trends.kpi.avg': 'متوسط ثاني أكسيد الكربون (كجم)',
+    'trends.kpi.bestyear': 'العام الأكثر كفاءة (بالمتوسط)',
+    'trends.kpi.bestcompany': 'الشركة الأكثر كفاءة (بالمتوسط)',
+    'trends.filters.title': 'عوامل التصفية',
+    'trends.filter.category': 'الفئة',
+    'trends.filter.company': 'الشركة',
+    'trends.filter.all': 'الكل',
+    'trends.cat.image': 'صورة',
+    'trends.cat.video': 'فيديو',
+    'trends.cat.audio': 'صوت',
+    'trends.cat.code': 'برمجة',
+    'trends.cat.vision': 'رؤية حاسوبية',
+    'trends.chart.scatter.title': 'تطور ثاني أكسيد الكربون الناتج عن التدريب حسب العام',
+    'trends.chart.scatter.note': 'كل نقطة تمثل نموذجًا (المحور الصادي لوغاريتمي). يمثل حجم الفقاعة كمية النفايات الإلكترونية الناتجة.',
+    'trends.chart.company.title': 'متوسط البصمة حسب الشركة',
+    'trends.table.best.title': 'أفضل 10 نماذج من حيث الكفاءة',
+    'trends.table.worst.title': 'أعلى 10 نماذج من حيث البصمة الكربونية',
+    'trends.table.year': 'العام',
+    'trends.method': 'البيانات: قاعدة بيانات خاصة تضم أكثر من 65 نموذجًا (تدريب) · منهجية Díaz Familia (2026) R²=0.89. سنوات الإصدار تقريبية؛ بعض النماذج هي توقعات.',
+    'trends.axis.year': 'العام',
+    'sched.hero.title': '🌤️ المُجدوِل الواعي بالكربون',
+    'sched.hero.sub': 'اكتشف أي منطقة تمتلك أنظف شبكة كهرباء الآن، وقدّر كمية ثاني أكسيد الكربون التي يمكنك توفيرها بنقل عبء عمل الذكاء الاصطناعي الخاص بك.',
+    'sched.ranking.title': 'تصنيف المناطق حسب كثافة الكربون',
+    'sched.btn.live': 'تحديث ببيانات مباشرة',
+    'sched.table.region': 'المنطقة',
+    'sched.table.factor': 'كجم CO₂/كيلوواط ساعة',
+    'sched.table.source': 'المصدر',
+    'sched.ranking.note': '🟢 = المنطقة الأنظف المتاحة الآن. تتطلب البيانات المباشرة مفتاح ElectricityMaps المجاني الخاص بك (زر ⚡ في الشريط العلوي).',
+    'sched.calc.title': 'حاسبة التوفير المحتمل',
+    'sched.calc.current': 'منطقتك الحالية',
+    'sched.calc.kwh': 'الطاقة المراد تشغيلها (كيلوواط ساعة)',
+    'sched.calc.btn': 'احسب التوفير المحتمل',
+    'sched.kpi.greenest': 'أنظف منطقة',
+    'sched.kpi.savings': 'كجم من ثاني أكسيد الكربون الموفر',
+    'sched.kpi.pct': 'نسبة التخفيض الممكنة',
+    'sched.kpi.trees': 'عدد الأشجار المكافئ/سنويًا',
+    'sched.tips.title': 'أفضل ممارسات الحوسبة الواعية بالكربون',
+    'sched.tip1': 'قم بجدولة عمليات التدريب الطويلة وغير العاجلة في مناطق أو أوقات ذات توليد أعلى للطاقة المتجددة كلما أمكن ذلك.',
+    'sched.tip2': 'أعطِ الأولوية لمراكز البيانات في الدول ذات الشبكات النظيفة (الطاقة المائية، النووية، الرياح) لأعباء التدريب المكثفة.',
+    'sched.tip3': 'بالنسبة للاستدلال في بيئة الإنتاج، ضع في اعتبارك موازنة حركة المرور جغرافيًا نحو مناطق أنظف عندما يسمح زمن الاستجابة بذلك.',
+    'sched.tip4': 'تحقق دائمًا من كثافة الكربون الفعلية لدى مزود الخدمة السحابية الخاص بك — هذا المُجدوِل هو مجرد دليل إرشادي وليس بديلاً عن البيانات الفورية.',
+    'sched.method': 'مصدر عوامل المناطق: الوكالة الدولية للطاقة (IEA، 2025) · البيانات المباشرة: واجهة برمجة تطبيقات ElectricityMaps. يقدم هذا المُجدوِل إرشادات عامة، وليس توقعًا فوريًا لكل ساعة.',
+    'sched.toast.nokey': '⚠️ قم بتوصيل مفتاح ElectricityMaps أولاً (زر ⚡ أعلاه)',
+    'sched.toast.updated': '⚡ تم تحديث البيانات المباشرة',
   },
 
   he: {
@@ -4639,6 +5497,57 @@ const T = {
     'toast.cleared':'🗑 הנתונים נמחקו','toast.preset':'✓ הפרמטרים נטענו',
     'footer.paper':'📄 מאמר מדעי',
     'footer.copy':'© 2026 אליזבת דיאז פמיליה · מתודולוגיה: Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': 'מגמות',
+    'tab.scheduler': 'מתזמן ירוק',
+    'trends.hero.title': '📊 לוח מגמות',
+    'trends.hero.sub': 'נתחו כיצד טביעת הרגל הפחמנית של הבינה המלאכותית מתפתחת עם הזמן, לפי חברה וקטגוריה, באמצעות למעלה מ-65 מודלים במאגר הנתונים.',
+    'trends.kpi.title': 'סקירה כללית',
+    'trends.kpi.models': 'מודלים שנותחו',
+    'trends.kpi.avg': 'ממוצע CO₂ (ק"ג)',
+    'trends.kpi.bestyear': 'השנה היעילה ביותר (ממוצע)',
+    'trends.kpi.bestcompany': 'החברה היעילה ביותר (ממוצע)',
+    'trends.filters.title': 'מסננים',
+    'trends.filter.category': 'קטגוריה',
+    'trends.filter.company': 'חברה',
+    'trends.filter.all': 'הכול',
+    'trends.cat.image': 'תמונה',
+    'trends.cat.video': 'וידאו',
+    'trends.cat.audio': 'שמע',
+    'trends.cat.code': 'קוד',
+    'trends.cat.vision': 'ראייה ממוחשבת',
+    'trends.chart.scatter.title': 'התפתחות CO₂ מאימון לפי שנה',
+    'trends.chart.scatter.note': 'כל נקודה מייצגת מודל (ציר Y לוגריתמי). גודל הבועה מייצג את כמות הפסולת האלקטרונית שנוצרה.',
+    'trends.chart.company.title': 'טביעת רגל ממוצעת לפי חברה',
+    'trends.table.best.title': '10 המודלים היעילים ביותר',
+    'trends.table.worst.title': '10 המודלים עם טביעת הרגל הפחמנית הגדולה ביותר',
+    'trends.table.year': 'שנה',
+    'trends.method': 'נתונים: מאגר קנייני של 65+ מודלים (אימון) · מתודולוגיית Díaz Familia (2026) R²=0.89. שנות ההשקה משוערות; חלק מהמודלים הם תחזיות.',
+    'trends.axis.year': 'שנה',
+    'sched.hero.title': '🌤️ מתזמן מודע לפחמן',
+    'sched.hero.sub': 'גלו אילו אזורים בעלי רשת החשמל הנקייה ביותר כרגע, והעריכו כמה CO₂ תוכלו לחסוך על ידי העברת עומס העבודה של הבינה המלאכותית שלכם.',
+    'sched.ranking.title': 'דירוג אזורים לפי עוצמת פחמן',
+    'sched.btn.live': 'עדכן עם נתונים חיים',
+    'sched.table.region': 'אזור',
+    'sched.table.factor': 'ק"ג CO₂/קוט"ש',
+    'sched.table.source': 'מקור',
+    'sched.ranking.note': '🟢 = האזור הנקי ביותר הזמין כרגע. נתונים חיים דורשים מפתח ElectricityMaps חינמי (כפתור ⚡ בסרגל העליון).',
+    'sched.calc.title': 'מחשבון חיסכון פוטנציאלי',
+    'sched.calc.current': 'האזור הנוכחי שלך',
+    'sched.calc.kwh': 'אנרגיה להרצה (קוט"ש)',
+    'sched.calc.btn': 'חשב חיסכון פוטנציאלי',
+    'sched.kpi.greenest': 'האזור הנקי ביותר',
+    'sched.kpi.savings': 'ק"ג CO₂ שנחסכו',
+    'sched.kpi.pct': 'הפחתה אפשרית',
+    'sched.kpi.trees': 'עצים מקבילים/שנה',
+    'sched.tips.title': 'שיטות עבודה מומלצות למחשוב מודע-פחמן',
+    'sched.tip1': 'תזמנו הרצות אימון ארוכות ולא דחופות באזורים או בשעות עם ייצור גבוה יותר של אנרגיה מתחדשת כאשר ניתן.',
+    'sched.tip2': 'תנו עדיפות למרכזי נתונים במדינות עם רשתות נקיות (הידרו, גרעין, רוח) לעומסי אימון אינטנסיביים.',
+    'sched.tip3': 'עבור הסקה בסביבת ייצור, שקלו איזון גיאוגרפי של התעבורה לעבר אזורים נקיים יותר כאשר זמן ההשהיה מאפשר זאת.',
+    'sched.tip4': 'תמיד אמתו את עוצמת הפחמן בפועל מספק הענן שלכם — מתזמן זה הוא כלי עזר ולא תחליף לנתונים בזמן אמת.',
+    'sched.method': 'מקור מקדמי האזורים: IEA (2025) · נתונים חיים: ElectricityMaps API. מתזמן זה מציע הנחיה כללית, לא תחזית שעתית בזמן אמת.',
+    'sched.toast.nokey': '⚠️ חברו תחילה את מפתח ElectricityMaps שלכם (כפתור ⚡ למעלה)',
+    'sched.toast.updated': '⚡ נתונים חיים עודכנו',
   },
 
   tr: {
@@ -4824,7 +5733,851 @@ const T = {
     'toast.cleared':'🗑 Veriler temizlendi','toast.preset':'✓ Parametreler yüklendi',
     'footer.paper':'📄 Bilimsel makale',
     'footer.copy':'© 2026 Elizabeth Díaz Familia · Metodoloji: Díaz Familia (2026) · CC BY 4.0',
+    /* Trends & Scheduler (v1.3) */
+    'tab.trends': 'Trendler',
+    'tab.scheduler': 'Yeşil Zamanlayıcı',
+    'trends.hero.title': '📊 Trend Panosu',
+    'trends.hero.sub': 'Veritabanındaki 65+ modeli kullanarak yapay zekanın karbon ayak izinin zaman içinde, şirkete ve kategoriye göre nasıl geliştiğini analiz edin.',
+    'trends.kpi.title': 'Genel Bakış',
+    'trends.kpi.models': 'Analiz edilen modeller',
+    'trends.kpi.avg': 'Ortalama CO₂ (kg)',
+    'trends.kpi.bestyear': 'En verimli yıl (ort.)',
+    'trends.kpi.bestcompany': 'En verimli şirket (ort.)',
+    'trends.filters.title': 'Filtreler',
+    'trends.filter.category': 'Kategori',
+    'trends.filter.company': 'Şirket',
+    'trends.filter.all': 'Tümü',
+    'trends.cat.image': 'Görüntü',
+    'trends.cat.video': 'Video',
+    'trends.cat.audio': 'Ses',
+    'trends.cat.code': 'Kod',
+    'trends.cat.vision': 'Görü',
+    'trends.chart.scatter.title': 'Yıla göre eğitim CO₂ değişimi',
+    'trends.chart.scatter.note': 'Her nokta bir modeldir (logaritmik Y ekseni). Baloncuk boyutu üretilen e-atığı temsil eder.',
+    'trends.chart.company.title': 'Şirkete göre ortalama ayak izi',
+    'trends.table.best.title': 'En verimli 10 model',
+    'trends.table.worst.title': 'En yüksek karbon ayak izine sahip 10 model',
+    'trends.table.year': 'Yıl',
+    'trends.method': 'Veriler: 65+ modelden oluşan özel veritabanı (eğitim) · Díaz Familia (2026) metodolojisi R²=0.89. Çıkış yılları yaklaşıktır; bazı modeller projeksiyondur.',
+    'trends.axis.year': 'Yıl',
+    'sched.hero.title': '🌤️ Karbon Duyarlı Zamanlayıcı',
+    'sched.hero.sub': 'Şu anda hangi bölgenin en temiz elektrik şebekesine sahip olduğunu keşfedin ve yapay zeka iş yükünüzü taşıyarak ne kadar CO₂ tasarrufu sağlayacağınızı tahmin edin.',
+    'sched.ranking.title': 'Karbon yoğunluğuna göre bölge sıralaması',
+    'sched.btn.live': 'Canlı verilerle güncelle',
+    'sched.table.region': 'Bölge',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': 'Kaynak',
+    'sched.ranking.note': '🟢 = şu anda mevcut en temiz bölge. Canlı veriler için ücretsiz ElectricityMaps anahtarınız gerekir (üst çubuktaki ⚡ düğmesi).',
+    'sched.calc.title': 'Potansiyel tasarruf hesaplayıcı',
+    'sched.calc.current': 'Mevcut bölgeniz',
+    'sched.calc.kwh': 'Çalıştırılacak enerji (kWh)',
+    'sched.calc.btn': 'Potansiyel tasarrufu hesapla',
+    'sched.kpi.greenest': 'En temiz bölge',
+    'sched.kpi.savings': 'Tasarruf edilen CO₂ (kg)',
+    'sched.kpi.pct': 'Olası azalma',
+    'sched.kpi.trees': 'Eşdeğer ağaç/yıl',
+    'sched.tips.title': 'Karbon duyarlı bilgi işlem en iyi uygulamaları',
+    'sched.tip1': 'Mümkün olduğunda uzun ve acil olmayan eğitimleri, yenilenebilir enerji üretiminin daha yüksek olduğu bölge veya zaman dilimlerinde planlayın.',
+    'sched.tip2': 'Yoğun eğitim iş yükleri için temiz şebekelere (hidroelektrik, nükleer, rüzgar) sahip ülkelerdeki veri merkezlerine öncelik verin.',
+    'sched.tip3': 'Üretim çıkarımı için, gecikme izin verdiğinde trafiği coğrafi olarak daha temiz bölgelere dengelemeyi düşünün.',
+    'sched.tip4': 'Her zaman bulut sağlayıcınızın gerçek karbon yoğunluğunu doğrulayın — bu zamanlayıcı bir kılavuzdur, gerçek zamanlı verilerin yerini almaz.',
+    'sched.method': 'Bölgesel faktör kaynağı: IEA (2025) · Canlı veriler: ElectricityMaps API. Bu zamanlayıcı gerçek zamanlı saatlik tahmin değil, genel bir rehberlik sunar.',
+    'sched.toast.nokey': '⚠️ Önce ElectricityMaps anahtarınızı bağlayın (yukarıdaki ⚡ düğmesi)',
+    'sched.toast.updated': '⚡ Canlı veriler güncellendi',
   },
+  de: {
+    dir:'ltr', name:'Deutsch', flag:'🇩🇪',
+    'header.eyebrow': 'Nachhaltige KI · Data Science · Green Computing',
+    'header.title': 'CO₂-Fußabdruck<br>von KI-Modellen',
+    'header.subtitle': 'Berechne die vollständigen Umweltauswirkungen in 5 wissenschaftlichen Dimensionen — CO₂, Energie, Wasser, Elektroschrott und kritische Mineralien.',
+    'header.author-role': 'Nachhaltige KI-Wissenschaftlerin · KI-Datenwissenschaftlerin · Nachhaltige Intelligenz & BI',
+    'header.paper-link': '📄 Wissenschaftliches Paper ansehen',
+    'status.online': 'Online',
+    'status.offline': 'Offline',
+    'status.eco': 'Eco',
+    'lcb.detecting': 'Standort wird ermittelt…',
+    'lcb.label': 'Live-CO₂-Intensität',
+    'lcb.loading': 'API wird geladen…',
+    'lcb.source-live': 'Live-API',
+    'lcb.source-cached': 'Zwischengespeicherte Daten',
+    'banner.eco': '⚡ Eco-Modus aktiv — APIs pausiert, Animationen reduziert, lokaler Cache aktiviert',
+    'calc.title': 'KI-Modell konfigurieren',
+    'calc.placeholder': 'Gib den Namen der KI ein, die du analysieren möchtest…',
+    'calc.hint': '💡 Wenn das Modell bekannt ist, erscheinen Vorschläge mit technischen Parametern — oder gib einen beliebigen Namen ein',
+    'calc.presets-label': 'Schnellauswahl →',
+    'field.gpu-count': 'Anzahl der GPUs',
+    'field.gpu-count-tip': 'Gesamtzahl der parallel laufenden GPUs während des Trainings',
+    'field.gpu-count-hint': 'z. B.: 512 (A100 für LLaMA 3 70B)',
+    'field.gpu-type': 'GPU-Typ',
+    'field.gpu-type-tip': 'Maximale Leistung in kW gemäß NVIDIA-Spezifikationen',
+    'field.hours': 'Trainingsstunden',
+    'field.hours-tip': 'Gesamte aktive Rechenzeit (ohne Datenvorbereitung)',
+    'field.hours-hint': 'z. B.: 336 Std. ≈ 14 durchgehende Tage',
+    'field.pue': 'Rechenzentrums-PUE',
+    'field.pue-tip': 'Power Usage Effectiveness. 1,0 = perfekt. Google ≈1,1, Branchendurchschnitt ≈1,6',
+    'field.location': 'Region / CO₂-Faktor',
+    'field.location-tip': 'kg CO₂ pro kWh basierend auf dem Energiemix des Landes (IEA 2025)',
+    'field.energy-cost': 'Energiekosten (USD/kWh)',
+    'field.energy-cost-tip': 'Industrieller Strompreis. US-Durchschnitt: $0,07',
+    'field.energy-cost-hint': 'Industrie-Cloud: $0,05–$0,12',
+    'pue.avg': 'Branchendurchschnitt — 1,60',
+    'pue.bad': 'Ineffiziente Zentren — 2,00',
+    'btn.calculate': '⚡ Umweltauswirkung berechnen',
+    'tab.training': '🌫️ Training',
+    'tab.inference': '⚡ Inferenz',
+    'tab.roi': '💰 Grüner ROI',
+    'tab.badge.new': 'NEU',
+    'btn.pdf': '📄 PDF exportieren',
+    'infer.hero.title': '⚡ Inferenz-Wirkungsrechner',
+    'infer.hero.sub': 'Miss die tatsächlichen Umweltkosten jeder Anfrage in der Produktion. 80–90 % der KI-Auswirkungen entstehen bei der Inferenz, nicht beim Training.',
+    'infer.card.title': 'Modell und Anfragetyp auswählen',
+    'infer.qtype.label': 'Anfragetyp',
+    'infer.qt.short': 'Kurzer Text',
+    'infer.qt.short.sub': '~200 Token',
+    'infer.qt.long': 'Langer Text',
+    'infer.qt.long.sub': '~1000 Token',
+    'infer.qt.image': 'Bild',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'Video',
+    'infer.qt.video.sub': '5 Sekunden',
+    'infer.model.label': 'KI-Modell',
+    'infer.model.custom': '✏️ Ein anderes Modell eingeben…',
+    'infer.custom.placeholder': 'Z. B.: GPT-5, Gemini 3, MeinModell-70B…',
+    'infer.custom.hint': '🧠 Wird automatisch geschätzt mit R²=0,89 — Díaz Familia (2026)',
+    'infer.qday.label': 'Anfragen pro Tag',
+    'infer.cf.label': 'CO₂-Faktor (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ Inferenz-Auswirkung berechnen',
+    'infer.results.default': 'Ergebnisse',
+    'infer.metric.gco2': 'g CO₂ / Anfrage',
+    'infer.metric.wh': 'Wh / Anfrage',
+    'infer.metric.water': 'ml Wasser / Anfrage',
+    'infer.metric.day': 'kg CO₂ / Tag',
+    'infer.metric.month': 'kg CO₂ / Monat',
+    'infer.metric.year': 't CO₂ / Jahr',
+    'infer.scale.label': 'Vergleich mit Google-Suche (0,3 Wh) →',
+    'infer.src.default': 'Quelle: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'kurzer Text',
+    'infer.type.long': 'langer Text',
+    'infer.type.image': 'Bild',
+    'infer.type.video': 'Video',
+    'infer.title.template': '{model} · {type} · {n} Anfragen/Tag',
+    'infer.title.custom.template': '{model} (geschätzt) · {n} Anfragen/Tag',
+    'infer.ref.template': 'Eine Anfrage verbraucht <strong>{wh}</strong> — entspricht <strong>dem {gx}-Fachen einer Google-Suche</strong>. Bei {n} Anfragen täglich: <strong>{year} t CO₂/Jahr</strong>.',
+    'infer.ref.custom.template': '🧠 Unbekanntes Modell geschätzt mit <strong>smartEstimate()</strong> — ~{params} Mrd. Parameter erkannt. Wh/Anfrage ≈ {wh} Wh. Jährliche Auswirkung: <strong>{year} t CO₂</strong>. Methodik Díaz Familia (2026) R²=0,89.',
+    'infer.src.template': 'Quelle: {src} · CO₂-Faktor: {cf} kg CO₂/kWh',
+    'infer.src.custom': 'Automatische Schätzung — passe die Parameter an, wenn du genaue Daten hast',
+    'infer.toast.noname': '✏️ Gib zuerst den Modellnamen ein',
+    'infer.toast.notavailable': '⚠️ Modell nicht verfügbar',
+    'infer.toast.typenotavailable': '⚠️ Dieser Anfragetyp ist für dieses Modell nicht verfügbar',
+    'infer.toast.estimated.template': '🧠 {model} geschätzt: ~{params} Mrd. Parameter · {wh} Wh/Anfrage',
+    'roi.hero.title': '💰 Carbon-ROI-Rechner',
+    'roi.hero.sub': 'Berechne die finanziellen und ökologischen Einsparungen durch den Wechsel zu einem effizienteren Modell. Begründe technische Entscheidungen mit echten Wirtschaftsdaten.',
+    'roi.card.title': 'Modellvergleich',
+    'roi.model.a.label': '❌ Aktuelles Modell (ineffizient)',
+    'roi.model.b.label': '✅ Effizientes Modell',
+    'roi.qday.label': 'Anfragen pro Tag',
+    'roi.kwh.label': 'Strompreis (USD/kWh)',
+    'roi.years.label': 'Analysehorizont',
+    'roi.years.1': '1 Jahr',
+    'roi.years.2': '2 Jahre',
+    'roi.years.3': '3 Jahre',
+    'roi.years.5': '5 Jahre',
+    'roi.cf.label': 'CO₂-Faktor (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 Grünen ROI berechnen',
+    'roi.kpi.co2': 't CO₂ eingespart/Jahr',
+    'roi.kpi.mwh': 'MWh eingespart/Jahr',
+    'roi.kpi.usd': 'Gesamte eingesparte USD',
+    'roi.kpi.pct': 'Emissionsreduktion',
+    'roi.chart.title': 'Visueller Vergleich',
+    'roi.breakdown.title': 'Finanzielle und ökologische Aufschlüsselung',
+    'roi.brow.co2a': 'CO₂ aktuelles Modell (Training)',
+    'roi.brow.co2b': 'CO₂ effizientes Modell (Training)',
+    'roi.brow.kwh': 'kWh eingespart/Jahr (Inferenz)',
+    'roi.brow.usdy': 'USD-Einsparung/Jahr',
+    'roi.brow.usdt': 'Gesamteinsparung',
+    'roi.brow.years.word': 'Jahre',
+    'roi.method': 'Methodik: Díaz Familia (2026) R²=0,89 · Inferenzdaten: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ Wähle gültige Modelle aus',
+    'roi.equiv.template': '🌿 Eine Einsparung von <strong>{co2} t CO₂/Jahr</strong> ≡ 🌳 dem Pflanzen von <strong>{trees} Bäumen</strong> · ✈️ dem Vermeiden von <strong>{flights} Transatlantikflügen</strong>.',
+    'roi.chart.label.training': 'Trainingsemissionen (t CO₂)',
+    'roi.chart.label.savings': 'Kumulierte Einsparungen (USD)',
+    'roi.chart.yaxis.co2': 't CO₂',
+    'roi.chart.year.word': 'Jahr',
+    'roi.brow.usdy.suffix': '/Jahr',
+    'em.modal.desc': '<strong style="color:var(--green-400)">Echtzeit</strong>-CO₂-Intensitätsdaten für über 60 Länder. Kostenlos nach Anmeldung — dein Schlüssel bleibt nur in deinem Browser.',
+    'em.step1': 'Gehe zu <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → kostenloses Konto',
+    'em.step2': 'Kopiere deinen <strong>Auth-Token</strong> aus dem Dashboard',
+    'em.step3': 'Füge ihn hier ein ↓',
+    'em.input.placeholder': 'Füge deinen Auth-Token hier ein…',
+    'em.zone.label': 'Erkannte Zone:',
+    'em.btn.remove': 'Entfernen',
+    'em.btn.cancel': 'Abbrechen',
+    'em.btn.connect': 'Verbinden',
+    'em.toast.invalidkey': '⚠️ Füge einen gültigen Schlüssel ein',
+    'em.toast.connected': '⚡ ElectricityMaps verbunden — Echtzeitdaten aktiv',
+    'em.toast.removed': '🔑 API-Schlüssel entfernt — verwende IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps nicht verfügbar — verwende IEA 2025',
+    'em.zone.unsupported': '— IEA-2025-Rückgriff',
+    'em.title.attr': 'ElectricityMaps API — Echtzeitdaten',
+    'float.ready': 'Bericht bereit',
+    'float.ready.template': '📊 {model} berechnet',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1,10',
+    'pue.leading': 'Anthropic / Führend — 1,20',
+    'pue.aws': 'AWS / Azure — 1,40',
+    'btn.share': 'Teilen',
+    'btn.clear.short': 'Löschen',
+    'toast.offline': '⚠️ Keine Verbindung — verwende zwischengespeicherte Daten',
+    'toast.eco.on': '⚡ Eco-Modus aktiviert — spart Daten und Energie',
+    'toast.eco.off': '🔄 Eco-Modus deaktiviert',
+    'toast.pdf.opening': '📄 PDF-Dialog wird geöffnet…',
+    'toast.copied': '🔗 In die Zwischenablage kopiert',
+    'toast.copy.failed': '❌ Kopieren fehlgeschlagen',
+    'toast.calc.complete': '✅ Berechnung in 5 Dimensionen abgeschlossen',
+    'conf.verified': '✓ Verifiziert',
+    'conf.estimated': '~ Geschätzt',
+    'conf.custom': '✎ Benutzerdefiniert',
+    'estbanner.estimated.template': 'Geschätzte Parameter (~{params} Mrd. erkannt) — Korrelation R²=0,89. Passe sie an, wenn du genaue Daten hast.',
+    'estbanner.custom': 'Manuell eingegebene Parameter.',
+    'estbanner.default': 'Geschätzte Parameter — basierend auf dem Modellnamen (R²=0,89). Passe sie an, wenn du genaue Daten hast.',
+    'share.training.template': '🌍 {model}: {co2} kg CO₂ beim Training.\nBerechnet mit dem KI-CO₂-Fußabdruck-Rechner — Díaz Familia (2026) R²=0,89',
+    'share.inference.template': '⚡ Inferenz {model}: {gco2} CO₂ · {wh} Wh pro Anfrage.\nBerechnet mit dem KI-CO₂-Fußabdruck-Rechner — Díaz Familia (2026) R²=0,89',
+    'share.roi.template': '💰 Carbon-ROI: Der Wechsel von {a} → {b} spart {co2} t CO₂/Jahr · {usd} USD · {pct} Reduktion.\nBerechnet mit dem KI-CO₂-Fußabdruck-Rechner — Díaz Familia (2026)',
+    'btn.clear': '🗑 Löschen',
+    'results.eyebrow': '📊 Ergebnisse der Umweltanalyse für:',
+    'results.badge': 'Gerade berechnet',
+    'results.hours': 'Stunden',
+    'results.training': 'Training',
+    'section.dims': 'Auswirkung in 5 wissenschaftlichen Dimensionen',
+    'section.equivs': 'Umweltäquivalente',
+    'dim.co2': 'Gesamt-CO₂',
+    'dim.co2-unit': 'kg CO₂',
+    'dim.energy': 'Energie',
+    'dim.energy-unit': 'kWh verbraucht',
+    'dim.water': 'Süßwasser',
+    'dim.water-unit': 'Liter',
+    'dim.ewaste': 'Elektroschrott',
+    'dim.ewaste-unit': 'kg Elektroschrott',
+    'dim.minerals': 'Kritische Mineralien',
+    'dim.minerals-unit': 'kg (Kobalt, Lithium…)',
+    'rating.calculating': 'Berechnung läuft…',
+    'rating.best': 'A+ Nachhaltig',
+    'rating.worst': 'F Kritisch',
+    'rating.efficiency': 'Effizienz',
+    'rating.Aplus.title': 'Ausgezeichnet — Hochgradig nachhaltiges Modell',
+    'rating.Aplus.desc': 'Minimale Auswirkung. Vergleichbar mit einem einzigen Inlandsflug.',
+    'rating.A.title': 'Sehr gut — Geringe Umweltauswirkung',
+    'rating.A.desc': 'Liegt im Bereich effizienter, gut konzipierter Modelle.',
+    'rating.B.title': 'Gut — Mäßig-geringe Auswirkung',
+    'rating.B.desc': 'Vergleichbar mit mittelgroßen Industriemodellen.',
+    'rating.C.title': 'Mäßig — Optimierungen prüfen',
+    'rating.C.desc': 'Erwäge den Standort des Rechenzentrums oder eine Reduzierung der Parameter.',
+    'rating.D.title': 'Hoch — Erhebliche Umweltauswirkung',
+    'rating.D.desc': 'GPT-3-Niveau. Erwäge das Training in Regionen mit erneuerbaren Energien.',
+    'rating.F.title': 'Kritisch — Sehr hohe Auswirkung',
+    'rating.F.desc': 'GPT-4-Niveau. Erfordert dringende Kompensation und Optimierung.',
+    'equiv.cars': 'Autos, 1 Jahr gefahren',
+    'equiv.flights': 'Flüge Madrid → New York',
+    'equiv.homes': 'Haushalte mit Strom / Monat',
+    'equiv.trees': 'Bäume nötig zum Ausgleich in 1 Jahr',
+    'equiv.phones': 'vollständige Smartphone-Ladungen',
+    'equiv.cost': 'geschätzte Stromkosten',
+    'chart.title': 'Vergleich mit Referenzmodellen',
+    'table.title': 'Vergleichstabelle der Auswirkungen',
+    'table.model': 'Modell',
+    'table.co2': 'CO₂ (kg)',
+    'table.water': 'Wasser (L)',
+    'table.rating': 'Bewertung',
+    'table.scale': 'Skala',
+    'table.calculated': '◀ berechnet',
+    'err.no-name': '⚠️ Bitte gib den Modellnamen zur Berechnung ein',
+    'err.fields': '⚠️ Bitte fülle alle Felder aus',
+    'err.gpu-range': '⚠️ Ungültige GPU-Anzahl',
+    'err.hours-range': '⚠️ Ungültige Trainingsstunden',
+    'toast.cleared': '🗑 Daten gelöscht',
+    'toast.preset': '✓ Parameter geladen',
+    'footer.paper': '📄 Wissenschaftliches Paper',
+    'footer.copy': '© 2026 Elizabeth Díaz Familia · Methodik: Díaz Familia (2026) · CC BY 4.0',
+    'tab.trends': 'Trends',
+    'tab.scheduler': 'Grüner Planer',
+    'trends.hero.title': '📊 Trend-Dashboard',
+    'trends.hero.sub': 'Analysiere, wie sich der CO₂-Fußabdruck der KI im Laufe der Zeit, nach Unternehmen und nach Kategorie entwickelt — anhand der 65+ Modelle in der Datenbank.',
+    'trends.kpi.title': 'Übersicht',
+    'trends.kpi.models': 'Analysierte Modelle',
+    'trends.kpi.avg': 'Durchschnittliches CO₂ (kg)',
+    'trends.kpi.bestyear': 'Effizientestes Jahr (Durchschn.)',
+    'trends.kpi.bestcompany': 'Effizientestes Unternehmen (Durchschn.)',
+    'trends.filters.title': 'Filter',
+    'trends.filter.category': 'Kategorie',
+    'trends.filter.company': 'Unternehmen',
+    'trends.filter.all': 'Alle',
+    'trends.cat.image': 'Bild',
+    'trends.cat.video': 'Video',
+    'trends.cat.audio': 'Audio',
+    'trends.cat.code': 'Code',
+    'trends.cat.vision': 'Bildverarbeitung',
+    'trends.chart.scatter.title': 'Entwicklung des Trainings-CO₂ nach Jahr',
+    'trends.chart.scatter.note': 'Jeder Punkt ist ein Modell (logarithmische Y-Achse). Die Blasengröße stellt den erzeugten Elektroschrott dar.',
+    'trends.chart.company.title': 'Durchschnittlicher Fußabdruck nach Unternehmen',
+    'trends.table.best.title': 'Top 10 effizienteste Modelle',
+    'trends.table.worst.title': 'Top 10 höchster CO₂-Fußabdruck',
+    'trends.table.year': 'Jahr',
+    'trends.method': 'Daten: eigene Datenbank mit 65+ Modellen (Training) · Methodik Díaz Familia (2026) R²=0,89. Erscheinungsjahre sind ungefähr; einige Modelle sind Projektionen.',
+    'trends.axis.year': 'Jahr',
+    'sched.hero.title': '🌤️ Carbon-Aware Planer',
+    'sched.hero.sub': 'Finde heraus, welche Region gerade das sauberste Stromnetz hat, und schätze, wie viel CO₂ du durch die Verlagerung deiner KI-Workload einsparen würdest.',
+    'sched.ranking.title': 'Regionen-Ranking nach CO₂-Intensität',
+    'sched.btn.live': 'Mit Live-Daten aktualisieren',
+    'sched.table.region': 'Region',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': 'Quelle',
+    'sched.ranking.note': '🟢 = derzeit sauberste verfügbare Region. Live-Daten erfordern deinen kostenlosen ElectricityMaps-Schlüssel (⚡-Button in der oberen Leiste).',
+    'sched.calc.title': 'Rechner für potenzielle Einsparungen',
+    'sched.calc.current': 'Deine aktuelle Region',
+    'sched.calc.kwh': 'Auszuführende Energie (kWh)',
+    'sched.calc.btn': 'Potenzielle Einsparungen berechnen',
+    'sched.kpi.greenest': 'Sauberste Region',
+    'sched.kpi.savings': 'kg CO₂ eingespart',
+    'sched.kpi.pct': 'Mögliche Reduktion',
+    'sched.kpi.trees': 'Äquivalente Bäume/Jahr',
+    'sched.tips.title': 'Best Practices für Carbon-Aware Computing',
+    'sched.tip1': 'Plane lange, nicht dringende Trainingsläufe nach Möglichkeit in Regionen oder Zeitfenstern mit höherer Erzeugung erneuerbarer Energie.',
+    'sched.tip2': 'Bevorzuge Rechenzentren in Ländern mit sauberen Netzen (Wasserkraft, Kernkraft, Wind) für intensive Trainings-Workloads.',
+    'sched.tip3': 'Erwäge für Produktions-Inferenz eine geografische Verkehrslastverteilung in sauberere Regionen, wenn die Latenz dies zulässt.',
+    'sched.tip4': 'Überprüfe immer die tatsächliche CO₂-Intensität deines Cloud-Anbieters — dieser Planer ist eine Orientierungshilfe, kein Ersatz für Echtzeitdaten.',
+    'sched.method': 'Quelle der Regionalfaktoren: IEA (2025) · Live-Daten: ElectricityMaps API. Dieser Planer bietet allgemeine Orientierung, keine stündliche Echtzeitprognose.',
+    'sched.toast.nokey': '⚠️ Verbinde zuerst deinen ElectricityMaps-Schlüssel (⚡-Button oben)',
+    'sched.toast.updated': '⚡ Live-Daten aktualisiert',
+  },
+  it: {
+    dir:'ltr', name:'Italiano', flag:'🇮🇹',
+    'header.eyebrow': 'IA Sostenibile · Data Science · Green Computing',
+    'header.title': 'Impronta di Carbonio<br>dei Modelli di IA',
+    'header.subtitle': 'Calcola l\'impatto ambientale completo in 5 dimensioni scientifiche — CO₂, energia, acqua, rifiuti elettronici e minerali critici.',
+    'header.author-role': 'Scienziata di IA Sostenibile · Data Scientist IA · Intelligenza Sostenibile & BI',
+    'header.paper-link': '📄 Visualizza il Paper Scientifico',
+    'status.online': 'Online',
+    'status.offline': 'Offline',
+    'status.eco': 'Eco',
+    'lcb.detecting': 'Rilevamento posizione…',
+    'lcb.label': 'Intensità di carbonio in tempo reale',
+    'lcb.loading': 'Caricamento API…',
+    'lcb.source-live': 'API in tempo reale',
+    'lcb.source-cached': 'Dati in cache',
+    'banner.eco': '⚡ Modalità Eco attiva — API in pausa, animazioni ridotte, cache locale attivata',
+    'calc.title': 'Configura Modello di IA',
+    'calc.placeholder': 'Digita il nome dell\'IA che vuoi analizzare…',
+    'calc.hint': '💡 Se il modello è noto, appariranno suggerimenti con parametri tecnici — oppure digita un nome personalizzato',
+    'calc.presets-label': 'Preset rapidi →',
+    'field.gpu-count': 'Numero di GPU',
+    'field.gpu-count-tip': 'Numero totale di GPU in esecuzione parallela durante l\'addestramento',
+    'field.gpu-count-hint': 'es.: 512 (A100 per LLaMA 3 70B)',
+    'field.gpu-type': 'Tipo di GPU',
+    'field.gpu-type-tip': 'Potenza massima in kW secondo le specifiche NVIDIA',
+    'field.hours': 'Ore di addestramento',
+    'field.hours-tip': 'Tempo di calcolo attivo totale (esclusa la preparazione dei dati)',
+    'field.hours-hint': 'es.: 336 h ≈ 14 giorni continui',
+    'field.pue': 'PUE del data center',
+    'field.pue-tip': 'Power Usage Effectiveness. 1,0 = perfetto. Google ≈1,1, media di settore ≈1,6',
+    'field.location': 'Regione / Fattore di carbonio',
+    'field.location-tip': 'kg CO₂ per kWh in base al mix energetico del paese (IEA 2025)',
+    'field.energy-cost': 'Costo energetico (USD/kWh)',
+    'field.energy-cost-tip': 'Prezzo industriale dell\'elettricità. Media USA: $0,07',
+    'field.energy-cost-hint': 'Cloud industriale: $0,05–$0,12',
+    'pue.avg': 'Media di settore — 1,60',
+    'pue.bad': 'Centri inefficienti — 2,00',
+    'btn.calculate': '⚡ Calcola Impatto Ambientale',
+    'tab.training': '🌫️ Addestramento',
+    'tab.inference': '⚡ Inferenza',
+    'tab.roi': '💰 ROI Verde',
+    'tab.badge.new': 'NUOVO',
+    'btn.pdf': '📄 Esporta PDF',
+    'infer.hero.title': '⚡ Calcolatore dell\'Impatto da Inferenza',
+    'infer.hero.sub': 'Misura il costo ambientale reale di ogni query in produzione. L\'80–90% dell\'impatto dell\'IA avviene durante l\'inferenza, non l\'addestramento.',
+    'infer.card.title': 'Seleziona Modello e Tipo di Query',
+    'infer.qtype.label': 'Tipo di query',
+    'infer.qt.short': 'Testo breve',
+    'infer.qt.short.sub': '~200 token',
+    'infer.qt.long': 'Testo lungo',
+    'infer.qt.long.sub': '~1000 token',
+    'infer.qt.image': 'Immagine',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'Video',
+    'infer.qt.video.sub': '5 secondi',
+    'infer.model.label': 'Modello di IA',
+    'infer.model.custom': '✏️ Scrivi un altro modello…',
+    'infer.custom.placeholder': 'Es.: GPT-5, Gemini 3, MioModello-70B…',
+    'infer.custom.hint': '🧠 Verrà stimato automaticamente con R²=0,89 — Díaz Familia (2026)',
+    'infer.qday.label': 'Query al giorno',
+    'infer.cf.label': 'Fattore di carbonio (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ Calcola l\'Impatto da Inferenza',
+    'infer.results.default': 'Risultati',
+    'infer.metric.gco2': 'g CO₂ / query',
+    'infer.metric.wh': 'Wh / query',
+    'infer.metric.water': 'ml acqua / query',
+    'infer.metric.day': 'kg CO₂ / giorno',
+    'infer.metric.month': 'kg CO₂ / mese',
+    'infer.metric.year': 't CO₂ / anno',
+    'infer.scale.label': 'Confronto con Google Search (0,3 Wh) →',
+    'infer.src.default': 'Fonte: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'testo breve',
+    'infer.type.long': 'testo lungo',
+    'infer.type.image': 'immagine',
+    'infer.type.video': 'video',
+    'infer.title.template': '{model} · {type} · {n} query/giorno',
+    'infer.title.custom.template': '{model} (stimato) · {n} query/giorno',
+    'infer.ref.template': 'Una query consuma <strong>{wh}</strong> — equivalente a <strong>{gx}× una ricerca Google</strong>. Con {n} query giornaliere: <strong>{year} t CO₂/anno</strong>.',
+    'infer.ref.custom.template': '🧠 Modello sconosciuto stimato con <strong>smartEstimate()</strong> — ~{params}B parametri rilevati. Wh/query ≈ {wh} Wh. Impatto annuale: <strong>{year} t CO₂</strong>. Metodologia Díaz Familia (2026) R²=0,89.',
+    'infer.src.template': 'Fonte: {src} · Fattore di carbonio: {cf} kg CO₂/kWh',
+    'infer.src.custom': 'Stima automatica — regola i parametri se hai dati esatti',
+    'infer.toast.noname': '✏️ Scrivi prima il nome del modello',
+    'infer.toast.notavailable': '⚠️ Modello non disponibile',
+    'infer.toast.typenotavailable': '⚠️ Questo tipo di query non è disponibile per questo modello',
+    'infer.toast.estimated.template': '🧠 {model} stimato: ~{params}B parametri · {wh} Wh/query',
+    'roi.hero.title': '💰 Calcolatore di ROI del Carbonio',
+    'roi.hero.sub': 'Calcola il risparmio finanziario e ambientale derivante dal passaggio a un modello più efficiente. Giustifica le decisioni tecniche con dati economici reali.',
+    'roi.card.title': 'Confronto tra Modelli',
+    'roi.model.a.label': '❌ Modello Attuale (inefficiente)',
+    'roi.model.b.label': '✅ Modello Efficiente',
+    'roi.qday.label': 'Query al giorno',
+    'roi.kwh.label': 'Prezzo dell\'elettricità (USD/kWh)',
+    'roi.years.label': 'Orizzonte di analisi',
+    'roi.years.1': '1 anno',
+    'roi.years.2': '2 anni',
+    'roi.years.3': '3 anni',
+    'roi.years.5': '5 anni',
+    'roi.cf.label': 'Fattore di carbonio (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 Calcola ROI Verde',
+    'roi.kpi.co2': 't CO₂ risparmiate/anno',
+    'roi.kpi.mwh': 'MWh risparmiati/anno',
+    'roi.kpi.usd': 'USD totali risparmiati',
+    'roi.kpi.pct': 'Riduzione delle emissioni',
+    'roi.chart.title': 'Confronto visivo',
+    'roi.breakdown.title': 'Dettaglio finanziario e ambientale',
+    'roi.brow.co2a': 'CO₂ modello attuale (addestramento)',
+    'roi.brow.co2b': 'CO₂ modello efficiente (addestramento)',
+    'roi.brow.kwh': 'kWh risparmiati/anno (inferenza)',
+    'roi.brow.usdy': 'Risparmio USD/anno',
+    'roi.brow.usdt': 'Risparmio totale',
+    'roi.brow.years.word': 'anni',
+    'roi.method': 'Metodologia: Díaz Familia (2026) R²=0,89 · Dati di inferenza: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ Seleziona modelli validi',
+    'roi.equiv.template': '🌿 Risparmiare <strong>{co2} t CO₂/anno</strong> ≡ 🌳 piantare <strong>{trees} alberi</strong> · ✈️ evitare <strong>{flights} voli transatlantici</strong>.',
+    'roi.chart.label.training': 'Emissioni di addestramento (t CO₂)',
+    'roi.chart.label.savings': 'Risparmio cumulativo (USD)',
+    'roi.chart.yaxis.co2': 't CO₂',
+    'roi.chart.year.word': 'Anno',
+    'roi.brow.usdy.suffix': '/anno',
+    'em.modal.desc': 'Dati di intensità di carbonio in <strong style="color:var(--green-400)">tempo reale</strong> per oltre 60 paesi. Gratuito con la registrazione — la tua chiave resta solo nel tuo browser.',
+    'em.step1': 'Vai su <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → account gratuito',
+    'em.step2': 'Copia il tuo <strong>auth-token</strong> dalla dashboard',
+    'em.step3': 'Incollalo qui ↓',
+    'em.input.placeholder': 'Incolla qui il tuo auth-token…',
+    'em.zone.label': 'Zona rilevata:',
+    'em.btn.remove': 'Rimuovi',
+    'em.btn.cancel': 'Annulla',
+    'em.btn.connect': 'Connetti',
+    'em.toast.invalidkey': '⚠️ Incolla una chiave valida',
+    'em.toast.connected': '⚡ ElectricityMaps connesso — dati in tempo reale attivi',
+    'em.toast.removed': '🔑 Chiave API rimossa — utilizzo IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps non disponibile — utilizzo IEA 2025',
+    'em.zone.unsupported': '— fallback IEA 2025',
+    'em.title.attr': 'ElectricityMaps API — dati in tempo reale',
+    'float.ready': 'Report pronto',
+    'float.ready.template': '📊 {model} calcolato',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1,10',
+    'pue.leading': 'Anthropic / Leader — 1,20',
+    'pue.aws': 'AWS / Azure — 1,40',
+    'btn.share': 'Condividi',
+    'btn.clear.short': 'Cancella',
+    'toast.offline': '⚠️ Nessuna connessione — utilizzo dati in cache',
+    'toast.eco.on': '⚡ Modalità Eco attivata — risparmio di dati ed energia',
+    'toast.eco.off': '🔄 Modalità Eco disattivata',
+    'toast.pdf.opening': '📄 Apertura finestra PDF…',
+    'toast.copied': '🔗 Copiato negli appunti',
+    'toast.copy.failed': '❌ Impossibile copiare',
+    'toast.calc.complete': '✅ Calcolo completato in 5 dimensioni',
+    'conf.verified': '✓ Verificato',
+    'conf.estimated': '~ Stimato',
+    'conf.custom': '✎ Personalizzato',
+    'estbanner.estimated.template': 'Parametri stimati (~{params}B rilevati) — correlazione R²=0,89. Regola se hai dati esatti.',
+    'estbanner.custom': 'Parametri inseriti manualmente.',
+    'estbanner.default': 'Parametri stimati — basati sul nome del modello (R²=0,89). Regola se hai dati esatti.',
+    'share.training.template': '🌍 {model}: {co2} kg CO₂ durante l\'addestramento.\nCalcolato con AI Carbon Footprint Calculator — Díaz Familia (2026) R²=0,89',
+    'share.inference.template': '⚡ Inferenza {model}: {gco2} CO₂ · {wh} Wh per query.\nCalcolato con AI Carbon Footprint Calculator — Díaz Familia (2026) R²=0,89',
+    'share.roi.template': '💰 ROI del Carbonio: Passare da {a} → {b} fa risparmiare {co2} t CO₂/anno · {usd} USD · {pct} di riduzione.\nCalcolato con AI Carbon Footprint Calculator — Díaz Familia (2026)',
+    'btn.clear': '🗑 Cancella',
+    'results.eyebrow': '📊 Risultati dell\'analisi ambientale per:',
+    'results.badge': 'Appena calcolato',
+    'results.hours': 'ore',
+    'results.training': 'addestramento',
+    'section.dims': 'Impatto in 5 dimensioni scientifiche',
+    'section.equivs': 'Equivalenze ambientali',
+    'dim.co2': 'CO₂ Totale',
+    'dim.co2-unit': 'kg di CO₂',
+    'dim.energy': 'Energia',
+    'dim.energy-unit': 'kWh consumati',
+    'dim.water': 'Acqua dolce',
+    'dim.water-unit': 'litri',
+    'dim.ewaste': 'Rifiuti Elettronici',
+    'dim.ewaste-unit': 'kg di rifiuti elettronici',
+    'dim.minerals': 'Minerali Critici',
+    'dim.minerals-unit': 'kg (cobalto, litio…)',
+    'rating.calculating': 'Calcolo in corso…',
+    'rating.best': 'A+ Sostenibile',
+    'rating.worst': 'F Critico',
+    'rating.efficiency': 'Efficienza',
+    'rating.Aplus.title': 'Eccellente — Modello altamente sostenibile',
+    'rating.Aplus.desc': 'Impatto minimo. Paragonabile a un singolo volo nazionale.',
+    'rating.A.title': 'Molto buono — Basso impatto ambientale',
+    'rating.A.desc': 'Nella fascia dei modelli efficienti e ben progettati.',
+    'rating.B.title': 'Buono — Impatto da moderato a basso',
+    'rating.B.desc': 'Paragonabile ai modelli industriali di medie dimensioni.',
+    'rating.C.title': 'Moderato — Rivedi le ottimizzazioni',
+    'rating.C.desc': 'Considera la posizione del data center o la riduzione dei parametri.',
+    'rating.D.title': 'Alto — Impatto ambientale significativo',
+    'rating.D.desc': 'Livello GPT-3. Considera l\'addestramento in regioni con energie rinnovabili.',
+    'rating.F.title': 'Critico — Impatto molto elevato',
+    'rating.F.desc': 'Livello GPT-4. Richiede una compensazione e un\'ottimizzazione urgenti.',
+    'equiv.cars': 'auto guidate per 1 anno',
+    'equiv.flights': 'voli Madrid → New York',
+    'equiv.homes': 'abitazioni con elettricità / mese',
+    'equiv.trees': 'alberi necessari per compensare in 1 anno',
+    'equiv.phones': 'ricariche complete di smartphone',
+    'equiv.cost': 'costo elettrico stimato',
+    'chart.title': 'Confronto con modelli di riferimento',
+    'table.title': 'Tabella comparativa dell\'impatto',
+    'table.model': 'Modello',
+    'table.co2': 'CO₂ (kg)',
+    'table.water': 'Acqua (L)',
+    'table.rating': 'Valutazione',
+    'table.scale': 'Scala',
+    'table.calculated': '◀ calcolato',
+    'err.no-name': '⚠️ Inserisci il nome del modello da calcolare',
+    'err.fields': '⚠️ Compila tutti i campi',
+    'err.gpu-range': '⚠️ Numero di GPU non valido',
+    'err.hours-range': '⚠️ Ore di addestramento non valide',
+    'toast.cleared': '🗑 Dati cancellati',
+    'toast.preset': '✓ Parametri caricati',
+    'footer.paper': '📄 Paper scientifico',
+    'footer.copy': '© 2026 Elizabeth Díaz Familia · Metodologia: Díaz Familia (2026) · CC BY 4.0',
+    'tab.trends': 'Tendenze',
+    'tab.scheduler': 'Pianificatore Verde',
+    'trends.hero.title': '📊 Dashboard delle Tendenze',
+    'trends.hero.sub': 'Analizza come evolve l\'impronta di carbonio dell\'IA nel tempo, per azienda e per categoria, utilizzando i 65+ modelli del database.',
+    'trends.kpi.title': 'Panoramica',
+    'trends.kpi.models': 'Modelli analizzati',
+    'trends.kpi.avg': 'CO₂ medio (kg)',
+    'trends.kpi.bestyear': 'Anno più efficiente (media)',
+    'trends.kpi.bestcompany': 'Azienda più efficiente (media)',
+    'trends.filters.title': 'Filtri',
+    'trends.filter.category': 'Categoria',
+    'trends.filter.company': 'Azienda',
+    'trends.filter.all': 'Tutte',
+    'trends.cat.image': 'Immagine',
+    'trends.cat.video': 'Video',
+    'trends.cat.audio': 'Audio',
+    'trends.cat.code': 'Codice',
+    'trends.cat.vision': 'Visione',
+    'trends.chart.scatter.title': 'Evoluzione del CO₂ di addestramento per anno',
+    'trends.chart.scatter.note': 'Ogni punto rappresenta un modello (asse Y logaritmico). La dimensione della bolla rappresenta i rifiuti elettronici generati.',
+    'trends.chart.company.title': 'Impronta media per azienda',
+    'trends.table.best.title': 'Top 10 modelli più efficienti',
+    'trends.table.worst.title': 'Top 10 impronta di carbonio più alta',
+    'trends.table.year': 'Anno',
+    'trends.method': 'Dati: database proprietario di 65+ modelli (addestramento) · Metodologia Díaz Familia (2026) R²=0,89. Gli anni di uscita sono approssimativi; alcuni modelli sono proiezioni.',
+    'trends.axis.year': 'Anno',
+    'sched.hero.title': '🌤️ Pianificatore Sensibile al Carbonio',
+    'sched.hero.sub': 'Scopri quale regione ha la rete elettrica più pulita in questo momento e stima quanto CO₂ risparmieresti spostando il tuo carico di lavoro IA.',
+    'sched.ranking.title': 'Classifica delle regioni per intensità di carbonio',
+    'sched.btn.live': 'Aggiorna con dati in tempo reale',
+    'sched.table.region': 'Regione',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': 'Fonte',
+    'sched.ranking.note': '🟢 = regione più pulita disponibile in questo momento. I dati in tempo reale richiedono la tua chiave gratuita ElectricityMaps (pulsante ⚡ nella barra superiore).',
+    'sched.calc.title': 'Calcolatore del risparmio potenziale',
+    'sched.calc.current': 'La tua regione attuale',
+    'sched.calc.kwh': 'Energia da eseguire (kWh)',
+    'sched.calc.btn': 'Calcola il risparmio potenziale',
+    'sched.kpi.greenest': 'Regione più pulita',
+    'sched.kpi.savings': 'kg CO₂ risparmiati',
+    'sched.kpi.pct': 'Riduzione possibile',
+    'sched.kpi.trees': 'Alberi equivalenti/anno',
+    'sched.tips.title': 'Best practice per il carbon-aware computing',
+    'sched.tip1': 'Pianifica gli addestramenti lunghi e non urgenti in regioni o fasce orarie con maggiore generazione rinnovabile, quando possibile.',
+    'sched.tip2': 'Dai priorità ai data center nei paesi con reti pulite (idroelettrico, nucleare, eolico) per i carichi di lavoro di addestramento intensivo.',
+    'sched.tip3': 'Per l\'inferenza in produzione, valuta di bilanciare geograficamente il traffico verso regioni più pulite quando la latenza lo consente.',
+    'sched.tip4': 'Verifica sempre l\'intensità di carbonio reale del tuo fornitore cloud — questo pianificatore è una guida, non un sostituto dei dati in tempo reale.',
+    'sched.method': 'Fonte dei fattori regionali: IEA (2025) · Dati in tempo reale: API ElectricityMaps. Questo pianificatore offre un orientamento generale, non una previsione oraria in tempo reale.',
+    'sched.toast.nokey': '⚠️ Collega prima la tua chiave ElectricityMaps (pulsante ⚡ sopra)',
+    'sched.toast.updated': '⚡ Dati in tempo reale aggiornati',
+  },
+  id: {
+    dir:'ltr', name:'Bahasa Indonesia', flag:'🇮🇩',
+    'header.eyebrow': 'AI Berkelanjutan · Data Science · Green Computing',
+    'header.title': 'Jejak Karbon<br>Model AI',
+    'header.subtitle': 'Hitung dampak lingkungan lengkap dalam 5 dimensi ilmiah — CO₂, energi, air, limbah elektronik, dan mineral kritis.',
+    'header.author-role': 'Ilmuwan AI Berkelanjutan · Data Scientist AI · Kecerdasan Berkelanjutan & BI',
+    'header.paper-link': '📄 Lihat Paper Ilmiah',
+    'status.online': 'Online',
+    'status.offline': 'Offline',
+    'status.eco': 'Eco',
+    'lcb.detecting': 'Mendeteksi lokasi…',
+    'lcb.label': 'Intensitas karbon langsung',
+    'lcb.loading': 'Memuat API…',
+    'lcb.source-live': 'API Langsung',
+    'lcb.source-cached': 'Data tembolok',
+    'banner.eco': '⚡ Mode Eco aktif — API dijeda, animasi dikurangi, cache lokal diaktifkan',
+    'calc.title': 'Konfigurasi Model AI',
+    'calc.placeholder': 'Ketik nama AI yang ingin Anda analisis…',
+    'calc.hint': '💡 Jika model sudah dikenal, saran dengan parameter teknis akan muncul — atau ketik nama kustom apa pun',
+    'calc.presets-label': 'Preset cepat →',
+    'field.gpu-count': 'Jumlah GPU',
+    'field.gpu-count-tip': 'Total GPU yang berjalan paralel selama pelatihan',
+    'field.gpu-count-hint': 'mis.: 512 (A100 untuk LLaMA 3 70B)',
+    'field.gpu-type': 'Jenis GPU',
+    'field.gpu-type-tip': 'Daya maksimum dalam kW sesuai spesifikasi NVIDIA',
+    'field.hours': 'Jam pelatihan',
+    'field.hours-tip': 'Total waktu komputasi aktif (tidak termasuk persiapan data)',
+    'field.hours-hint': 'mis.: 336 jam ≈ 14 hari berturut-turut',
+    'field.pue': 'PUE pusat data',
+    'field.pue-tip': 'Power Usage Effectiveness. 1,0 = sempurna. Google ≈1,1, rata-rata industri ≈1,6',
+    'field.location': 'Wilayah / Faktor karbon',
+    'field.location-tip': 'kg CO₂ per kWh berdasarkan bauran energi negara (IEA 2025)',
+    'field.energy-cost': 'Biaya energi (USD/kWh)',
+    'field.energy-cost-tip': 'Harga listrik industri. Rata-rata AS: $0,07',
+    'field.energy-cost-hint': 'Cloud industri: $0,05–$0,12',
+    'pue.avg': 'Rata-rata industri — 1,60',
+    'pue.bad': 'Pusat data tidak efisien — 2,00',
+    'btn.calculate': '⚡ Hitung Dampak Lingkungan',
+    'tab.training': '🌫️ Pelatihan',
+    'tab.inference': '⚡ Inferensi',
+    'tab.roi': '💰 ROI Hijau',
+    'tab.badge.new': 'BARU',
+    'btn.pdf': '📄 Ekspor PDF',
+    'infer.hero.title': '⚡ Kalkulator Dampak Inferensi',
+    'infer.hero.sub': 'Ukur biaya lingkungan nyata dari setiap query di produksi. 80–90% dampak AI terjadi selama inferensi, bukan pelatihan.',
+    'infer.card.title': 'Pilih Model dan Jenis Query',
+    'infer.qtype.label': 'Jenis query',
+    'infer.qt.short': 'Teks pendek',
+    'infer.qt.short.sub': '~200 token',
+    'infer.qt.long': 'Teks panjang',
+    'infer.qt.long.sub': '~1000 token',
+    'infer.qt.image': 'Gambar',
+    'infer.qt.image.sub': '1024×1024px',
+    'infer.qt.video': 'Video',
+    'infer.qt.video.sub': '5 detik',
+    'infer.model.label': 'Model AI',
+    'infer.model.custom': '✏️ Tulis model lain…',
+    'infer.custom.placeholder': 'Mis.: GPT-5, Gemini 3, ModelSaya-70B…',
+    'infer.custom.hint': '🧠 Akan diestimasi otomatis dengan R²=0,89 — Díaz Familia (2026)',
+    'infer.qday.label': 'Query per hari',
+    'infer.cf.label': 'Faktor karbon (kg CO₂/kWh)',
+    'infer.btn.calc': '⚡ Hitung Dampak Inferensi',
+    'infer.results.default': 'Hasil',
+    'infer.metric.gco2': 'g CO₂ / query',
+    'infer.metric.wh': 'Wh / query',
+    'infer.metric.water': 'ml air / query',
+    'infer.metric.day': 'kg CO₂ / hari',
+    'infer.metric.month': 'kg CO₂ / bulan',
+    'infer.metric.year': 'ton CO₂ / tahun',
+    'infer.scale.label': 'Skala vs Google Search (0,3 Wh) →',
+    'infer.src.default': 'Sumber: Jegham et al. arXiv:2505.09598 (2025) · Díaz Familia (2026)',
+    'infer.type.short': 'teks pendek',
+    'infer.type.long': 'teks panjang',
+    'infer.type.image': 'gambar',
+    'infer.type.video': 'video',
+    'infer.title.template': '{model} · {type} · {n} query/hari',
+    'infer.title.custom.template': '{model} (diestimasi) · {n} query/hari',
+    'infer.ref.template': 'Satu query mengonsumsi <strong>{wh}</strong> — setara dengan <strong>{gx}× pencarian Google</strong>. Dengan {n} query harian: <strong>{year} ton CO₂/tahun</strong>.',
+    'infer.ref.custom.template': '🧠 Model tidak dikenal diestimasi dengan <strong>smartEstimate()</strong> — ~{params}B parameter terdeteksi. Wh/query ≈ {wh} Wh. Dampak tahunan: <strong>{year} ton CO₂</strong>. Metodologi Díaz Familia (2026) R²=0,89.',
+    'infer.src.template': 'Sumber: {src} · Faktor karbon: {cf} kg CO₂/kWh',
+    'infer.src.custom': 'Estimasi otomatis — sesuaikan parameter jika Anda memiliki data yang tepat',
+    'infer.toast.noname': '✏️ Tulis nama model terlebih dahulu',
+    'infer.toast.notavailable': '⚠️ Model tidak tersedia',
+    'infer.toast.typenotavailable': '⚠️ Jenis query ini tidak tersedia untuk model ini',
+    'infer.toast.estimated.template': '🧠 {model} diestimasi: ~{params}B parameter · {wh} Wh/query',
+    'roi.hero.title': '💰 Kalkulator ROI Karbon',
+    'roi.hero.sub': 'Hitung penghematan finansial dan lingkungan dari beralih ke model yang lebih efisien. Justifikasi keputusan teknis dengan data ekonomi nyata.',
+    'roi.card.title': 'Perbandingan Model',
+    'roi.model.a.label': '❌ Model Saat Ini (tidak efisien)',
+    'roi.model.b.label': '✅ Model Efisien',
+    'roi.qday.label': 'Query per hari',
+    'roi.kwh.label': 'Harga listrik (USD/kWh)',
+    'roi.years.label': 'Cakrawala analisis',
+    'roi.years.1': '1 tahun',
+    'roi.years.2': '2 tahun',
+    'roi.years.3': '3 tahun',
+    'roi.years.5': '5 tahun',
+    'roi.cf.label': 'Faktor karbon (kg CO₂/kWh)',
+    'roi.btn.calc': '💰 Hitung ROI Hijau',
+    'roi.kpi.co2': 'ton CO₂ dihemat/tahun',
+    'roi.kpi.mwh': 'MWh dihemat/tahun',
+    'roi.kpi.usd': 'Total USD dihemat',
+    'roi.kpi.pct': 'Pengurangan emisi',
+    'roi.chart.title': 'Perbandingan visual',
+    'roi.breakdown.title': 'Rincian finansial dan lingkungan',
+    'roi.brow.co2a': 'CO₂ model saat ini (pelatihan)',
+    'roi.brow.co2b': 'CO₂ model efisien (pelatihan)',
+    'roi.brow.kwh': 'kWh dihemat/tahun (inferensi)',
+    'roi.brow.usdy': 'Penghematan USD/tahun',
+    'roi.brow.usdt': 'Total penghematan',
+    'roi.brow.years.word': 'tahun',
+    'roi.method': 'Metodologi: Díaz Familia (2026) R²=0,89 · Data inferensi: Jegham et al. arXiv:2505.09598 (2025)',
+    'roi.toast.invalidmodels': '⚠️ Pilih model yang valid',
+    'roi.equiv.template': '🌿 Menghemat <strong>{co2} ton CO₂/tahun</strong> ≡ 🌳 menanam <strong>{trees} pohon</strong> · ✈️ menghindari <strong>{flights} penerbangan transatlantik</strong>.',
+    'roi.chart.label.training': 'Emisi pelatihan (t CO₂)',
+    'roi.chart.label.savings': 'Penghematan kumulatif (USD)',
+    'roi.chart.yaxis.co2': 'ton CO₂',
+    'roi.chart.year.word': 'Tahun',
+    'roi.brow.usdy.suffix': '/tahun',
+    'em.modal.desc': 'Data intensitas karbon <strong style="color:var(--green-400)">real-time</strong> untuk lebih dari 60 negara. Gratis dengan pendaftaran — kunci Anda hanya tersimpan di browser Anda.',
+    'em.step1': 'Buka <a href="https://app.electricitymaps.com/map" target="_blank"><strong>electricitymaps.com</strong></a> → akun gratis',
+    'em.step2': 'Salin <strong>auth-token</strong> Anda dari dasbor',
+    'em.step3': 'Tempel di sini ↓',
+    'em.input.placeholder': 'Tempel auth-token Anda di sini…',
+    'em.zone.label': 'Zona terdeteksi:',
+    'em.btn.remove': 'Hapus',
+    'em.btn.cancel': 'Batal',
+    'em.btn.connect': 'Hubungkan',
+    'em.toast.invalidkey': '⚠️ Tempel kunci yang valid',
+    'em.toast.connected': '⚡ ElectricityMaps terhubung — data real-time aktif',
+    'em.toast.removed': '🔑 Kunci API dihapus — menggunakan IEA 2025',
+    'em.toast.fallback': '⚠️ ElectricityMaps tidak tersedia — menggunakan IEA 2025',
+    'em.zone.unsupported': '— fallback IEA 2025',
+    'em.title.attr': 'ElectricityMaps API — data real-time',
+    'float.ready': 'Laporan siap',
+    'float.ready.template': '📊 {model} dihitung',
+    'btn.pdf.short': 'PDF',
+    'pue.google': 'Google Cloud — 1,10',
+    'pue.leading': 'Anthropic / Terdepan — 1,20',
+    'pue.aws': 'AWS / Azure — 1,40',
+    'btn.share': 'Bagikan',
+    'btn.clear.short': 'Hapus',
+    'toast.offline': '⚠️ Tidak ada koneksi — menggunakan data tembolok',
+    'toast.eco.on': '⚡ Mode Eco diaktifkan — menghemat data dan energi',
+    'toast.eco.off': '🔄 Mode Eco dinonaktifkan',
+    'toast.pdf.opening': '📄 Membuka dialog PDF…',
+    'toast.copied': '🔗 Disalin ke clipboard',
+    'toast.copy.failed': '❌ Gagal menyalin',
+    'toast.calc.complete': '✅ Perhitungan selesai dalam 5 dimensi',
+    'conf.verified': '✓ Terverifikasi',
+    'conf.estimated': '~ Diestimasi',
+    'conf.custom': '✎ Kustom',
+    'estbanner.estimated.template': 'Parameter diestimasi (~{params}B terdeteksi) — korelasi R²=0,89. Sesuaikan jika Anda memiliki data yang tepat.',
+    'estbanner.custom': 'Parameter dimasukkan secara manual.',
+    'estbanner.default': 'Parameter diestimasi — berdasarkan nama model (R²=0,89). Sesuaikan jika Anda memiliki data yang tepat.',
+    'share.training.template': '🌍 {model}: {co2} kg CO₂ selama pelatihan.\nDihitung dengan AI Carbon Footprint Calculator — Díaz Familia (2026) R²=0,89',
+    'share.inference.template': '⚡ Inferensi {model}: {gco2} CO₂ · {wh} Wh per query.\nDihitung dengan AI Carbon Footprint Calculator — Díaz Familia (2026) R²=0,89',
+    'share.roi.template': '💰 ROI Karbon: Beralih dari {a} → {b} menghemat {co2} ton CO₂/tahun · {usd} USD · pengurangan {pct}.\nDihitung dengan AI Carbon Footprint Calculator — Díaz Familia (2026)',
+    'btn.clear': '🗑 Hapus',
+    'results.eyebrow': '📊 Hasil analisis lingkungan untuk:',
+    'results.badge': 'Baru saja dihitung',
+    'results.hours': 'jam',
+    'results.training': 'pelatihan',
+    'section.dims': 'Dampak dalam 5 dimensi ilmiah',
+    'section.equivs': 'Kesetaraan lingkungan',
+    'dim.co2': 'Total CO₂',
+    'dim.co2-unit': 'kg CO₂',
+    'dim.energy': 'Energi',
+    'dim.energy-unit': 'kWh dikonsumsi',
+    'dim.water': 'Air tawar',
+    'dim.water-unit': 'liter',
+    'dim.ewaste': 'Limbah Elektronik',
+    'dim.ewaste-unit': 'kg limbah elektronik',
+    'dim.minerals': 'Mineral Kritis',
+    'dim.minerals-unit': 'kg (kobalt, litium…)',
+    'rating.calculating': 'Menghitung…',
+    'rating.best': 'A+ Berkelanjutan',
+    'rating.worst': 'F Kritis',
+    'rating.efficiency': 'Efisiensi',
+    'rating.Aplus.title': 'Sangat Baik — Model yang sangat berkelanjutan',
+    'rating.Aplus.desc': 'Dampak minimal. Setara dengan satu penerbangan domestik.',
+    'rating.A.title': 'Sangat Baik — Dampak lingkungan rendah',
+    'rating.A.desc': 'Berada dalam kisaran model yang efisien dan dirancang dengan baik.',
+    'rating.B.title': 'Baik — Dampak rendah-sedang',
+    'rating.B.desc': 'Setara dengan model industri berukuran menengah.',
+    'rating.C.title': 'Sedang — Tinjau optimasi',
+    'rating.C.desc': 'Pertimbangkan lokasi pusat data atau pengurangan parameter.',
+    'rating.D.title': 'Tinggi — Dampak lingkungan signifikan',
+    'rating.D.desc': 'Setara GPT-3. Pertimbangkan pelatihan di wilayah dengan energi terbarukan.',
+    'rating.F.title': 'Kritis — Dampak sangat tinggi',
+    'rating.F.desc': 'Setara GPT-4. Memerlukan kompensasi dan optimasi segera.',
+    'equiv.cars': 'mobil dikendarai selama 1 tahun',
+    'equiv.flights': 'penerbangan Madrid → New York',
+    'equiv.homes': 'rumah dengan listrik / bulan',
+    'equiv.trees': 'pohon yang dibutuhkan untuk menyeimbangkan dalam 1 tahun',
+    'equiv.phones': 'pengisian penuh smartphone',
+    'equiv.cost': 'estimasi biaya listrik',
+    'chart.title': 'Perbandingan dengan model referensi',
+    'table.title': 'Tabel perbandingan dampak',
+    'table.model': 'Model',
+    'table.co2': 'CO₂ (kg)',
+    'table.water': 'Air (L)',
+    'table.rating': 'Peringkat',
+    'table.scale': 'Skala',
+    'table.calculated': '◀ dihitung',
+    'err.no-name': '⚠️ Silakan masukkan nama model untuk dihitung',
+    'err.fields': '⚠️ Harap isi semua kolom',
+    'err.gpu-range': '⚠️ Jumlah GPU tidak valid',
+    'err.hours-range': '⚠️ Jam pelatihan tidak valid',
+    'toast.cleared': '🗑 Data dihapus',
+    'toast.preset': '✓ Parameter dimuat',
+    'footer.paper': '📄 Paper ilmiah',
+    'footer.copy': '© 2026 Elizabeth Díaz Familia · Metodologi: Díaz Familia (2026) · CC BY 4.0',
+    'tab.trends': 'Tren',
+    'tab.scheduler': 'Penjadwal Hijau',
+    'trends.hero.title': '📊 Dasbor Tren',
+    'trends.hero.sub': 'Analisis bagaimana jejak karbon AI berkembang seiring waktu, berdasarkan perusahaan dan kategori, menggunakan 65+ model dalam database.',
+    'trends.kpi.title': 'Ikhtisar',
+    'trends.kpi.models': 'Model dianalisis',
+    'trends.kpi.avg': 'Rata-rata CO₂ (kg)',
+    'trends.kpi.bestyear': 'Tahun paling efisien (rata-rata)',
+    'trends.kpi.bestcompany': 'Perusahaan paling efisien (rata-rata)',
+    'trends.filters.title': 'Filter',
+    'trends.filter.category': 'Kategori',
+    'trends.filter.company': 'Perusahaan',
+    'trends.filter.all': 'Semua',
+    'trends.cat.image': 'Gambar',
+    'trends.cat.video': 'Video',
+    'trends.cat.audio': 'Audio',
+    'trends.cat.code': 'Kode',
+    'trends.cat.vision': 'Visi',
+    'trends.chart.scatter.title': 'Evolusi CO₂ pelatihan per tahun',
+    'trends.chart.scatter.note': 'Setiap titik mewakili satu model (sumbu Y logaritmik). Ukuran gelembung menunjukkan jumlah limbah elektronik yang dihasilkan.',
+    'trends.chart.company.title': 'Jejak rata-rata per perusahaan',
+    'trends.table.best.title': '10 model paling efisien',
+    'trends.table.worst.title': '10 model dengan jejak karbon tertinggi',
+    'trends.table.year': 'Tahun',
+    'trends.method': 'Data: basis data eksklusif dari 65+ model (pelatihan) · Metodologi Díaz Familia (2026) R²=0,89. Tahun rilis bersifat perkiraan; beberapa model adalah proyeksi.',
+    'trends.axis.year': 'Tahun',
+    'sched.hero.title': '🌤️ Penjadwal Sadar Karbon',
+    'sched.hero.sub': 'Temukan wilayah mana yang memiliki jaringan listrik paling bersih saat ini dan perkirakan berapa banyak CO₂ yang dapat Anda hemat dengan memindahkan beban kerja AI Anda.',
+    'sched.ranking.title': 'Peringkat wilayah berdasarkan intensitas karbon',
+    'sched.btn.live': 'Perbarui dengan data langsung',
+    'sched.table.region': 'Wilayah',
+    'sched.table.factor': 'kg CO₂/kWh',
+    'sched.table.source': 'Sumber',
+    'sched.ranking.note': '🟢 = wilayah paling bersih yang tersedia saat ini. Data langsung memerlukan kunci ElectricityMaps gratis Anda (tombol ⚡ di bilah atas).',
+    'sched.calc.title': 'Kalkulator penghematan potensial',
+    'sched.calc.current': 'Wilayah Anda saat ini',
+    'sched.calc.kwh': 'Energi yang akan dijalankan (kWh)',
+    'sched.calc.btn': 'Hitung penghematan potensial',
+    'sched.kpi.greenest': 'Wilayah paling bersih',
+    'sched.kpi.savings': 'kg CO₂ dihemat',
+    'sched.kpi.pct': 'Pengurangan yang mungkin',
+    'sched.kpi.trees': 'Pohon setara/tahun',
+    'sched.tips.title': 'Praktik terbaik komputasi sadar karbon',
+    'sched.tip1': 'Jadwalkan pelatihan yang panjang dan tidak mendesak di wilayah atau jendela waktu dengan pembangkitan energi terbarukan yang lebih tinggi jika memungkinkan.',
+    'sched.tip2': 'Prioritaskan pusat data di negara dengan jaringan bersih (hidro, nuklir, angin) untuk beban kerja pelatihan intensif.',
+    'sched.tip3': 'Untuk inferensi produksi, pertimbangkan menyeimbangkan lalu lintas secara geografis ke wilayah yang lebih bersih jika latensi memungkinkan.',
+    'sched.tip4': 'Selalu verifikasi intensitas karbon aktual dari penyedia cloud Anda — penjadwal ini adalah panduan, bukan pengganti data real-time.',
+    'sched.method': 'Sumber faktor regional: IEA (2025) · Data langsung: ElectricityMaps API. Penjadwal ini menawarkan panduan umum, bukan perkiraan per jam secara real-time.',
+    'sched.toast.nokey': '⚠️ Hubungkan dulu kunci ElectricityMaps Anda (tombol ⚡ di atas)',
+    'sched.toast.updated': '⚡ Data langsung diperbarui',
+  },
+
 };
 
 /* ─── MOTOR DE TRADUCCIÓN — aplica TODOS los textos de una sola vez ─── */
