@@ -1640,26 +1640,34 @@ body {
       <div class="roi-vs-grid">
         <div>
           <div class="model-lbl bad" data-i18n="roi.model.a.label">❌ Modelo Actual (Ineficiente)</div>
-          <select class="form-select" id="roiA">
+          <select class="form-select" id="roiA" onchange="onRoiModelChange(this,'A')">
             <option value="gpt4">GPT-4 — 1,820,000 kg CO₂</option>
             <option value="gpt3">GPT-3 — 1,713,600 kg CO₂</option>
             <option value="geminiultra">Gemini Ultra — 910,000 kg CO₂</option>
             <option value="gpt4o">GPT-4o — 728,000 kg CO₂</option>
             <option value="llama3_405b">LLaMA 3.1 405B — 455,000 kg CO₂</option>
             <option value="claudeopus">Claude 3 Opus — 182,000 kg CO₂</option>
+            <option value="__custom__" data-i18n-opt="infer.model.custom">✏️ Escribir otro modelo…</option>
           </select>
+          <div id="roiACustomWrap" style="display:none;margin-top:10px">
+            <input type="text" class="form-input" id="roiACustomModel" data-i18n-placeholder="infer.custom.placeholder" placeholder="Ej: GPT-5, Gemini 3, MiModelo-70B…" style="border-color:rgba(251,191,36,.40)">
+          </div>
         </div>
         <div class="vs-center"><div class="vs-badge">VS</div></div>
         <div>
           <div class="model-lbl good" data-i18n="roi.model.b.label">✅ Modelo Eficiente</div>
-          <select class="form-select" id="roiB">
+          <select class="form-select" id="roiB" onchange="onRoiModelChange(this,'B')">
             <option value="dseekr1">DeepSeek-R1 — 72,800 kg CO₂</option>
             <option value="dseekv3">DeepSeek-V3 ✓ — 54,600 kg CO₂</option>
             <option value="claude35s">Claude 3.5 Sonnet — 18,200 kg CO₂</option>
             <option value="mistral7b">Mistral 7B — 3,185 kg CO₂</option>
             <option value="llama3_8b">LLaMA 3.1 8B — 1,820 kg CO₂</option>
             <option value="phi4">Phi-4 — 7,280 kg CO₂</option>
+            <option value="__custom__" data-i18n-opt="infer.model.custom">✏️ Escribir otro modelo…</option>
           </select>
+          <div id="roiBCustomWrap" style="display:none;margin-top:10px">
+            <input type="text" class="form-input" id="roiBCustomModel" data-i18n-placeholder="infer.custom.placeholder" placeholder="Ej: GPT-5, Gemini 3, MiModelo-70B…" style="border-color:rgba(251,191,36,.40)">
+          </div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px">
@@ -2143,14 +2151,33 @@ function smartEstimate(name){
 }
 
 let _conf='custom';
+let _estParamB=null;
 function setConf(c){ _conf=c; }
-function showEstBanner(paramB){
+/* Selects can only hold a value that exactly string-matches one of their <option>
+   values — assigning an arbitrary number silently deselects everything. This snaps
+   to the numerically closest option instead, so any pue/loc/power value (whether from
+   MODELS_DB or from smartEstimate()) always lands on something valid. */
+function _snapSelectValue(sel,value){
+  if(!sel||value===null||value===undefined||isNaN(value)) return;
+  let best=null,bestDiff=Infinity;
+  for(const opt of sel.options){
+    const v=parseFloat(opt.value);
+    if(isNaN(v)) continue;
+    const diff=Math.abs(v-value);
+    if(diff<bestDiff){ bestDiff=diff; best=opt.value; }
+  }
+  if(best!==null) sel.value=best;
+}
+function showEstBanner(){
   const b=document.getElementById('estBanner');
   const txtEl=document.getElementById('estBannerText');
   if(!b||!txtEl) return;
   if(_conf==='verified'){ b.classList.remove('show'); return; }
-  if(_conf==='estimated'){
-    txtEl.textContent=_tfill('estbanner.estimated.template',{params:paramB});
+  if(_conf==='estimated' && _estParamB!=null){
+    txtEl.textContent=_tfill('estbanner.estimated.template',{params:_estParamB});
+    b.classList.add('show');
+  } else if(_conf==='estimated'){
+    txtEl.textContent=t('estbanner.default');
     b.classList.add('show');
   } else {
     txtEl.textContent=t('estbanner.custom');
@@ -2218,10 +2245,41 @@ const INFER = {
   dseekv3:    {ts:0.04,tl:0.20,img:null,vid:null, wue:2.0,src:'Verified training data'},
 };
 let _qType='text_short';
+const _QT_KEY={text_short:'ts',text_long:'tl',image:'img',video:'vid'};
+/* Per-type energy multiplier for smartEstimate() custom/unknown models, derived from the
+   internal ts/tl/img/vid ratios of the one model in INFER with all four types measured (gpt4o):
+   text_long≈5×, image≈2.9×, video≈2250× the text_short baseline. */
+const _QT_MULT={text_short:1,text_long:5,image:2.9,video:2250};
+function _modelSupportsType(mid,type){
+  if(mid==='__custom__') return true;
+  const d=INFER[mid];
+  if(!d) return false;
+  const v=d[_QT_KEY[type]];
+  return v!==null && v!==undefined;
+}
+function _bestModelForType(type){
+  const key=_QT_KEY[type];
+  const preferred={image:'dalle3',video:'sora',text_short:'gpt4o',text_long:'gpt4o'}[type];
+  if(preferred && INFER[preferred] && INFER[preferred][key]!==null && INFER[preferred][key]!==undefined) return preferred;
+  for(const id in INFER){ if(INFER[id][key]!==null && INFER[id][key]!==undefined) return id; }
+  return null;
+}
+function _ensureModelSupportsType(type){
+  const sel=document.getElementById('iModel');
+  if(!sel || sel.value==='__custom__' || _modelSupportsType(sel.value,type)) return;
+  const bestId=_bestModelForType(type);
+  if(bestId && bestId!==sel.value){
+    sel.value=bestId;
+    onInferModelChange(sel);
+    const mLabel=sel.options[sel.selectedIndex].text;
+    toast(_tfill('infer.toast.modelswitched',{model:mLabel}),'success',3800);
+  }
+}
 function selectQT(type,btn){
   _qType=type;
   document.querySelectorAll('.qt-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  _ensureModelSupportsType(type);
   if(document.getElementById('inferResults').classList.contains('show')) calcInference();
 }
 function onInferModelChange(sel){
@@ -2245,16 +2303,21 @@ function _tfill(key, vals){
   return s;
 }
 function calcInference(){
+  _ensureModelSupportsType(_qType);
   const mid=document.getElementById('iModel').value;
+  const typeKeyMap={text_short:'infer.type.short',text_long:'infer.type.long',image:'infer.type.image',video:'infer.type.video'};
 
-  // Handle custom model with smartEstimate
+  // Handle custom model with smartEstimate — scaled per query type (text/image/video
+  // have very different real-world energy costs; see _QT_MULT) so ANY model name typed
+  // in, including ones released after this app shipped, gets a plausible estimate for
+  // whichever query type is selected, not just a flat text-only number.
   if(mid === '__custom__'){
     const customName = document.getElementById('iCustomModel').value.trim();
     if(!customName){ toast(t('infer.toast.noname'),'error'); return; }
     const est = smartEstimate(customName);
     const qd  = parseFloat(document.getElementById('iQDay').value)||100;
     const cf  = parseFloat(document.getElementById('iCF').value)||0.386;
-    const whQuery = Math.max(0.001, est.paramB * 0.006);
+    const whQuery = Math.max(0.001, est.paramB * 0.006 * (_QT_MULT[_qType]||1));
     const wue = 1.8;
     const gco2 = whQuery * cf * 1000;
     const mlw  = whQuery * wue * 1000;
@@ -2266,7 +2329,7 @@ function calcInference(){
     document.getElementById('iMonth').textContent  = co2m<1?co2m.toFixed(3):co2m.toFixed(2);
     document.getElementById('iYear').textContent   = co2y.toFixed(3);
     document.getElementById('iScale').style.width  = Math.min((whQuery/0.3)*20,100)+'%';
-    document.getElementById('inferTitle').textContent = _tfill('infer.title.custom.template',{model:customName,n:qd.toLocaleString()});
+    document.getElementById('inferTitle').textContent = _tfill('infer.title.custom.template',{model:customName,type:t(typeKeyMap[_qType]),n:qd.toLocaleString()});
     document.getElementById('inferRef').innerHTML  = _tfill('infer.ref.custom.template',{params:est.paramB,wh:whQuery.toFixed(3),year:co2y.toFixed(3)});
     document.getElementById('inferSrc').textContent= t('infer.src.custom');
     document.getElementById('inferResults').classList.add('show');
@@ -2291,7 +2354,6 @@ function calcInference(){
   document.getElementById('iYear').textContent  = co2y.toFixed(3);
   document.getElementById('iScale').style.width = Math.min((wh/0.3)*20,100)+'%';
   const mLabel=document.getElementById('iModel').options[document.getElementById('iModel').selectedIndex].text.split(' ')[0];
-  const typeKeyMap={text_short:'infer.type.short',text_long:'infer.type.long',image:'infer.type.image',video:'infer.type.video'};
   document.getElementById('inferTitle').textContent=_tfill('infer.title.template',{model:mLabel,type:t(typeKeyMap[_qType]),n:qd.toLocaleString()});
   const gx=(wh/0.3).toFixed(1);
   const whDisplay = wh<0.1?(wh*1000).toFixed(1)+' mWh':wh.toFixed(3)+' Wh';
@@ -2353,9 +2415,29 @@ const ROI_M = {
   phi4:{name:'Phi-4',co2:7280,e:18200},
 };
 let _roiChart=null;
+function onRoiModelChange(sel,side){
+  const wrap=document.getElementById('roi'+side+'CustomWrap');
+  if(!wrap) return;
+  wrap.style.display = sel.value==='__custom__' ? 'block' : 'none';
+  if(sel.value==='__custom__') document.getElementById('roi'+side+'CustomModel')?.focus();
+}
+/* Any AI model typed into the custom option gets a self-consistent ROI estimate built
+   from smartEstimate(), using the exact same energy formula as the Training tab's own
+   calculate() (gpus × power(kW) × hours × PUE, then × location factor for CO₂) — the
+   curated ROI_M entries above come from cited per-model research instead, so a typed
+   model is clearly an estimate, not claimed to match that sourced data. */
+function _roiModelFor(side){
+  const sel=document.getElementById('roi'+side);
+  if(sel.value!=='__custom__') return ROI_M[sel.value];
+  const name=(document.getElementById('roi'+side+'CustomModel').value||'').trim();
+  if(!name) return null;
+  const est=smartEstimate(name);
+  const eKwh=est.gpus*est.power*est.hours*est.pue;
+  return {name:name+' ('+t('conf.estimated')+')', co2:eKwh*est.loc, e:eKwh};
+}
 function calcROI(){
-  const A=ROI_M[document.getElementById('roiA').value];
-  const B=ROI_M[document.getElementById('roiB').value];
+  const A=_roiModelFor('A');
+  const B=_roiModelFor('B');
   const qd=parseFloat(document.getElementById('roiQDay').value)||10000;
   const kc=parseFloat(document.getElementById('roiKwh').value)||0.07;
   const yrs=parseInt(document.getElementById('roiYears').value)||3;
@@ -2431,6 +2513,12 @@ async function shareROI(){
 function clearROI(){
   document.getElementById('roiA').selectedIndex = 0;
   document.getElementById('roiB').selectedIndex = 0;
+  ['A','B'].forEach(side=>{
+    const wrap=document.getElementById('roi'+side+'CustomWrap');
+    if(wrap) wrap.style.display='none';
+    const inp=document.getElementById('roi'+side+'CustomModel');
+    if(inp) inp.value='';
+  });
   document.getElementById('roiQDay').value  = '10000';
   document.getElementById('roiKwh').value   = '0.07';
   document.getElementById('roiYears').value = '3';
@@ -2558,7 +2646,20 @@ function updateCarbonBar(val, idx, source){
     list.classList.add('show');
   });
 
-  input.addEventListener('blur', ()=>setTimeout(()=>list.classList.remove('show'),150));
+  input.addEventListener('blur', ()=>setTimeout(()=>{
+    list.classList.remove('show');
+    // Leaving the field with a name that isn't in the database: auto-fill the rest
+    // right away (via smartEstimate) so the user sees a full picture without having
+    // to hunt for "Calcular" first. Selecting a suggestion already calls applyModel()
+    // and skips this (mousedown's preventDefault stops this blur from firing then).
+    const val = input.value.trim();
+    if(!val) return;
+    const known = MODELS_DB.find(m=>m.name.toLowerCase()===val.toLowerCase());
+    if(known){ applyModel(known); return; }
+    const missing = !document.getElementById('fGpuCount').value || !document.getElementById('fHours').value ||
+      !document.getElementById('fPue').value || !document.getElementById('fLocation').value || !document.getElementById('fGpuType').value;
+    if(missing){ applySmartEstimateModel(val); showEstBanner(); }
+  },150));
   input.addEventListener('keydown', e=>{
     const items = list.querySelectorAll('.ac-item');
     if(e.key==='ArrowDown'){ selectedIdx=Math.min(selectedIdx+1,items.length-1); }
@@ -2592,14 +2693,31 @@ function updateCarbonBar(val, idx, source){
 
 function applyModel(m){
   setConf(m.verified?'verified':'estimated');
+  _estParamB=null; // known DB entry — not a smartEstimate() guess, no {params}B to show
   const b=document.getElementById('estBanner'); if(b) b.classList.remove('show');
   document.getElementById('fModelName').value  = m.name;
   document.getElementById('fGpuCount').value   = m.gpus;
-  document.getElementById('fGpuType').value    = m.power.toFixed(1);
+  _snapSelectValue(document.getElementById('fGpuType'), m.power);
   document.getElementById('fHours').value      = m.hours;
-  document.getElementById('fPue').value        = m.pue.toFixed(1);
-  document.getElementById('fLocation').value   = m.loc;
+  _snapSelectValue(document.getElementById('fPue'), m.pue);
+  _snapSelectValue(document.getElementById('fLocation'), m.loc);
   document.getElementById('fEnergyCost').value = 0.07;
+}
+/* Any AI model the user types that ISN'T in the curated database still gets full
+   auto-filled parameters, via the same smartEstimate() heuristic already used in the
+   Inference tab's custom-model flow — new models released after this app shipped work
+   out of the box instead of forcing the user to hand-enter GPU/hours/PUE/location. */
+function applySmartEstimateModel(name){
+  const est=smartEstimate(name);
+  setConf('estimated');
+  _estParamB=est.paramB;
+  document.getElementById('fGpuCount').value = est.gpus;
+  _snapSelectValue(document.getElementById('fGpuType'), est.power);
+  document.getElementById('fHours').value = est.hours;
+  _snapSelectValue(document.getElementById('fPue'), est.pue);
+  _snapSelectValue(document.getElementById('fLocation'), est.loc);
+  if(!document.getElementById('fEnergyCost').value) document.getElementById('fEnergyCost').value = 0.07;
+  return est;
 }
 
 /* ─── CLEAR ─── */
@@ -2612,6 +2730,8 @@ function clearAll(){
   document.getElementById('fPue').value         = '1.2';
   document.getElementById('fLocation').value    = '0.386';
   document.querySelectorAll('.preset-chip').forEach(c=>c.classList.remove('active'));
+  setConf('custom'); _estParamB=null;
+  document.getElementById('estBanner')?.classList.remove('show');
 
   const rs = document.getElementById('results-section');
   rs.classList.remove('show'); rs.style.display='none';
@@ -2623,14 +2743,28 @@ function clearAll(){
 /* ─── CALCULATE ─── */
 function calculate(){
   const modelName = document.getElementById('fModelName').value.trim();
+  if(!modelName){ toast(t('err.no-name'),'error'); document.getElementById('fModelName').focus(); return; }
+
+  // ANY AI model works: if the typed name isn't in the curated database and some
+  // fields are still empty, auto-estimate them from the name before validating —
+  // matches the same smartEstimate() flow already used for custom models in Inference.
+  const knownModel = MODELS_DB.find(m=>m.name.toLowerCase()===modelName.toLowerCase());
+  const fieldsIncomplete = !document.getElementById('fGpuCount').value || !document.getElementById('fHours').value ||
+    !document.getElementById('fPue').value || !document.getElementById('fLocation').value || !document.getElementById('fGpuType').value;
+  if(!knownModel && fieldsIncomplete){
+    const est = applySmartEstimateModel(modelName);
+    showEstBanner();
+    toast(_tfill('toast.smartestimate.template',{model:modelName,params:est.paramB}),'success',3200);
+  }
+
   const gpuCount  = parseFloat(document.getElementById('fGpuCount').value);
-  const gpuPower  = parseFloat(document.getElementById('fGpuType').value);
+  const gpuTypeRaw= document.getElementById('fGpuType').value;
+  const gpuPower  = parseFloat(gpuTypeRaw);
   const hours     = parseFloat(document.getElementById('fHours').value);
   const pue       = parseFloat(document.getElementById('fPue').value);
   const locFactor = parseFloat(document.getElementById('fLocation').value);
   const energyCost= parseFloat(document.getElementById('fEnergyCost').value);
 
-  if(!modelName){ toast(t('err.no-name'),'error'); document.getElementById('fModelName').focus(); return; }
   if(!gpuCount||!gpuPower||!hours||!pue||!locFactor){
     toast(t('err.fields'),'error'); return;
   }
@@ -2646,11 +2780,14 @@ function calculate(){
   const waterL    = energyKWh * WATER_INTENSITY;
 
   // E-Waste: (GPU mass × GPU count × training fraction of lifetime)
-  const gpuMass   = GPU_MASS_KG[gpuPower.toFixed(1)] || 2.1;
+  // NOTE: look up by the select's raw string value (e.g. "0.45"), not gpuPower.toFixed(1)
+  // — toFixed(1) rounds 0.45→"0.5"/0.35→"0.4"/0.56→"0.6", which don't exist as dict keys
+  // and used to silently fall back to the A100 default for the RTX/MI250X GPU options.
+  const gpuMass   = GPU_MASS_KG[gpuTypeRaw] || 2.1;
   const ewasteKg  = gpuCount * gpuMass * (hours / GPU_LIFETIME_H);
 
   // Minerals: critical minerals amortized per GPU per use
-  const minKgPerGpu = GPU_MINERALS_KG[gpuPower.toFixed(1)] || 0.05;
+  const minKgPerGpu = GPU_MINERALS_KG[gpuTypeRaw] || 0.05;
   const mineralsKg  = gpuCount * minKgPerGpu * (hours / GPU_LIFETIME_H);
 
   // Efficiency score
@@ -2686,9 +2823,9 @@ function displayResults(r){
   if(chip){
     chip.style.display='inline-flex';
     chip.className='conf-chip '+(_conf==='verified'?'verified':_conf==='estimated'?'estimated':'custom');
-    chip.textContent=_conf==='verified'?'✓ Verificado':_conf==='estimated'?'~ Estimado':'✎ Personalizado';
+    chip.textContent=_conf==='verified'?t('conf.verified'):_conf==='estimated'?t('conf.estimated'):t('conf.custom');
   }
-  showEstBanner(null);
+  showEstBanner();
   showFloatBar(r.modelName);
   document.getElementById('rhMeta').innerHTML = `
     <span class="rh-meta-item">${r.gpuCount.toLocaleString('es')} × ${r.gpuName}</span>
@@ -3228,7 +3365,7 @@ const T = {
     'infer.type.image': 'imagen',
     'infer.type.video': 'video',
     'infer.title.template': '{model} · {type} · {n} consultas/día',
-    'infer.title.custom.template': '{model} (estimado) · {n} consultas/día',
+    'infer.title.custom.template': '{model} (estimado) · {type} · {n} consultas/día',
     'infer.ref.template': 'Una consulta consume <strong>{wh}</strong> — equivale a <strong>{gx}× una búsqueda en Google</strong>. Con {n} consultas diarias: <strong>{year} ton CO₂/año</strong>.',
     'infer.ref.custom.template': '🧠 Modelo desconocido estimado con <strong>smartEstimate()</strong> — ~{params}B parámetros detectados. Wh/consulta ≈ {wh} Wh. Impacto anual: <strong>{year} ton CO₂</strong>. Metodología Díaz Familia (2026) R²=0.89.',
     'infer.src.template': 'Fuente: {src} · Factor carbono: {cf} kg CO₂/kWh',
@@ -3236,6 +3373,7 @@ const T = {
     'infer.toast.noname': '✏️ Escribe el nombre del modelo primero',
     'infer.toast.notavailable': '⚠️ Modelo no disponible',
     'infer.toast.typenotavailable': '⚠️ Este tipo de consulta no está disponible para este modelo',
+    'infer.toast.modelswitched': '⚠️ Modelo cambiado automáticamente a {model} (compatible con este tipo de consulta)',
     'infer.toast.estimated.template': '🧠 {model} estimado: ~{params}B params · {wh} Wh/consulta',
     'roi.hero.title': '💰 Carbon ROI Calculator',
     'roi.hero.sub': 'Calcula el ahorro financiero y ambiental de migrar a un modelo más eficiente. Justifica decisiones técnicas con datos económicos reales.',
@@ -3360,6 +3498,7 @@ const T = {
     'err.gpu-range':       '⚠️ Número de GPUs inválido',
     'err.hours-range':     '⚠️ Horas de entrenamiento inválidas',
     'toast.cleared':       '🗑 Datos limpiados',
+    'toast.smartestimate.template': '🧠 {model}: parámetros estimados automáticamente (~{params}B) — ajusta si tienes datos exactos',
     'toast.preset':        '✓ Parámetros cargados',
     /* Footer */
     'footer.paper':        '📄 Paper científico',
@@ -3489,7 +3628,7 @@ const T = {
     'infer.type.image': 'image',
     'infer.type.video': 'video',
     'infer.title.template': '{model} · {type} · {n} queries/day',
-    'infer.title.custom.template': '{model} (estimated) · {n} queries/day',
+    'infer.title.custom.template': '{model} (estimated) · {type} · {n} queries/day',
     'infer.ref.template': 'One query consumes <strong>{wh}</strong> — equivalent to <strong>{gx}× a Google search</strong>. With {n} daily queries: <strong>{year} ton CO₂/year</strong>.',
     'infer.ref.custom.template': '🧠 Unknown model estimated with <strong>smartEstimate()</strong> — ~{params}B parameters detected. Wh/query ≈ {wh} Wh. Annual impact: <strong>{year} ton CO₂</strong>. Díaz Familia (2026) methodology R²=0.89.',
     'infer.src.template': 'Source: {src} · Carbon factor: {cf} kg CO₂/kWh',
@@ -3497,6 +3636,7 @@ const T = {
     'infer.toast.noname': '✏️ Write the model name first',
     'infer.toast.notavailable': '⚠️ Model not available',
     'infer.toast.typenotavailable': '⚠️ This query type is not available for this model',
+    'infer.toast.modelswitched': '⚠️ Model automatically switched to {model} (supports this query type)',
     'infer.toast.estimated.template': '🧠 {model} estimated: ~{params}B params · {wh} Wh/query',
     'roi.hero.title': '💰 Carbon ROI Calculator',
     'roi.hero.sub': 'Calculate the financial and environmental savings of switching to a more efficient model. Justify technical decisions with real economic data.',
@@ -3600,7 +3740,8 @@ const T = {
     'err.fields':'⚠️ Please fill in all fields',
     'err.gpu-range':'⚠️ Invalid GPU count',
     'err.hours-range':'⚠️ Invalid training hours',
-    'toast.cleared':'🗑 Data cleared','toast.preset':'✓ Parameters loaded',
+    'toast.cleared':'🗑 Data cleared',
+    'toast.smartestimate.template':'🧠 {model}: parameters automatically estimated (~{params}B) — adjust if you have exact data','toast.preset':'✓ Parameters loaded',
     'footer.paper':'📄 Scientific paper',
     'footer.copy':'© 2026 Elizabeth Díaz Familia · Methodology: Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -3728,7 +3869,7 @@ const T = {
     'infer.type.image': 'image',
     'infer.type.video': 'vidéo',
     'infer.title.template': '{model} · {type} · {n} requêtes/jour',
-    'infer.title.custom.template': '{model} (estimé) · {n} requêtes/jour',
+    'infer.title.custom.template': '{model} (estimé) · {type} · {n} requêtes/jour',
     'infer.ref.template': 'Une requête consomme <strong>{wh}</strong> — équivaut à <strong>{gx}× une recherche Google</strong>. Avec {n} requêtes quotidiennes : <strong>{year} t CO₂/an</strong>.',
     'infer.ref.custom.template': '🧠 Modèle inconnu estimé avec <strong>smartEstimate()</strong> — ~{params}B paramètres détectés. Wh/requête ≈ {wh} Wh. Impact annuel : <strong>{year} t CO₂</strong>. Méthodologie Díaz Familia (2026) R²=0.89.',
     'infer.src.template': 'Source : {src} · Facteur carbone : {cf} kg CO₂/kWh',
@@ -3736,6 +3877,7 @@ const T = {
     "infer.toast.noname": "✏️ Écrivez d'abord le nom du modèle",
     'infer.toast.notavailable': '⚠️ Modèle non disponible',
     "infer.toast.typenotavailable": "⚠️ Ce type de requête n'est pas disponible pour ce modèle",
+    "infer.toast.modelswitched": "⚠️ Modèle changé automatiquement pour {model} (compatible avec ce type de requête)",
     'infer.toast.estimated.template': '🧠 {model} estimé : ~{params}B params · {wh} Wh/requête',
     'roi.hero.title': '💰 Calculateur ROI Carbone',
     'roi.hero.sub': 'Calculez les économies financières et environnementales en passant à un modèle plus efficace. Justifiez les décisions techniques avec des données économiques réelles.',
@@ -3838,7 +3980,8 @@ const T = {
     'err.no-name':'⚠️ Veuillez saisir le nom du modèle à calculer',
     'err.fields':'⚠️ Veuillez remplir tous les champs',
     'err.gpu-range':'⚠️ Nombre de GPUs invalide','err.hours-range':'⚠️ Heures d\'entraînement invalides',
-    'toast.cleared':'🗑 Données effacées','toast.preset':'✓ Paramètres chargés',
+    'toast.cleared':'🗑 Données effacées',
+    'toast.smartestimate.template':'🧠 {model} : paramètres estimés automatiquement (~{params}B) — ajustez si vous avez des données exactes','toast.preset':'✓ Paramètres chargés',
     'footer.paper':'📄 Article scientifique',
     'footer.copy':'© 2026 Elizabeth Díaz Familia · Méthodologie : Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -3966,7 +4109,7 @@ const T = {
     'infer.type.image': 'imagem',
     'infer.type.video': 'vídeo',
     'infer.title.template': '{model} · {type} · {n} consultas/dia',
-    'infer.title.custom.template': '{model} (estimado) · {n} consultas/dia',
+    'infer.title.custom.template': '{model} (estimado) · {type} · {n} consultas/dia',
     'infer.ref.template': 'Uma consulta consome <strong>{wh}</strong> — equivale a <strong>{gx}× uma busca no Google</strong>. Com {n} consultas diárias: <strong>{year} ton CO₂/ano</strong>.',
     'infer.ref.custom.template': '🧠 Modelo desconhecido estimado com <strong>smartEstimate()</strong> — ~{params}B parâmetros detectados. Wh/consulta ≈ {wh} Wh. Impacto anual: <strong>{year} ton CO₂</strong>. Metodologia Díaz Familia (2026) R²=0.89.',
     'infer.src.template': 'Fonte: {src} · Fator carbono: {cf} kg CO₂/kWh',
@@ -3974,6 +4117,7 @@ const T = {
     'infer.toast.noname': '✏️ Escreva o nome do modelo primeiro',
     'infer.toast.notavailable': '⚠️ Modelo não disponível',
     'infer.toast.typenotavailable': '⚠️ Este tipo de consulta não está disponível para este modelo',
+    'infer.toast.modelswitched': '⚠️ Modelo alterado automaticamente para {model} (compatível com este tipo de consulta)',
     'infer.toast.estimated.template': '🧠 {model} estimado: ~{params}B params · {wh} Wh/consulta',
     'roi.hero.title': '💰 Calculadora de ROI Verde',
     'roi.hero.sub': 'Calcule a economia financeira e ambiental de migrar para um modelo mais eficiente. Justifique decisões técnicas com dados econômicos reais.',
@@ -4076,7 +4220,8 @@ const T = {
     'err.no-name':'⚠️ Por favor insira o nome do modelo a calcular',
     'err.fields':'⚠️ Por favor preencha todos os campos',
     'err.gpu-range':'⚠️ Quantidade de GPUs inválida','err.hours-range':'⚠️ Horas de treinamento inválidas',
-    'toast.cleared':'🗑 Dados limpos','toast.preset':'✓ Parâmetros carregados',
+    'toast.cleared':'🗑 Dados limpos',
+    'toast.smartestimate.template':'🧠 {model}: parâmetros estimados automaticamente (~{params}B) — ajuste se tiver dados exatos','toast.preset':'✓ Parâmetros carregados',
     'footer.paper':'📄 Artigo científico',
     'footer.copy':'© 2026 Elizabeth Díaz Familia · Metodologia: Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -4204,7 +4349,7 @@ const T = {
     'infer.type.image': 'изображение',
     'infer.type.video': 'видео',
     'infer.title.template': '{model} · {type} · {n} запросов/день',
-    'infer.title.custom.template': '{model} (оценка) · {n} запросов/день',
+    'infer.title.custom.template': '{model} (оценка) · {type} · {n} запросов/день',
     'infer.ref.template': 'Один запрос потребляет <strong>{wh}</strong> — это эквивалентно <strong>{gx}× поиску в Google</strong>. С {n} запросами в день: <strong>{year} т CO₂/год</strong>.',
     'infer.ref.custom.template': '🧠 Неизвестная модель оценена с помощью <strong>smartEstimate()</strong> — обнаружено ~{params}B параметров. Вт·ч/запрос ≈ {wh} Вт·ч. Годовое влияние: <strong>{year} т CO₂</strong>. Методология Díaz Familia (2026) R²=0.89.',
     'infer.src.template': 'Источник: {src} · Фактор углерода: {cf} кг CO₂/кВтч',
@@ -4212,6 +4357,7 @@ const T = {
     'infer.toast.noname': '✏️ Сначала укажите название модели',
     'infer.toast.notavailable': '⚠️ Модель недоступна',
     'infer.toast.typenotavailable': '⚠️ Этот тип запроса недоступен для данной модели',
+    'infer.toast.modelswitched': '⚠️ Модель автоматически изменена на {model} (поддерживает этот тип запроса)',
     'infer.toast.estimated.template': '🧠 {model} оценено: ~{params}B параметров · {wh} Вт·ч/запрос',
     'roi.hero.title': '💰 Калькулятор зелёного ROI',
     'roi.hero.sub': 'Рассчитайте финансовую и экологическую экономию от перехода на более эффективную модель. Обоснуйте технические решения реальными экономическими данными.',
@@ -4314,7 +4460,8 @@ const T = {
     'err.no-name':'⚠️ Пожалуйста, введите название модели для расчёта',
     'err.fields':'⚠️ Пожалуйста, заполните все поля',
     'err.gpu-range':'⚠️ Недопустимое количество GPU','err.hours-range':'⚠️ Недопустимые часы обучения',
-    'toast.cleared':'🗑 Данные очищены','toast.preset':'✓ Параметры загружены',
+    'toast.cleared':'🗑 Данные очищены',
+    'toast.smartestimate.template':'🧠 {model}: параметры автоматически оценены (~{params}B) — скорректируйте при наличии точных данных','toast.preset':'✓ Параметры загружены',
     'footer.paper':'📄 Научная статья',
     'footer.copy':'© 2026 Элизабет Диас Фамилия · Методология: Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -4442,7 +4589,7 @@ const T = {
     'infer.type.image': '图像',
     'infer.type.video': '视频',
     'infer.title.template': '{model} · {type} · 每日 {n} 次查询',
-    'infer.title.custom.template': '{model}（估算）· 每日 {n} 次查询',
+    'infer.title.custom.template': '{model}（估算）· {type} · 每日 {n} 次查询',
     'infer.ref.template': '一次查询消耗 <strong>{wh}</strong> — 相当于 <strong>{gx}× 一次 Google 搜索</strong>。每日 {n} 次查询：<strong>{year} 吨 CO₂/年</strong>。',
     'infer.ref.custom.template': '🧠 使用 <strong>smartEstimate()</strong> 估算的未知模型 — 检测到约 {params}B 参数。Wh/查询 ≈ {wh} Wh。年度影响：<strong>{year} 吨 CO₂</strong>。Díaz Familia (2026) 方法论 R²=0.89。',
     'infer.src.template': '来源：{src} · 碳因子：{cf} kg CO₂/kWh',
@@ -4450,6 +4597,7 @@ const T = {
     'infer.toast.noname': '✏️ 请先输入模型名称',
     'infer.toast.notavailable': '⚠️ 模型不可用',
     'infer.toast.typenotavailable': '⚠️ 此查询类型不适用于该模型',
+    'infer.toast.modelswitched': '⚠️ 已自动切换到模型 {model}（支持此查询类型）',
     'infer.toast.estimated.template': '🧠 {model} 已估算：约 {params}B 参数 · {wh} Wh/查询',
     'roi.hero.title': '💰 碳排放 ROI 计算器',
     'roi.hero.sub': '计算迁移到更高效模型的财务和环境节省。用真实经济数据证明技术决策。',
@@ -4550,7 +4698,8 @@ const T = {
     'table.calculated':'◀ 已计算',
     'err.no-name':'⚠️ 请输入要计算的模型名称','err.fields':'⚠️ 请填写所有字段',
     'err.gpu-range':'⚠️ GPU数量无效','err.hours-range':'⚠️ 训练小时数无效',
-    'toast.cleared':'🗑 数据已清除','toast.preset':'✓ 参数已加载',
+    'toast.cleared':'🗑 数据已清除',
+    'toast.smartestimate.template':'🧠 {model}：已自动估算参数（约 {params}B）— 如有精确数据请调整','toast.preset':'✓ 参数已加载',
     'footer.paper':'📄 科学论文',
     'footer.copy':'© 2026 伊丽莎白·迪亚斯·法米利亚 · 方法论：Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -4678,7 +4827,7 @@ const T = {
     'infer.type.image': '画像',
     'infer.type.video': '動画',
     'infer.title.template': '{model} · {type} · 1日{n}クエリ',
-    'infer.title.custom.template': '{model}（推定）· 1日{n}クエリ',
+    'infer.title.custom.template': '{model}（推定）· {type} · 1日{n}クエリ',
     'infer.ref.template': '1回のクエリは<strong>{wh}</strong>を消費します — <strong>Google検索の{gx}倍</strong>に相当します。1日{n}クエリの場合：<strong>年間{year}トンCO₂</strong>。',
     'infer.ref.custom.template': '🧠 <strong>smartEstimate()</strong>で推定された未知のモデル — 約{params}Bパラメータを検出。Wh/クエリ ≈ {wh} Wh。年間インパクト：<strong>{year}トンCO₂</strong>。Díaz Familia (2026)手法 R²=0.89。',
     'infer.src.template': '出典: {src} · 炭素係数: {cf} kg CO₂/kWh',
@@ -4686,6 +4835,7 @@ const T = {
     'infer.toast.noname': '✏️ まずモデル名を入力してください',
     'infer.toast.notavailable': '⚠️ モデルが利用できません',
     'infer.toast.typenotavailable': '⚠️ このクエリタイプはこのモデルでは利用できません',
+    'infer.toast.modelswitched': '⚠️ このクエリタイプに対応する {model} に自動的に切り替えました',
     'infer.toast.estimated.template': '🧠 {model}を推定：約{params}Bパラメータ · {wh} Wh/クエリ',
     'roi.hero.title': '💰 カーボンROI計算機',
     'roi.hero.sub': 'より効率的なモデルへの移行による財務的・環境的節約を計算します。実際の経済データで技術的決定を正当化します。',
@@ -4786,7 +4936,8 @@ const T = {
     'table.calculated':'◀ 計算済み',
     'err.no-name':'⚠️ 計算するモデル名を入力してください','err.fields':'⚠️ すべてのフィールドを入力してください',
     'err.gpu-range':'⚠️ GPU数が無効です','err.hours-range':'⚠️ トレーニング時間が無効です',
-    'toast.cleared':'🗑 データがクリアされました','toast.preset':'✓ パラメータを読み込みました',
+    'toast.cleared':'🗑 データがクリアされました',
+    'toast.smartestimate.template':'🧠 {model}: パラメータを自動推定しました（約{params}B）— 正確なデータがあれば調整してください','toast.preset':'✓ パラメータを読み込みました',
     'footer.paper':'📄 科学論文',
     'footer.copy':'© 2026 エリザベス・ディアス・ファミリア · 方法論: Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -4914,7 +5065,7 @@ const T = {
     'infer.type.image': '이미지',
     'infer.type.video': '비디오',
     'infer.title.template': '{model} · {type} · 일일 {n}건 쿼리',
-    'infer.title.custom.template': '{model} (추정) · 일일 {n}건 쿼리',
+    'infer.title.custom.template': '{model} (추정) · {type} · 일일 {n}건 쿼리',
     'infer.ref.template': '쿼리 1건은 <strong>{wh}</strong>를 소비합니다 — <strong>Google 검색의 {gx}배</strong>에 해당합니다. 일일 {n}건 쿼리 기준: <strong>연간 {year}톤 CO₂</strong>.',
     'infer.ref.custom.template': '🧠 <strong>smartEstimate()</strong>로 추정된 알 수 없는 모델 — 약 {params}B 파라미터 감지됨. Wh/쿼리 ≈ {wh} Wh. 연간 영향: <strong>{year}톤 CO₂</strong>. Díaz Familia (2026) 방법론 R²=0.89.',
     'infer.src.template': '출처: {src} · 탄소 계수: {cf} kg CO₂/kWh',
@@ -4922,6 +5073,7 @@ const T = {
     'infer.toast.noname': '✏️ 먼저 모델 이름을 입력하세요',
     'infer.toast.notavailable': '⚠️ 모델을 사용할 수 없습니다',
     'infer.toast.typenotavailable': '⚠️ 이 모델에는 이 쿼리 유형을 사용할 수 없습니다',
+    'infer.toast.modelswitched': '⚠️ 이 쿼리 유형을 지원하는 {model}(으)로 자동 전환되었습니다',
     'infer.toast.estimated.template': '🧠 {model} 추정됨: 약 {params}B params · {wh} Wh/쿼리',
     'roi.hero.title': '💰 탄소 ROI 계산기',
     'roi.hero.sub': '더 효율적인 모델로 전환할 때의 재정 및 환경 절감을 계산합니다. 실제 경제 데이터로 기술적 결정을 입증하세요.',
@@ -5022,7 +5174,8 @@ const T = {
     'table.calculated':'◀ 계산됨',
     'err.no-name':'⚠️ 계산할 모델 이름을 입력하세요','err.fields':'⚠️ 모든 필드를 입력하세요',
     'err.gpu-range':'⚠️ GPU 수가 유효하지 않습니다','err.hours-range':'⚠️ 훈련 시간이 유효하지 않습니다',
-    'toast.cleared':'🗑 데이터 지워짐','toast.preset':'✓ 매개변수 로드됨',
+    'toast.cleared':'🗑 데이터 지워짐',
+    'toast.smartestimate.template':'🧠 {model}: 매개변수가 자동으로 추정되었습니다 (약 {params}B) — 정확한 데이터가 있으면 조정하세요','toast.preset':'✓ 매개변수 로드됨',
     'footer.paper':'📄 과학 논문',
     'footer.copy':'© 2026 엘리자베스 디아스 파밀리아 · 방법론: Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -5150,7 +5303,7 @@ const T = {
     'infer.type.image': 'صورة',
     'infer.type.video': 'فيديو',
     'infer.title.template': '{model} · {type} · {n} استعلام/يوم',
-    'infer.title.custom.template': '{model} (مُقدَّر) · {n} استعلام/يوم',
+    'infer.title.custom.template': '{model} (مُقدَّر) · {type} · {n} استعلام/يوم',
     'infer.ref.template': 'يستهلك الاستعلام الواحد <strong>{wh}</strong> — ما يعادل <strong>{gx}× بحث جوجل</strong>. مع {n} استعلام يومياً: <strong>{year} طن CO₂/سنة</strong>.',
     'infer.ref.custom.template': '🧠 نموذج غير معروف تم تقديره بـ <strong>smartEstimate()</strong> — تم اكتشاف ~{params}B معامل. Wh/استعلام ≈ {wh} Wh. التأثير السنوي: <strong>{year} طن CO₂</strong>. منهجية Díaz Familia (2026) R²=0.89.',
     'infer.src.template': 'المصدر: {src} · عامل الكربون: {cf} kg CO₂/kWh',
@@ -5158,6 +5311,7 @@ const T = {
     'infer.toast.noname': '✏️ اكتب اسم النموذج أولاً',
     'infer.toast.notavailable': '⚠️ النموذج غير متوفر',
     'infer.toast.typenotavailable': '⚠️ هذا نوع الاستعلام غير متوفر لهذا النموذج',
+    'infer.toast.modelswitched': '⚠️ تم التبديل تلقائيًا إلى النموذج {model} (يدعم نوع الاستعلام هذا)',
     'infer.toast.estimated.template': '🧠 تم تقدير {model}: ~{params}B معامل · {wh} Wh/استعلام',
     'roi.hero.title': '💰 حاسبة العائد الكربوني الأخضر',
     'roi.hero.sub': 'احسب الوفورات المالية والبيئية من الانتقال إلى نموذج أكثر كفاءة. برّر القرارات التقنية ببيانات اقتصادية حقيقية.',
@@ -5258,7 +5412,8 @@ const T = {
     'table.calculated':'◀ محسوب',
     'err.no-name':'⚠️ الرجاء إدخال اسم النموذج للحساب','err.fields':'⚠️ الرجاء ملء جميع الحقول',
     'err.gpu-range':'⚠️ عدد GPU غير صالح','err.hours-range':'⚠️ ساعات التدريب غير صالحة',
-    'toast.cleared':'🗑 تم مسح البيانات','toast.preset':'✓ تم تحميل المعاملات',
+    'toast.cleared':'🗑 تم مسح البيانات',
+    'toast.smartestimate.template':'🧠 {model}: تم تقدير المعاملات تلقائيًا (~{params}B) — عدّل إذا كانت لديك بيانات دقيقة','toast.preset':'✓ تم تحميل المعاملات',
     'footer.paper':'📄 الورقة العلمية',
     'footer.copy':'© 2026 إليزابيث دياز فاميليا · المنهجية: Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -5386,7 +5541,7 @@ const T = {
     'infer.type.image': 'תמונה',
     'infer.type.video': 'וידאו',
     'infer.title.template': '{model} · {type} · {n} שאילתות/יום',
-    'infer.title.custom.template': '{model} (מוערך) · {n} שאילתות/יום',
+    'infer.title.custom.template': '{model} (מוערך) · {type} · {n} שאילתות/יום',
     'infer.ref.template': 'שאילתה אחת צורכת <strong>{wh}</strong> — שווה ל<strong>{gx}× חיפוש בגוגל</strong>. עם {n} שאילתות ביום: <strong>{year} טון CO₂/שנה</strong>.',
     'infer.ref.custom.template': '🧠 מודל לא ידוע שהוערך עם <strong>smartEstimate()</strong> — זוהו ~{params}B פרמטרים. Wh/שאילתה ≈ {wh} Wh. השפעה שנתית: <strong>{year} טון CO₂</strong>. מתודולוגיית Díaz Familia (2026) R²=0.89.',
     'infer.src.template': 'מקור: {src} · מקדם פחמן: {cf} kg CO₂/kWh',
@@ -5394,6 +5549,7 @@ const T = {
     'infer.toast.noname': '✏️ הזן שם מודל קודם',
     'infer.toast.notavailable': '⚠️ המודל אינו זמין',
     'infer.toast.typenotavailable': '⚠️ סוג שאילתה זה אינו זמין למודל זה',
+    'infer.toast.modelswitched': '⚠️ המודל הוחלף אוטומטית ל-{model} (תומך בסוג שאילתה זה)',
     'infer.toast.estimated.template': '🧠 {model} הוערך: ~{params}B פרמטרים · {wh} Wh/שאילתה',
     'roi.hero.title': '💰 מחשבון ROI ירוק',
     'roi.hero.sub': 'חשב את החיסכון הפיננסי והסביבתי במעבר למודל יעיל יותר. נמק החלטות טכניות עם נתונים כלכליים אמיתיים.',
@@ -5494,7 +5650,8 @@ const T = {
     'table.calculated':'◀ חושב',
     'err.no-name':'⚠️ אנא הזן את שם המודל לחישוב','err.fields':'⚠️ אנא מלא את כל השדות',
     'err.gpu-range':'⚠️ מספר GPU לא חוקי','err.hours-range':'⚠️ שעות אימון לא חוקיות',
-    'toast.cleared':'🗑 הנתונים נמחקו','toast.preset':'✓ הפרמטרים נטענו',
+    'toast.cleared':'🗑 הנתונים נמחקו',
+    'toast.smartestimate.template':'🧠 {model}: הפרמטרים הוערכו אוטומטית (~{params}B) — התאם אם יש לך נתונים מדויקים','toast.preset':'✓ הפרמטרים נטענו',
     'footer.paper':'📄 מאמר מדעי',
     'footer.copy':'© 2026 אליזבת דיאז פמיליה · מתודולוגיה: Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -5622,7 +5779,7 @@ const T = {
     'infer.type.image': 'görüntü',
     'infer.type.video': 'video',
     'infer.title.template': '{model} · {type} · günde {n} sorgu',
-    'infer.title.custom.template': '{model} (tahmini) · günde {n} sorgu',
+    'infer.title.custom.template': '{model} (tahmini) · {type} · günde {n} sorgu',
     'infer.ref.template': 'Bir sorgu <strong>{wh}</strong> tüketir — bu <strong>{gx}× bir Google aramasına</strong> eşdeğerdir. Günlük {n} sorgu ile: <strong>yılda {year} ton CO₂</strong>.',
     'infer.ref.custom.template': '🧠 <strong>smartEstimate()</strong> ile tahmin edilen bilinmeyen model — ~{params}B parametre tespit edildi. Wh/sorgu ≈ {wh} Wh. Yıllık etki: <strong>{year} ton CO₂</strong>. Díaz Familia (2026) metodolojisi R²=0.89.',
     'infer.src.template': 'Kaynak: {src} · Karbon faktörü: {cf} kg CO₂/kWh',
@@ -5630,6 +5787,7 @@ const T = {
     'infer.toast.noname': '✏️ Önce model adını yazın',
     'infer.toast.notavailable': '⚠️ Model mevcut değil',
     'infer.toast.typenotavailable': '⚠️ Bu sorgu türü bu model için mevcut değil',
+    'infer.toast.modelswitched': '⚠️ Bu sorgu türünü destekleyen {model} moduna otomatik olarak geçildi',
     'infer.toast.estimated.template': '🧠 {model} tahmin edildi: ~{params}B params · {wh} Wh/sorgu',
     'roi.hero.title': '💰 Karbon ROI Hesaplayıcısı',
     'roi.hero.sub': 'Daha verimli bir modele geçişin finansal ve çevresel tasarruflarını hesaplayın. Teknik kararları gerçek ekonomik verilerle gerekçelendirin.',
@@ -5730,7 +5888,8 @@ const T = {
     'table.calculated':'◀ hesaplandı',
     'err.no-name':'⚠️ Lütfen hesaplanacak model adını girin','err.fields':'⚠️ Lütfen tüm alanları doldurun',
     'err.gpu-range':'⚠️ Geçersiz GPU sayısı','err.hours-range':'⚠️ Geçersiz eğitim saatleri',
-    'toast.cleared':'🗑 Veriler temizlendi','toast.preset':'✓ Parametreler yüklendi',
+    'toast.cleared':'🗑 Veriler temizlendi',
+    'toast.smartestimate.template':'🧠 {model}: parametreler otomatik olarak tahmin edildi (~{params}B) — kesin verileriniz varsa ayarlayın','toast.preset':'✓ Parametreler yüklendi',
     'footer.paper':'📄 Bilimsel makale',
     'footer.copy':'© 2026 Elizabeth Díaz Familia · Metodoloji: Díaz Familia (2026) · CC BY 4.0',
     /* Trends & Scheduler (v1.3) */
@@ -5861,7 +6020,7 @@ const T = {
     'infer.type.image': 'Bild',
     'infer.type.video': 'Video',
     'infer.title.template': '{model} · {type} · {n} Anfragen/Tag',
-    'infer.title.custom.template': '{model} (geschätzt) · {n} Anfragen/Tag',
+    'infer.title.custom.template': '{model} (geschätzt) · {type} · {n} Anfragen/Tag',
     'infer.ref.template': 'Eine Anfrage verbraucht <strong>{wh}</strong> — entspricht <strong>dem {gx}-Fachen einer Google-Suche</strong>. Bei {n} Anfragen täglich: <strong>{year} t CO₂/Jahr</strong>.',
     'infer.ref.custom.template': '🧠 Unbekanntes Modell geschätzt mit <strong>smartEstimate()</strong> — ~{params} Mrd. Parameter erkannt. Wh/Anfrage ≈ {wh} Wh. Jährliche Auswirkung: <strong>{year} t CO₂</strong>. Methodik Díaz Familia (2026) R²=0,89.',
     'infer.src.template': 'Quelle: {src} · CO₂-Faktor: {cf} kg CO₂/kWh',
@@ -5869,6 +6028,7 @@ const T = {
     'infer.toast.noname': '✏️ Gib zuerst den Modellnamen ein',
     'infer.toast.notavailable': '⚠️ Modell nicht verfügbar',
     'infer.toast.typenotavailable': '⚠️ Dieser Anfragetyp ist für dieses Modell nicht verfügbar',
+    'infer.toast.modelswitched': '⚠️ Modell automatisch zu {model} gewechselt (unterstützt diesen Anfragetyp)',
     'infer.toast.estimated.template': '🧠 {model} geschätzt: ~{params} Mrd. Parameter · {wh} Wh/Anfrage',
     'roi.hero.title': '💰 Carbon-ROI-Rechner',
     'roi.hero.sub': 'Berechne die finanziellen und ökologischen Einsparungen durch den Wechsel zu einem effizienteren Modell. Begründe technische Entscheidungen mit echten Wirtschaftsdaten.',
@@ -5995,6 +6155,7 @@ const T = {
     'err.gpu-range': '⚠️ Ungültige GPU-Anzahl',
     'err.hours-range': '⚠️ Ungültige Trainingsstunden',
     'toast.cleared': '🗑 Daten gelöscht',
+    'toast.smartestimate.template': '🧠 {model}: Parameter automatisch geschätzt (~{params} Mrd.) — passe sie an, wenn du genaue Daten hast',
     'toast.preset': '✓ Parameter geladen',
     'footer.paper': '📄 Wissenschaftliches Paper',
     'footer.copy': '© 2026 Elizabeth Díaz Familia · Methodik: Díaz Familia (2026) · CC BY 4.0',
@@ -6125,7 +6286,7 @@ const T = {
     'infer.type.image': 'immagine',
     'infer.type.video': 'video',
     'infer.title.template': '{model} · {type} · {n} query/giorno',
-    'infer.title.custom.template': '{model} (stimato) · {n} query/giorno',
+    'infer.title.custom.template': '{model} (stimato) · {type} · {n} query/giorno',
     'infer.ref.template': 'Una query consuma <strong>{wh}</strong> — equivalente a <strong>{gx}× una ricerca Google</strong>. Con {n} query giornaliere: <strong>{year} t CO₂/anno</strong>.',
     'infer.ref.custom.template': '🧠 Modello sconosciuto stimato con <strong>smartEstimate()</strong> — ~{params}B parametri rilevati. Wh/query ≈ {wh} Wh. Impatto annuale: <strong>{year} t CO₂</strong>. Metodologia Díaz Familia (2026) R²=0,89.',
     'infer.src.template': 'Fonte: {src} · Fattore di carbonio: {cf} kg CO₂/kWh',
@@ -6133,6 +6294,7 @@ const T = {
     'infer.toast.noname': '✏️ Scrivi prima il nome del modello',
     'infer.toast.notavailable': '⚠️ Modello non disponibile',
     'infer.toast.typenotavailable': '⚠️ Questo tipo di query non è disponibile per questo modello',
+    'infer.toast.modelswitched': '⚠️ Modello cambiato automaticamente in {model} (supporta questo tipo di query)',
     'infer.toast.estimated.template': '🧠 {model} stimato: ~{params}B parametri · {wh} Wh/query',
     'roi.hero.title': '💰 Calcolatore di ROI del Carbonio',
     'roi.hero.sub': 'Calcola il risparmio finanziario e ambientale derivante dal passaggio a un modello più efficiente. Giustifica le decisioni tecniche con dati economici reali.',
@@ -6259,6 +6421,7 @@ const T = {
     'err.gpu-range': '⚠️ Numero di GPU non valido',
     'err.hours-range': '⚠️ Ore di addestramento non valide',
     'toast.cleared': '🗑 Dati cancellati',
+    'toast.smartestimate.template': '🧠 {model}: parametri stimati automaticamente (~{params}B) — regola se hai dati esatti',
     'toast.preset': '✓ Parametri caricati',
     'footer.paper': '📄 Paper scientifico',
     'footer.copy': '© 2026 Elizabeth Díaz Familia · Metodologia: Díaz Familia (2026) · CC BY 4.0',
@@ -6389,7 +6552,7 @@ const T = {
     'infer.type.image': 'gambar',
     'infer.type.video': 'video',
     'infer.title.template': '{model} · {type} · {n} query/hari',
-    'infer.title.custom.template': '{model} (diestimasi) · {n} query/hari',
+    'infer.title.custom.template': '{model} (diestimasi) · {type} · {n} query/hari',
     'infer.ref.template': 'Satu query mengonsumsi <strong>{wh}</strong> — setara dengan <strong>{gx}× pencarian Google</strong>. Dengan {n} query harian: <strong>{year} ton CO₂/tahun</strong>.',
     'infer.ref.custom.template': '🧠 Model tidak dikenal diestimasi dengan <strong>smartEstimate()</strong> — ~{params}B parameter terdeteksi. Wh/query ≈ {wh} Wh. Dampak tahunan: <strong>{year} ton CO₂</strong>. Metodologi Díaz Familia (2026) R²=0,89.',
     'infer.src.template': 'Sumber: {src} · Faktor karbon: {cf} kg CO₂/kWh',
@@ -6397,6 +6560,7 @@ const T = {
     'infer.toast.noname': '✏️ Tulis nama model terlebih dahulu',
     'infer.toast.notavailable': '⚠️ Model tidak tersedia',
     'infer.toast.typenotavailable': '⚠️ Jenis query ini tidak tersedia untuk model ini',
+    'infer.toast.modelswitched': '⚠️ Model otomatis diganti ke {model} (mendukung jenis query ini)',
     'infer.toast.estimated.template': '🧠 {model} diestimasi: ~{params}B parameter · {wh} Wh/query',
     'roi.hero.title': '💰 Kalkulator ROI Karbon',
     'roi.hero.sub': 'Hitung penghematan finansial dan lingkungan dari beralih ke model yang lebih efisien. Justifikasi keputusan teknis dengan data ekonomi nyata.',
@@ -6523,6 +6687,7 @@ const T = {
     'err.gpu-range': '⚠️ Jumlah GPU tidak valid',
     'err.hours-range': '⚠️ Jam pelatihan tidak valid',
     'toast.cleared': '🗑 Data dihapus',
+    'toast.smartestimate.template': '🧠 {model}: parameter diestimasi secara otomatis (~{params}B) — sesuaikan jika Anda memiliki data yang tepat',
     'toast.preset': '✓ Parameter dimuat',
     'footer.paper': '📄 Paper ilmiah',
     'footer.copy': '© 2026 Elizabeth Díaz Familia · Metodologi: Díaz Familia (2026) · CC BY 4.0',
