@@ -1211,9 +1211,15 @@ body {
   body { background:#fff !important; color:#000 !important; }
 }
 
+/* ── Accesibilidad (v1.3.2) ── */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:-9999px;top:8px;z-index:10000;background:var(--green-500);color:#030a06;padding:10px 16px;border-radius:8px;font-weight:700;text-decoration:none}
+.skip-link:focus{left:8px}
+button:focus-visible,[role="tab"]:focus-visible,[role="button"]:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--green-400);outline-offset:3px}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#tabNav">Saltar al contenido</a>
 
 <!-- Background layers -->
 <div class="bg-canvas"></div>
@@ -1240,7 +1246,7 @@ body {
 </div>
 
 <!-- Toast container -->
-<div class="toast-container" id="toastContainer"></div>
+<div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
 
 <!-- ═══════════════════ APP ═══════════════════ -->
 <div class="app-wrap">
@@ -1260,7 +1266,7 @@ body {
       <a href="index.html" class="author-chip" data-i18n="header.paper-link">📄 Ver Paper Científico</a>
 
       <!-- LANGUAGE SWITCHER -->
-      <div class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+      <div class="lang-btn" id="langBtn" onclick="toggleLangMenu()" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false" aria-label="Idioma" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleLangMenu();}">
         <span class="globe">🌐</span>
         <span id="langCurrentLabel">Español</span>
         <span style="font-size:10px;opacity:0.6">▾</span>
@@ -1312,29 +1318,29 @@ body {
   </div>
 
   <!-- TAB NAVIGATION -->
-  <div class="tab-nav" role="tablist">
-    <button class="tab-btn active" onclick="switchTab('training')" id="tbn-training">
+  <div class="tab-nav" role="tablist" id="tabNav" tabindex="-1" aria-label="Módulos de la calculadora">
+    <button class="tab-btn active" onclick="switchTab('training')" id="tbn-training" role="tab" aria-selected="true" aria-controls="panel-training">
       🌫️ <span data-i18n="tab.training">Entrenamiento</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('inference')" id="tbn-inference">
+    <button class="tab-btn" onclick="switchTab('inference')" id="tbn-inference" role="tab" aria-selected="false" aria-controls="panel-inference">
       ⚡ <span data-i18n="tab.inference">Inferencia</span>
       <span class="tbadge" data-i18n="tab.badge.new">NUEVO</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('roi')" id="tbn-roi">
+    <button class="tab-btn" onclick="switchTab('roi')" id="tbn-roi" role="tab" aria-selected="false" aria-controls="panel-roi">
       💰 <span data-i18n="tab.roi">ROI Verde</span>
       <span class="tbadge" data-i18n="tab.badge.new">NUEVO</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('trends')" id="tbn-trends">
+    <button class="tab-btn" onclick="switchTab('trends')" id="tbn-trends" role="tab" aria-selected="false" aria-controls="panel-trends">
       📊 <span data-i18n="tab.trends">Tendencias</span>
       <span class="tbadge" data-i18n="tab.badge.new">NUEVO</span>
     </button>
-    <button class="tab-btn" onclick="switchTab('scheduler')" id="tbn-scheduler">
+    <button class="tab-btn" onclick="switchTab('scheduler')" id="tbn-scheduler" role="tab" aria-selected="false" aria-controls="panel-scheduler">
       🌤️ <span data-i18n="tab.scheduler">Planificador Verde</span>
       <span class="tbadge" data-i18n="tab.badge.new">NUEVO</span>
     </button>
   </div>
 
-  <div id="panel-training" class="tab-panel active">
+  <div id="panel-training" role="tabpanel" aria-labelledby="tbn-training" class="tab-panel active">
   <!-- ═══ CALCULATOR CARD ═══ -->
   <div class="card section-gap">
     <div class="card-title">
@@ -1564,7 +1570,7 @@ body {
   </div><!-- /panel-training -->
 
   <!-- ═══ INFERENCE PANEL ═══ -->
-  <div id="panel-inference" class="tab-panel">
+  <div id="panel-inference" role="tabpanel" aria-labelledby="tbn-inference" class="tab-panel">
     <div class="infer-hero">
       <div class="infer-hero-title" data-i18n="infer.hero.title">⚡ Calculadora de Impacto por Inferencia</div>
       <p class="infer-hero-sub" data-i18n="infer.hero.sub">Mide el costo ambiental real de cada consulta en producción. El 80–90% del impacto de la IA ocurre durante la inferencia, no el entrenamiento.</p>
@@ -1612,7 +1618,7 @@ body {
         <button class="btn-pdf" onclick="shareInference()" id="btnInferShare" style="display:none;background:rgba(0,232,122,.10);border-color:rgba(0,232,122,.35);color:var(--green-400)">🔗 <span data-i18n="btn.share">Compartir</span></button>
         <button class="btn-secondary" onclick="clearInference()">🗑 <span data-i18n="btn.clear.short">Limpiar</span></button>
       </div>
-      <div class="infer-results" id="inferResults">
+      <div class="infer-results" id="inferResults" aria-live="polite">
         <div style="font-family:var(--font-mono);font-size:10px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;color:#fbbf24;margin-bottom:16px">⚡ <span id="inferTitle" data-i18n="infer.results.default">Resultados</span></div>
         <div class="infer-metrics">
           <div class="im-card"><div class="im-val" id="iGCO2">—</div><div class="im-lbl" data-i18n="infer.metric.gco2">g CO₂ / consulta</div></div>
@@ -1631,7 +1637,7 @@ body {
   </div><!-- /panel-inference -->
 
   <!-- ═══ ROI VERDE PANEL ═══ -->
-  <div id="panel-roi" class="tab-panel">
+  <div id="panel-roi" role="tabpanel" aria-labelledby="tbn-roi" class="tab-panel">
     <div class="roi-hero">
       <div class="roi-hero-title" data-i18n="roi.hero.title">💰 Carbon ROI Calculator</div>
       <p class="roi-hero-sub" data-i18n="roi.hero.sub">Calcula el ahorro financiero y ambiental de migrar a un modelo más eficiente. Justifica decisiones técnicas con datos económicos reales.</p>
@@ -1683,7 +1689,7 @@ body {
         <button class="btn-pdf" onclick="shareROI()" id="btnROIShare" style="display:none;background:rgba(0,232,122,.10);border-color:rgba(0,232,122,.35);color:var(--green-400)">🔗 <span data-i18n="btn.share">Compartir</span></button>
         <button class="btn-secondary" onclick="clearROI()">🗑 <span data-i18n="btn.clear.short">Limpiar</span></button>
       </div>
-      <div class="roi-results" id="roiResults">
+      <div class="roi-results" id="roiResults" aria-live="polite">
         <div class="roi-kpis">
           <div class="roi-kpi g"><div class="roi-kpi-val" id="rCO2">—</div><div class="roi-kpi-lbl" data-i18n="roi.kpi.co2">ton CO₂ ahorradas/año</div></div>
           <div class="roi-kpi b"><div class="roi-kpi-val" id="rMwh">—</div><div class="roi-kpi-lbl" data-i18n="roi.kpi.mwh">MWh ahorrados/año</div></div>
@@ -1708,7 +1714,7 @@ body {
     </div>
   </div><!-- /panel-roi -->
 
-  <div id="panel-trends" class="tab-panel">
+  <div id="panel-trends" role="tabpanel" aria-labelledby="tbn-trends" class="tab-panel">
     <div class="roi-hero">
       <div class="roi-hero-title" data-i18n="trends.hero.title">📊 Dashboard de Tendencias</div>
       <p class="roi-hero-sub" data-i18n="trends.hero.sub">Analiza la evolución de la huella de carbono de la IA en el tiempo, por empresa y por categoría, usando los 65+ modelos de la base de datos.</p>
@@ -1785,7 +1791,7 @@ body {
     </div>
   </div><!-- /panel-trends -->
 
-  <div id="panel-scheduler" class="tab-panel">
+  <div id="panel-scheduler" role="tabpanel" aria-labelledby="tbn-scheduler" class="tab-panel">
     <div class="roi-hero">
       <div class="roi-hero-title" data-i18n="sched.hero.title">🌤️ Planificador de Carbono (Carbon-Aware Scheduler)</div>
       <p class="roi-hero-sub" data-i18n="sched.hero.sub">Descubre qué región tiene la matriz eléctrica más limpia ahora mismo y estima cuánto CO₂ te ahorrarías moviendo tu carga de trabajo de IA.</p>
@@ -1825,7 +1831,7 @@ body {
       <div class="btn-row" style="margin-bottom:20px">
         <button class="btn-primary" onclick="calcSchedulerSavings()" style="flex:1;background:linear-gradient(135deg,#06c0e0,#0891b2);box-shadow:0 4px 20px rgba(8,145,178,.25)">🌤️ <span data-i18n="sched.calc.btn">Calcular ahorro potencial</span></button>
       </div>
-      <div class="roi-kpis" id="schedResults" style="display:none">
+      <div class="roi-kpis" id="schedResults" aria-live="polite" style="display:none">
         <div class="roi-kpi g"><div class="roi-kpi-val" id="schedGreenest">—</div><div class="roi-kpi-lbl" data-i18n="sched.kpi.greenest">Región más limpia</div></div>
         <div class="roi-kpi b"><div class="roi-kpi-val" id="schedSavingsKg">—</div><div class="roi-kpi-lbl" data-i18n="sched.kpi.savings">kg CO₂ ahorrados</div></div>
         <div class="roi-kpi p"><div class="roi-kpi-val" id="schedSavingsPct">—</div><div class="roi-kpi-lbl" data-i18n="sched.kpi.pct">Reducción posible</div></div>
@@ -2169,11 +2175,21 @@ function switchTab(tab){
   ['training','inference','roi','trends','scheduler'].forEach(t=>{
     document.getElementById('panel-'+t)?.classList.toggle('active',t===tab);
     document.getElementById('tbn-'+t)?.classList.toggle('active',t===tab);
+    document.getElementById('tbn-'+t)?.setAttribute('aria-selected', String(t===tab));
   });
   window.scrollTo({top:0,behavior:'smooth'});
   if(tab==='trends')    initTrends();
   if(tab==='scheduler') initScheduler();
 }
+
+/* Navegación por teclado de las pestañas (flechas, Inicio, Fin) */
+document.addEventListener('keydown', function(e){
+  const tab = e.target && e.target.closest && e.target.closest('[role="tab"]'); if(!tab) return;
+  const tabs = [...document.querySelectorAll('[role="tab"]')]; let i = tabs.indexOf(tab);
+  if(e.key==='ArrowRight') i=(i+1)%tabs.length; else if(e.key==='ArrowLeft') i=(i-1+tabs.length)%tabs.length;
+  else if(e.key==='Home') i=0; else if(e.key==='End') i=tabs.length-1; else return;
+  e.preventDefault(); tabs[i].focus(); tabs[i].click();
+});
 
 /* ── PDF & Share ── */
 function exportPDF(){
@@ -6779,7 +6795,7 @@ function applyLang(code){
   if(code !== 'es' || currentLang !== 'es') toast(`🌐 ${L.flag} ${L.name}`, 'success', 1800);
 }
 
-function toggleLangMenu(){ document.getElementById('langDropdown').classList.toggle('open'); }
+function toggleLangMenu(){ const o=document.getElementById('langDropdown').classList.toggle('open'); const b=document.getElementById('langBtn'); if(b) b.setAttribute('aria-expanded', String(o)); }
 document.addEventListener('click', e => { if(!e.target.closest('#langBtn')) document.getElementById('langDropdown').classList.remove('open'); });
 function setLang(code, e){ if(e) e.stopPropagation(); applyLang(code); }
 
@@ -6796,6 +6812,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
 document.getElementById('fLocation').addEventListener('change', ()=>{
   window.__userPickedLoc = true; if(!STATE.dataSaver) fetchLiveCarbon();
 });
+/* ── Accesibilidad: etiquetas accesibles para controles sin <label> (sigue al idioma activo) ── */
+function syncAriaLabels(){
+  const FB={fModelName:'Nombre del modelo de IA',iModel:'Modelo de IA',iCustomModel:'Nombre del modelo personalizado',roiA:'Modelo actual (ineficiente)',roiACustomModel:'Nombre del modelo actual personalizado',roiB:'Modelo alternativo (eficiente)',roiBCustomModel:'Nombre del modelo alternativo personalizado',emInput:'Token de ElectricityMaps'};
+  const FROM_LABEL=['fModelName','iModel','roiA','roiB'];
+  Object.keys(FB).forEach(function(id){
+    const el=document.getElementById(id); if(!el) return; let txt='';
+    if(FROM_LABEL.indexOf(id)>-1){ const w=el.closest('.form-group,.field-group,.field,.input-group,div'); const lab=w&&w.querySelector('label'); if(lab) txt=(lab.textContent||'').replace(/\s+/g,' ').trim(); }
+    if(!txt) txt=el.getAttribute('placeholder')&&id.indexOf('Custom')>-1 ? el.getAttribute('placeholder') : FB[id];
+    el.setAttribute('aria-label', txt || FB[id]);
+  });
+}
+syncAriaLabels();
+if(typeof applyLang==='function'){ const _applyLang=applyLang; applyLang=function(){ const r=_applyLang.apply(this,arguments); try{ syncAriaLabels(); }catch(e){} return r; }; }
 </script>
 
 <!-- ═══ EM API MODAL ═══ -->
