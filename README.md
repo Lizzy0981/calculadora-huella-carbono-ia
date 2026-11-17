@@ -64,7 +64,7 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 - 💬 **4 tipos de consulta** — Texto corto, Texto largo, Imagen, Video
 - 📊 **6 métricas simultáneas** — gCO₂/consulta, Wh/consulta, ml agua, día, mes y año
 - 📉 **Barra de escala comparativa** vs Google Search (0.3 Wh de referencia)
-- 🌍 **Dato clave documentado** — 5 segundos de video IA = 944 Wh = 2,000× más que una búsqueda
+- 🌍 **Dato clave documentado** — 5 segundos de video IA = 944 Wh = ~3,100× más que una búsqueda
 - 🖥️ **20+ modelos con datos de inferencia** — GPT-4o, LLaMA 3.1 8B/405B, SDXL, Sora y más
 - ✏️ **Modelo personalizado** — opción "Escribir otro modelo…" estima cualquier modelo desconocido con `smartEstimate()` R²=0.89
 - 📄🔗🗑️ **PDF, Compartir y Limpiar** propios — independientes del módulo de Entrenamiento, con nombre de archivo único por modelo
@@ -129,11 +129,11 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 - ⚡ **Cambio instantáneo** sin recargar la página
 
 ### 🚀 **Tecnología de Vanguardia**
-- 📡 **Modo Offline** — Service Worker con caché inteligente 30 minutos
+- 📡 **Modo Offline** — *(en desarrollo: requiere `sw.js` y `manifest.json` propios; aún no activo)*
 - 🌱 **Modo Eco** — pausa APIs, reduce animaciones, ahorra energía
 - 📱 **Responsive design** — Mobile, Tablet, Desktop, 4K
 - 🎨 **Diseño moderno 2026** — título con gradiente animado, cards con barra de color por dimensión
-- 🔐 **Privacidad total** — ningún dato personal sale del navegador
+- 🔐 **Privacidad total** — los cálculos se hacen 100% en tu navegador; solo se consulta ipapi.co (recibe tu IP) para detectar el país, y el Modo Eco lo desactiva
 
 ---
 
@@ -147,15 +147,15 @@ Agua (L)  = Energía (kWh) × 1.8 L/kWh    [Li et al. UC Riverside, 2023]
 
 ### ⚡ **Módulo 2 — Inferencia (Jegham et al. arXiv:2505.09598, 2025)**
 ```
-CO₂_consulta (g) = Energía (Wh) × Factor_Carbono (kg CO₂/kWh) × 1000
-Agua_consulta    = Energía (Wh) × WUE (L/kWh) × 1000  [ml]
+CO₂_consulta (g) = Energía (Wh) × Factor_Carbono (kg CO₂/kWh)
+Agua_consulta    = Energía (Wh) × WUE (L/kWh)  [ml]
 
 Energía medida por tipo (Wh/consulta):
   GPT-4o texto corto:    0.42 Wh  [verificado Jegham et al. 2025]
   LLaMA 3.1 8B texto:    0.032 Wh [verificado Jegham et al. 2025]
   LLaMA 3.1 405B texto:  1.86 Wh  [verificado Jegham et al. 2025]
   Stable Diffusion XL:   0.63 Wh  [verificado Jegham et al. 2025]
-  Video 5 segundos:      944 Wh   [verificado Jegham et al. 2025]
+  Video 5 segundos:      944 Wh   [MIT Technology Review, 2025 — estimación de un modelo de video abierto]
   Google Search:         0.30 Wh  [referencia de comparación]
 ```
 
@@ -240,7 +240,7 @@ Ajuste Instruct = 1.15   (RLHF / instruction-tuned)
 ```
 💬 GPT-4o (texto corto):    0.42 Wh/consulta = 1.4× una búsqueda Google
 🖼️ Stable Diffusion XL:     0.63 Wh/imagen = 2.1× una búsqueda Google
-🎬 Video 5 segundos (Sora): 944 Wh = 3,147× una búsqueda Google
+🎬 Video 5 segundos (modelo de video abierto · MIT Technology Review, 2025): 944 Wh = 3,147× una búsqueda Google
 🌍 700M consultas/día GPT:  Equivale a 35,000 hogares de EE.UU. / año
 💧 100 palabras de prompt:  ~519 ml de agua evaporada (1 botella)
 ```
@@ -272,7 +272,7 @@ Ajuste Instruct = 1.15   (RLHF / instruction-tuned)
 🇬🇧 National Grid UK API # Carbono UK tiempo real (sin key requerida)
 🌍 ipapi.co              # Geolocalización automática del usuario (gratuita)
 📲 Web Share API         # Compartir nativo en móvil con fallback portapapeles
-📡 Service Worker        # Cache offline 30 min — funciona sin conexión
+📡 Service Worker        # En desarrollo (aún no activo)
 ```
 
 ### 🔬 **Motores Científicos**
@@ -390,13 +390,13 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 
 ## 📊 Métricas de Performance
 
-### ⚡ **Lighthouse Score**
+### ⚡ **Lighthouse Score** *(valores históricos, pendientes de re-medición)*
 ```
 🎯 Performance:      97/100   // Sin framework overhead
-♿ Accessibility:    95/100   // WCAG 2.1 cumplido
+♿ Accessibility:    95/100   // mejoras de accesibilidad en curso (ARIA y etiquetas pendientes)
 🔍 SEO:              93/100   // Meta tags optimizados
 💡 Best Practices:   98/100   // HTML5 semántico moderno
-📱 PWA:              91/100   // Service Worker + offline
+📱 PWA:              91/100   // Service Worker en desarrollo
 🌐 i18n:             100%     // 14 idiomas · 261/261 claves por idioma
 ```
 
@@ -435,7 +435,15 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - [x] 🏷️ Sistema de confianza (Verificado / Estimado / Personalizado)
 - [x] 🎨 Diseño modernizado 2026 — título animado · cards con barra de color
 - [x] 🚀 Auto-deploy GitHub Actions + Vercel + Netlify
-- [x] 📱 PWA con Service Worker y modo offline
+- [x] 📱 PWA con Service Worker y modo offline *(pendiente de activar)*
+
+### ✅ **Completado — v1.3.1 · Noviembre 2026**
+- 🐛 Inferencia: corregido error de escala ×1000 en gCO₂ y ml de agua por consulta, y en los totales diario/mensual/anual
+- 🐛 ROI Verde: corregido error de escala ×1000 en kWh, CO₂ y USD ahorrados
+- 🐛 Entrenamiento: el selector de país ya no se sobrescribe con el país detectado por IP
+- 🐛 smartEstimate(): detecta arquitecturas AxB (p. ej. Mixtral 8x7B) como MoE con parámetros totales
+- ✅ Validación de consultas/día (> 0) en Inferencia y ROI
+- 📝 README: fórmulas de inferencia, atribución del dato de video (MIT Technology Review, 2025) y notas de privacidad/offline corregidas
 
 ### ✅ **Completado — v1.3 · Agosto 2026**
 - [x] 📊 **Dashboard de Tendencias** — nueva pestaña con evolución del CO₂ por año (gráfica de burbujas logarítmica), huella promedio por empresa, filtros por categoría/empresa y rankings Top 10
@@ -460,7 +468,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 🚫 Sin cookies de tracking    // Cero seguimiento de usuarios
 ✅ HTTPS automático           // GitHub Pages + Vercel + Netlify
 🛡️ Security headers           // CSP + X-Frame + XSS-Protection
-📡 Service Worker             // Funciona completamente offline
+📡 Service Worker             // En desarrollo (aún no activo)
 📄 PDF generado localmente    // window.print() — sin servidor externo
 ```
 
@@ -470,7 +478,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 
 **CC BY 4.0** — Puedes usar, compartir y adaptar este trabajo siempre que cites la fuente:
 
-> Díaz Familia, E. (2026). *Calculadora de Huella de Carbono en Modelos de IA (v1.2)*.
+> Díaz Familia, E. (2026). *Calculadora de Huella de Carbono en Modelos de IA (v1.3.1)*.
 > Metodología Díaz Familia (2026) — Correlación R²=0.89. Datos de inferencia: Jegham et al. (2025).
 > Investigación Independiente. Santo Domingo Este, República Dominicana.
 > https://lizzy0981.github.io/calculadora-huella-carbono-ia/
@@ -509,7 +517,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - 📊 **Patterson et al.** (Google Brain, 2021) — Profundización metodológica y factor geográfico
 - 💧 **Li et al.** (UC Riverside, 2023) — Primera cuantificación de la crisis hídrica en IA
 - ♻️ **Wang et al.** (Nature Comp. Sci., 2024) — E-waste y proyecciones 2030
-- ⚡ **IEA** (2025) — Datos oficiales de intensidad de carbono por región (17 países)
+- ⚡ **IEA** (2025) — Datos oficiales de intensidad de carbono por región (16 regiones)
 - 🌊 **de Vries-Gao** (Cell Reports Sustainability, 2025) — Water footprint de IA
 
 ### 🛠️ **Tecnologías Open Source**
