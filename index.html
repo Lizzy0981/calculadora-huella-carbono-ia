@@ -2519,7 +2519,7 @@ function exportROIPDF(){
   toast(t('toast.pdf.opening'),'success',2000);
 }
 async function shareROI(){
-  const co2 = document.getElementById('rCO2')?.textContent || '—';
+  const co2 = String((document.getElementById('rCO2')||{}).textContent||'—').replace(/\s*t\s*$/i,'');
   const usd = document.getElementById('rUsd')?.textContent || '—';
   const pct = document.getElementById('rPct')?.textContent || '—';
   const a = document.getElementById('roiA').options[document.getElementById('roiA').selectedIndex].text.split(' —')[0];
