@@ -2211,7 +2211,7 @@ function exportPDF(){
   document.title=`huella-carbono-${name}-diaz-familia-2026`;
   window.print();
   document.title=orig;
-  toast('📄 Abriendo diálogo PDF…','success',2000);
+  toast(t('toast.pdf.opening'),'success',2000);
 }
 async function shareResult(){
   const model=document.getElementById('rhModelName')?.textContent||'AI Model';
