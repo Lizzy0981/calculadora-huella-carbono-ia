@@ -453,6 +453,12 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - 🏷️ DeepSeek-V3: la fuente de su dato de inferencia pasa a «estimación proporcional» (antes decía «verificado»)
 - 🌍 i18n: enlace «Saltar al contenido», mensaje de validación, nota del método de ROI y etiquetas accesibles traducidos a los 14 idiomas (272 claves por idioma; traducciones nuevas pendientes de revisión por hablantes nativos); `aria-expanded` del menú de idioma sincronizado al elegir un idioma o hacer clic fuera
 
+### ✅ **Completado — v1.3.3 · Noviembre 2026**
+- 📱 Móvil: las pestañas se desplazan horizontalmente sin desbordar la página (probado a 390 px), con áreas táctiles de 44 px
+- 🏷️ Interfaz: eliminado el icono duplicado en las pestañas Entrenamiento/Inferencia/ROI Verde y en el botón «Exportar PDF»
+- 🛡️ Entrenamiento: valida que el costo de energía no sea negativo y que el PUE esté entre 1.0 y 3.0 (mensajes en los 14 idiomas; traducciones nuevas pendientes de revisión por hablantes nativos)
+- 🌍 i18n: el aviso de «Exportar PDF» de Entrenamiento ahora sigue el idioma elegido
+
 ### ✅ **Completado — v1.3 · Agosto 2026**
 - [x] 📊 **Dashboard de Tendencias** — nueva pestaña con evolución del CO₂ por año (gráfica de burbujas logarítmica), huella promedio por empresa, filtros por categoría/empresa y rankings Top 10
 - [x] 🗓️ **Campo `year`** añadido a los 65+ modelos de `MODELS_DB` (año de lanzamiento aproximado) para habilitar el análisis temporal
