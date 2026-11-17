@@ -2300,7 +2300,7 @@ function _tfill(key, vals){
   return s;
 }
 function calcInference(){
-  { const _q=parseFloat(document.getElementById('iQDay').value); if(!(_q>0)){ toast('⚠ Consultas/día debe ser un número mayor que 0','error'); return; } }
+  { const _q=parseFloat(document.getElementById('iQDay').value); if(!(_q>0)){ toast(t('a11y.qinvalid'),'error'); return; } }
   _ensureModelSupportsType(_qType);
   const mid=document.getElementById('iModel').value;
   const typeKeyMap={text_short:'infer.type.short',text_long:'infer.type.long',image:'infer.type.image',video:'infer.type.video'};
@@ -2434,7 +2434,7 @@ function _roiModelFor(side){
   return {name:name+' ('+t('conf.estimated')+')', co2:eKwh*est.loc, e:eKwh};
 }
 function calcROI(){
-  { const _q=parseFloat(document.getElementById('roiQDay').value); if(!(_q>0)){ toast('⚠ Consultas/día debe ser un número mayor que 0','error'); return; } }
+  { const _q=parseFloat(document.getElementById('roiQDay').value); if(!(_q>0)){ toast(t('a11y.qinvalid'),'error'); return; } }
   const A=_roiModelFor('A');
   const B=_roiModelFor('B');
   const qd=parseFloat(document.getElementById('roiQDay').value)||10000;
@@ -6751,6 +6751,24 @@ const T = {
 /* ─── MOTOR DE TRADUCCIÓN — aplica TODOS los textos de una sola vez ─── */
 let currentLang = localStorage.getItem('calc_lang') || 'es';
 
+/* ── i18n de textos de accesibilidad y mensajes nuevos (14 idiomas; revisar por hablantes nativos) ── */
+const A11Y_I18N = {
+  es:{'a11y.skip':"Saltar al contenido",'a11y.lang':"Idioma",'a11y.qinvalid':"⚠ Consultas/día debe ser un número mayor que 0",'a11y.roi_infer':"Método: energía de inferencia por consulta (Wh, datos de la pestaña Inferencia; algunos modelos son estimaciones proporcionales).",'a11y.roi_proxy':"Método: aproximación a partir de la energía de entrenamiento (referencia; menos precisa que usar Wh medidos por consulta).",'a11y.emtoken':"Token de ElectricityMaps"},
+  en:{'a11y.skip':"Skip to content",'a11y.lang':"Language",'a11y.qinvalid':"⚠ Queries per day must be a number greater than 0",'a11y.roi_infer':"Method: inference energy per query (Wh, from the Inference tab; some models are proportional estimates).",'a11y.roi_proxy':"Method: approximation from training energy (reference only; less precise than using measured Wh per query).",'a11y.emtoken':"ElectricityMaps token"},
+  fr:{'a11y.skip':"Aller au contenu",'a11y.lang':"Langue",'a11y.qinvalid':"⚠ Le nombre de requêtes par jour doit être supérieur à 0",'a11y.roi_infer':"Méthode : énergie d'inférence par requête (Wh, données de l'onglet Inférence ; certains modèles sont des estimations proportionnelles).",'a11y.roi_proxy':"Méthode : approximation à partir de l'énergie d'entraînement (indicatif ; moins précis que des Wh mesurés par requête).",'a11y.emtoken':"Jeton ElectricityMaps"},
+  pt:{'a11y.skip':"Ir para o conteúdo",'a11y.lang':"Idioma",'a11y.qinvalid':"⚠ Consultas por dia deve ser um número maior que 0",'a11y.roi_infer':"Método: energia de inferência por consulta (Wh, dados da aba Inferência; alguns modelos são estimativas proporcionais).",'a11y.roi_proxy':"Método: aproximação a partir da energia de treinamento (referência; menos precisa que usar Wh medidos por consulta).",'a11y.emtoken':"Token do ElectricityMaps"},
+  ru:{'a11y.skip':"Перейти к содержимому",'a11y.lang':"Язык",'a11y.qinvalid':"⚠ Количество запросов в день должно быть больше 0",'a11y.roi_infer':"Метод: энергия инференса на запрос (Вт·ч, данные вкладки «Инференс»; часть моделей — пропорциональные оценки).",'a11y.roi_proxy':"Метод: приближение по энергии обучения (ориентир; менее точно, чем измеренные Вт·ч на запрос).",'a11y.emtoken':"Токен ElectricityMaps"},
+  zh:{'a11y.skip':"跳到内容",'a11y.lang':"语言",'a11y.qinvalid':"⚠ 每日查询次数必须大于 0",'a11y.roi_infer':"方法：每次查询的推理能耗（Wh，数据来自“推理”选项卡；部分模型为按比例估算）。",'a11y.roi_proxy':"方法：基于训练能耗的近似值（仅供参考；不如每次查询的实测 Wh 精确）。",'a11y.emtoken':"ElectricityMaps 令牌"},
+  ja:{'a11y.skip':"コンテンツへスキップ",'a11y.lang':"言語",'a11y.qinvalid':"⚠ 1日あたりのクエリ数は 0 より大きい数値にしてください",'a11y.roi_infer':"方法：クエリあたりの推論エネルギー（Wh、「推論」タブのデータ。一部のモデルは比例推定）。",'a11y.roi_proxy':"方法：学習エネルギーからの近似（参考値。クエリあたりの実測 Wh より精度は低い）。",'a11y.emtoken':"ElectricityMaps トークン"},
+  ko:{'a11y.skip':"본문으로 건너뛰기",'a11y.lang':"언어",'a11y.qinvalid':"⚠ 일일 쿼리 수는 0보다 커야 합니다",'a11y.roi_infer':"방법: 쿼리당 추론 에너지(Wh, '추론' 탭 데이터, 일부 모델은 비례 추정치).",'a11y.roi_proxy':"방법: 학습 에너지 기반 근사치(참고용, 쿼리당 측정 Wh보다 정밀도가 낮음).",'a11y.emtoken':"ElectricityMaps 토큰"},
+  ar:{'a11y.skip':"انتقل إلى المحتوى",'a11y.lang':"اللغة",'a11y.qinvalid':"⚠ يجب أن يكون عدد الاستعلامات اليومية أكبر من 0",'a11y.roi_infer':"الطريقة: طاقة الاستدلال لكل استعلام (Wh، من تبويب الاستدلال؛ بعض النماذج تقديرات تناسبية).",'a11y.roi_proxy':"الطريقة: تقريب انطلاقًا من طاقة التدريب (للإرشاد فقط؛ أقل دقة من Wh المقاسة لكل استعلام).",'a11y.emtoken':"رمز ElectricityMaps"},
+  he:{'a11y.skip':"דלג לתוכן",'a11y.lang':"שפה",'a11y.qinvalid':"⚠ מספר השאילתות ביום חייב להיות גדול מ-0",'a11y.roi_infer':"שיטה: אנרגיית היסק לכל שאילתה (Wh, מנתוני לשונית ההיסק; חלק מהמודלים הם הערכות יחסיות).",'a11y.roi_proxy':"שיטה: קירוב על בסיס אנרגיית האימון (לעיון בלבד; פחות מדויק מ-Wh שנמדדו לכל שאילתה).",'a11y.emtoken':"אסימון ElectricityMaps"},
+  tr:{'a11y.skip':"İçeriğe geç",'a11y.lang':"Dil",'a11y.qinvalid':"⚠ Günlük sorgu sayısı 0'dan büyük olmalıdır",'a11y.roi_infer':"Yöntem: sorgu başına çıkarım enerjisi (Wh, Çıkarım sekmesindeki veriler; bazı modeller orantılı tahmindir).",'a11y.roi_proxy':"Yöntem: eğitim enerjisinden yaklaşık değer (yalnızca referans; sorgu başına ölçülen Wh'den daha az hassas).",'a11y.emtoken':"ElectricityMaps belirteci"},
+  de:{'a11y.skip':"Zum Inhalt springen",'a11y.lang':"Sprache",'a11y.qinvalid':"⚠ Die Anzahl der Anfragen pro Tag muss größer als 0 sein",'a11y.roi_infer':"Methode: Inferenzenergie pro Anfrage (Wh, Daten aus dem Tab Inferenz; einige Modelle sind proportionale Schätzungen).",'a11y.roi_proxy':"Methode: Näherung aus der Trainingsenergie (nur Richtwert; weniger genau als gemessene Wh pro Anfrage).",'a11y.emtoken':"ElectricityMaps-Token"},
+  it:{'a11y.skip':"Vai al contenuto",'a11y.lang':"Lingua",'a11y.qinvalid':"⚠ Le richieste al giorno devono essere un numero maggiore di 0",'a11y.roi_infer':"Metodo: energia di inferenza per richiesta (Wh, dati della scheda Inferenza; alcuni modelli sono stime proporzionali).",'a11y.roi_proxy':"Metodo: approssimazione dall'energia di addestramento (indicativa; meno precisa dei Wh misurati per richiesta).",'a11y.emtoken':"Token ElectricityMaps"},
+  id:{'a11y.skip':"Lewati ke konten",'a11y.lang':"Bahasa",'a11y.qinvalid':"⚠ Jumlah kueri per hari harus lebih besar dari 0",'a11y.roi_infer':"Metode: energi inferensi per kueri (Wh, data dari tab Inferensi; beberapa model adalah estimasi proporsional).",'a11y.roi_proxy':"Metode: perkiraan dari energi pelatihan (hanya acuan; kurang akurat dibanding Wh terukur per kueri).",'a11y.emtoken':"Token ElectricityMaps"}
+};
+Object.keys(A11Y_I18N).forEach(function(l){ if(T[l]) Object.assign(T[l], A11Y_I18N[l]); });
 function t(key){ return (T[currentLang] && T[currentLang][key]) || (T['es'][key]) || key; }
 
 function applyLang(code){
@@ -6820,7 +6838,7 @@ document.getElementById('fLocation').addEventListener('change', ()=>{
 });
 /* ── Accesibilidad: etiquetas accesibles para controles sin <label> (sigue al idioma activo) ── */
 function syncAriaLabels(){
-  const FB={fModelName:'Nombre del modelo de IA',iModel:'Modelo de IA',iCustomModel:'Nombre del modelo personalizado',roiA:'Modelo actual (ineficiente)',roiACustomModel:'Nombre del modelo actual personalizado',roiB:'Modelo alternativo (eficiente)',roiBCustomModel:'Nombre del modelo alternativo personalizado',emInput:'Token de ElectricityMaps'};
+  const FB={fModelName:'Nombre del modelo de IA',iModel:'Modelo de IA',iCustomModel:'Nombre del modelo personalizado',roiA:'Modelo actual (ineficiente)',roiACustomModel:'Nombre del modelo actual personalizado',roiB:'Modelo alternativo (eficiente)',roiBCustomModel:'Nombre del modelo alternativo personalizado',emInput:t('a11y.emtoken')};
   const FROM_LABEL=['fModelName','iModel','roiA','roiB'];
   Object.keys(FB).forEach(function(id){
     const el=document.getElementById(id); if(!el) return; let txt='';
@@ -6829,6 +6847,9 @@ function syncAriaLabels(){
     el.setAttribute('aria-label', txt || FB[id]);
   });
 }
+/* idioma del botón, enlace de salto y aria-expanded sincronizado con cualquier forma de abrir/cerrar el menú */
+(function(){ const _s=syncAriaLabels; syncAriaLabels=function(){ _s(); const lb=document.getElementById('langBtn'); if(lb) lb.setAttribute('aria-label', t('a11y.lang')); const sk=document.querySelector('.skip-link'); if(sk) sk.textContent=t('a11y.skip'); }; })();
+(function(){ const dd=document.getElementById('langDropdown'), b=document.getElementById('langBtn'); if(!dd||!b||!window.MutationObserver) return; new MutationObserver(function(){ b.setAttribute('aria-expanded', String(dd.classList.contains('open'))); }).observe(dd,{attributes:true,attributeFilter:['class']}); })();
 syncAriaLabels();
 /* ── ROI: nota con el método usado (medido vs aproximado) ── */
 function _roiMethodNote(){
@@ -6836,8 +6857,8 @@ function _roiMethodNote(){
   let n=document.getElementById('roiMethodNote');
   if(!n){ n=document.createElement('p'); n.id='roiMethodNote'; n.style.cssText='font-size:12px;opacity:.75;margin:10px 0 0'; host.appendChild(n); }
   n.textContent = window.__roiUseInfer
-    ? 'Método: energía de inferencia por consulta (Wh, datos de la pestaña Inferencia; algunos modelos son estimaciones proporcionales).'
-    : 'Método: aproximación a partir de la energía de entrenamiento (referencia; menos precisa que usar Wh medidos por consulta).';
+    ? t('a11y.roi_infer')
+    : t('a11y.roi_proxy');
 }
 if(typeof calcROI==='function'){ const _calcROI=calcROI; calcROI=function(){ const r=_calcROI.apply(this,arguments); try{ _roiMethodNote(); }catch(e){} return r; }; }
 if(typeof applyLang==='function'){ const _applyLang=applyLang; applyLang=function(){ const r=_applyLang.apply(this,arguments); try{ syncAriaLabels(); }catch(e){} return r; }; }
