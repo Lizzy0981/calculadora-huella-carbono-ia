@@ -1,0 +1,31 @@
+{
+  "name": "Calculadora de Huella de Carbono de IA",
+  "short_name": "Huella IA",
+  "description": "Calcula el impacto ambiental de modelos de IA: carbono, energía, agua, residuos electrónicos y minerales críticos.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#030a06",
+  "theme_color": "#050d0a",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
