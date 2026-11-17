@@ -395,7 +395,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 ### ⚡ **Lighthouse Score** *(valores históricos, pendientes de re-medición)*
 ```
 🎯 Performance:      97/100   // Sin framework overhead
-♿ Accessibility:    95/100   // mejoras de accesibilidad en curso (ARIA y etiquetas pendientes)
+♿ Accessibility:    95/100   // roles ARIA, etiquetas, skip-link y teclado añadidos en v1.3.2; auditoría formal pendiente
 🔍 SEO:              93/100   // Meta tags optimizados
 💡 Best Practices:   98/100   // HTML5 semántico moderno
 📱 PWA:              91/100   // Service Worker + manifest PWA
@@ -447,6 +447,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - ✅ Validación de consultas/día (> 0) en Inferencia y ROI
 - 📝 README: fórmulas de inferencia, atribución del dato de video (MIT Technology Review, 2025) y notas de privacidad/offline corregidas
 - 📡 Service Worker real (`sw.js`) + `manifest.json` + íconos 192/512 px: modo offline y app instalable (PWA). El SW no cachea ipapi.co ni ElectricityMaps
+- ♿ Accesibilidad (v1.3.2): roles ARIA en pestañas con navegación por flechas, etiquetas accesibles en todos los campos (siguen al idioma), enlace «Saltar al contenido», foco visible, botón de idioma operable con teclado y avisos en regiones `aria-live`
 
 ### ✅ **Completado — v1.3 · Agosto 2026**
 - [x] 📊 **Dashboard de Tendencias** — nueva pestaña con evolución del CO₂ por año (gráfica de burbujas logarítmica), huella promedio por empresa, filtros por categoría/empresa y rankings Top 10
