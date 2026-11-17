@@ -162,7 +162,7 @@ Energía medida por tipo (Wh/consulta):
 ### 💰 **Módulo 3 — ROI Verde**
 ```
 CO₂_ahorro_año (t) = (kWh_A - kWh_B) × consultas_día × 365 × factor / 1000
-kWh_inferencia     ≈ kWh_entrenamiento / (2000h × 1M consultas)
+kWh_inferencia     ≈ kWh_entrenamiento / (2000h × 1M consultas)  (solo como respaldo; si hay Wh/consulta medidos se usan directamente: kWh_ahorrados = (Wh_A − Wh_B)/1000 × consultas_día × 365)
 USD_ahorro         = kWh_ahorrado × precio_electricidad
 ```
 
@@ -448,6 +448,9 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - 📝 README: fórmulas de inferencia, atribución del dato de video (MIT Technology Review, 2025) y notas de privacidad/offline corregidas
 - 📡 Service Worker real (`sw.js`) + `manifest.json` + íconos 192/512 px: modo offline y app instalable (PWA). El SW no cachea ipapi.co ni ElectricityMaps
 - ♿ Accesibilidad (v1.3.2): roles ARIA en pestañas con navegación por flechas, etiquetas accesibles en todos los campos (siguen al idioma), enlace «Saltar al contenido», foco visible, botón de idioma operable con teclado y avisos en regiones `aria-live`
+- 💰 ROI Verde: usa los Wh medidos por consulta de la pestaña Inferencia cuando ambos modelos los tienen (si no, aproximación desde el entrenamiento) y muestra qué método se usó; el % de reducción sigue el mismo método
+- 🎨 Contraste del texto atenuado subido a WCAG AA (≈5.5:1) y región `main` semántica
+- 🏷️ DeepSeek-V3: la fuente de su dato de inferencia pasa a «estimación proporcional» (antes decía «verificado»)
 
 ### ✅ **Completado — v1.3 · Agosto 2026**
 - [x] 📊 **Dashboard de Tendencias** — nueva pestaña con evolución del CO₂ por año (gráfica de burbujas logarítmica), huella promedio por empresa, filtros por categoría/empresa y rankings Top 10
