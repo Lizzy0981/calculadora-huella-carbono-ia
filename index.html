@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#050d0a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>🌿 Huella de Carbono IA — Elizabeth Díaz Familia</title>
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -1965,34 +1966,10 @@ const STATE = {
 };
 
 /* ─── SERVICE WORKER (inline, offline support) ─── */
-if ('serviceWorker' in navigator) {
-  const SW_CODE = `
-    const CACHE='ai-carbon-v1';
-    const PRECACHE=['./','/calculadora.html'];
-    self.addEventListener('install',e=>e.waitUntil(
-      caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{}))
-    ));
-    self.addEventListener('fetch',e=>{
-      if(e.request.url.includes('ipapi.co')||e.request.url.includes('carbonintensity')){
-        e.respondWith(
-          fetch(e.request).then(r=>{
-            const clone=r.clone();
-            caches.open(CACHE).then(c=>c.put(e.request,clone));
-            return r;
-          }).catch(()=>caches.match(e.request))
-        );
-        return;
-      }
-      e.respondWith(
-        caches.match(e.request).then(r=>r||fetch(e.request))
-      );
-    });
-  `;
-  try {
-    const blob = new Blob([SW_CODE], {type:'text/javascript'});
-    const url  = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(url, {scope:'/'}).catch(()=>{});
-  } catch(e) {}
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
 }
 
 /* ─── PARTICLES ─── */
