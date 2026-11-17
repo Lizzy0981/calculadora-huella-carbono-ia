@@ -2237,7 +2237,7 @@ const INFER = {
   sora:       {ts:null,tl:null,img:null,vid:944,  wue:1.8,src:'Jegham et al. 2025'},
   mistral7b:  {ts:0.018,tl:0.09,img:null,vid:null,wue:1.9,src:'Proportional estimate'},
   dseekr1:    {ts:0.08,tl:0.40,img:null,vid:null, wue:2.0,src:'Proportional estimate'},
-  dseekv3:    {ts:0.04,tl:0.20,img:null,vid:null, wue:2.0,src:'Verified training data'},
+  dseekv3:    {ts:0.04,tl:0.20,img:null,vid:null, wue:2.0,src:'Proportional estimate'},
 };
 let _qType='text_short';
 const _QT_KEY={text_short:'ts',text_long:'tl',image:'img',video:'vid'};
@@ -2440,10 +2440,14 @@ function calcROI(){
   const yrs=parseInt(document.getElementById('roiYears').value)||3;
   const cf=parseFloat(document.getElementById('roiCF').value)||0.386;
   if(!A||!B){ toast(t('roi.toast.invalidmodels'),'error'); return; }
-  const iWhA=(A.e/(2000*1e6))*1e6, iWhB=(B.e/(2000*1e6))*1e6;
-  const kwhY=(iWhA-iWhB)*qd*365/1e6;
+  // Método: si ambos modelos tienen dato de inferencia (Wh/consulta, pestaña Inferencia) se usa ese; si no, aproximación desde el entrenamiento
+  const _kA=document.getElementById('roiA').value, _kB=document.getElementById('roiB').value;
+  const _mA=(_kA!=='__custom__'&&INFER[_kA])?INFER[_kA].ts/1000:null, _mB=(_kB!=='__custom__'&&INFER[_kB])?INFER[_kB].ts/1000:null;
+  const useInfer=(_mA!==null&&_mB!==null); window.__roiUseInfer=useInfer;
+  const kwhQA=useInfer?_mA:A.e/(2000*1e6), kwhQB=useInfer?_mB:B.e/(2000*1e6);
+  const kwhY=(kwhQA-kwhQB)*qd*365;
   const co2Y=kwhY*cf/1000, usdY=kwhY*kc, usdT=usdY*yrs;
-  const pct=((A.co2-B.co2)/A.co2*100).toFixed(1);
+  const pct=(useInfer?((kwhQA-kwhQB)/kwhQA*100):((A.co2-B.co2)/A.co2*100)).toFixed(1);
   const fmt=(n,d=1)=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1000?(n/1000).toFixed(1)+'K':n.toFixed(d);
   document.getElementById('rCO2').textContent  = fmt(co2Y,2)+' t';
   document.getElementById('rMwh').textContent  = fmt(kwhY/1000,1);
@@ -6824,6 +6828,16 @@ function syncAriaLabels(){
   });
 }
 syncAriaLabels();
+/* ── ROI: nota con el método usado (medido vs aproximado) ── */
+function _roiMethodNote(){
+  const host=document.getElementById('roiResults'); if(!host) return;
+  let n=document.getElementById('roiMethodNote');
+  if(!n){ n=document.createElement('p'); n.id='roiMethodNote'; n.style.cssText='font-size:12px;opacity:.75;margin:10px 0 0'; host.appendChild(n); }
+  n.textContent = window.__roiUseInfer
+    ? 'Método: energía de inferencia por consulta (Wh, datos de la pestaña Inferencia; algunos modelos son estimaciones proporcionales).'
+    : 'Método: aproximación a partir de la energía de entrenamiento (referencia; menos precisa que usar Wh medidos por consulta).';
+}
+if(typeof calcROI==='function'){ const _calcROI=calcROI; calcROI=function(){ const r=_calcROI.apply(this,arguments); try{ _roiMethodNote(); }catch(e){} return r; }; }
 if(typeof applyLang==='function'){ const _applyLang=applyLang; applyLang=function(){ const r=_applyLang.apply(this,arguments); try{ syncAriaLabels(); }catch(e){} return r; }; }
 </script>
 
