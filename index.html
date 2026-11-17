@@ -2123,7 +2123,9 @@ function smartEstimate(name){
   const n=name.toLowerCase();
   let p=null;
   const pm=n.match(/(\d+(?:\.\d+)?)\s*[bB](?:[^a-z]|$)/);
-  if(pm) p=parseFloat(pm[1]);
+  if(pm) p = parseFloat(pm[1]);
+  let _moeFromName = false; const mx = n.match(/(\d+)\s*x\s*(\d+(?:\.\d+)?)\s*b/);
+  if(mx){ p = Math.round(parseFloat(mx[1])*parseFloat(mx[2])*0.83*10)/10; _moeFromName = true; }
   if(!p){
     if(/(nano|tiny)/.test(n)) p=0.5;
     else if(/(mini|small)/.test(n)) p=3;
@@ -2133,7 +2135,7 @@ function smartEstimate(name){
     else p=7;
   }
   let af=1.0;
-  if(/(moe|mixture|sparse)/.test(n)) af=0.30;
+  if(_moeFromName || /(moe|mixture|sparse)/.test(n)) af=0.30;
   if(/(instruct|chat|rlhf)/.test(n)) af*=1.15;
   if(/(distill|quant|int4|gguf)/.test(n)) af*=0.6;
   const gpus=Math.max(32,Math.min(Math.round(Math.pow(p,0.78)*60*af),60000));
@@ -2303,6 +2305,7 @@ function _tfill(key, vals){
   return s;
 }
 function calcInference(){
+  { const _q=parseFloat(document.getElementById('iQDay').value); if(!(_q>0)){ toast('⚠ Consultas/día debe ser un número mayor que 0','error'); return; } }
   _ensureModelSupportsType(_qType);
   const mid=document.getElementById('iModel').value;
   const typeKeyMap={text_short:'infer.type.short',text_long:'infer.type.long',image:'infer.type.image',video:'infer.type.video'};
@@ -2319,8 +2322,8 @@ function calcInference(){
     const cf  = parseFloat(document.getElementById('iCF').value)||0.386;
     const whQuery = Math.max(0.001, est.paramB * 0.006 * (_QT_MULT[_qType]||1));
     const wue = 1.8;
-    const gco2 = whQuery * cf * 1000;
-    const mlw  = whQuery * wue * 1000;
+    const gco2 = whQuery * cf;
+    const mlw  = whQuery * wue;
     const co2d = gco2/1000 * qd, co2m = co2d*30, co2y = (co2d*365)/1000;
     document.getElementById('iGCO2').textContent   = gco2<1?gco2.toFixed(3)+'g':gco2.toFixed(1)+'g';
     document.getElementById('iWh').textContent     = whQuery<1?whQuery.toFixed(3):whQuery.toFixed(2);
@@ -2344,8 +2347,8 @@ function calcInference(){
   const typeMap={text_short:'ts',text_long:'tl',image:'img',video:'vid'};
   const wh=d[typeMap[_qType]];
   if(wh===null||wh===undefined){ toast(t('infer.toast.typenotavailable'),'error',3000); return; }
-  const co2q=wh*cf, gco2=co2q*1000, mlw=wh*d.wue*1000;
-  const co2d=co2q*qd, co2m=co2d*30, co2y=(co2d*365)/1000;
+  const co2q=wh*cf, gco2 = co2q, mlw=wh*d.wue;
+  const co2d = co2q*qd/1000, co2m=co2d*30, co2y=(co2d*365)/1000;
   document.getElementById('iGCO2').textContent  = gco2<1?gco2.toFixed(3)+'g':gco2.toFixed(1)+'g';
   document.getElementById('iWh').textContent    = wh<1?wh.toFixed(3):wh.toFixed(2);
   document.getElementById('iMlWater').textContent = mlw<1?mlw.toFixed(2):mlw.toFixed(1);
@@ -2436,6 +2439,7 @@ function _roiModelFor(side){
   return {name:name+' ('+t('conf.estimated')+')', co2:eKwh*est.loc, e:eKwh};
 }
 function calcROI(){
+  { const _q=parseFloat(document.getElementById('roiQDay').value); if(!(_q>0)){ toast('⚠ Consultas/día debe ser un número mayor que 0','error'); return; } }
   const A=_roiModelFor('A');
   const B=_roiModelFor('B');
   const qd=parseFloat(document.getElementById('roiQDay').value)||10000;
@@ -2444,7 +2448,7 @@ function calcROI(){
   const cf=parseFloat(document.getElementById('roiCF').value)||0.386;
   if(!A||!B){ toast(t('roi.toast.invalidmodels'),'error'); return; }
   const iWhA=(A.e/(2000*1e6))*1e6, iWhB=(B.e/(2000*1e6))*1e6;
-  const kwhY=(iWhA-iWhB)*qd*365/1000;
+  const kwhY=(iWhA-iWhB)*qd*365/1e6;
   const co2Y=kwhY*cf/1000, usdY=kwhY*kc, usdT=usdY*yrs;
   const pct=((A.co2-B.co2)/A.co2*100).toFixed(1);
   const fmt=(n,d=1)=>n>=1e6?(n/1e6).toFixed(1)+'M':n>=1000?(n/1000).toFixed(1)+'K':n.toFixed(d);
@@ -2558,7 +2562,7 @@ async function fetchLiveCarbon(){
           const d=Math.abs(parseFloat(sel.options[i].value)-cf);
           if(d<bd){bd=d;best=i;}
         }
-        sel.selectedIndex=best;
+        if(!window.__userPickedLoc) sel.selectedIndex = best;
       }
     }
   }catch(e){ document.getElementById('lcbCountry').textContent='—'; }
@@ -6813,7 +6817,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 // Update location when user changes the dropdown
 document.getElementById('fLocation').addEventListener('change', ()=>{
-  if(!STATE.dataSaver) fetchLiveCarbon();
+  window.__userPickedLoc = true; if(!STATE.dataSaver) fetchLiveCarbon();
 });
 </script>
 
