@@ -1985,6 +1985,9 @@ const STATE = {
 };
 
 /* ─── SERVICE WORKER (inline, offline support) ─── */
+/* Accesibilidad (v1.3.4): regiones etiquetadas y cierre del menú de idioma con Escape */
+['offlinePill','saverPill','liveCarbonBar','datasakerBanner'].forEach(function(id){ var e=document.getElementById(id); if(e){ e.setAttribute('role','region'); e.setAttribute('aria-labelledby',id); } });
+document.addEventListener('keydown',function(ev){ if(ev.key==='Escape'){ var d=document.getElementById('langDropdown'); if(d && d.classList.contains('open')){ d.classList.remove('open'); var b=document.getElementById('langBtn'); if(b){ b.setAttribute('aria-expanded','false'); b.focus(); } } } });
 if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
