@@ -2107,6 +2107,7 @@ async function fetchEM(zone){
       {headers:{'auth-token':EM_KEY}}),
     new Promise((_,r)=>setTimeout(r,5000))
   ]);
+  if(res.status===401||res.status===403){ EM_KEY=''; localStorage.removeItem('em_api_key'); updateEMBtn(false); toast(t('em.toast.invalidkey'),'error'); }
   if(!res.ok) throw new Error('EM '+res.status);
   return (await res.json()).carbonIntensity;
 }
