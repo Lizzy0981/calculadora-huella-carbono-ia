@@ -453,6 +453,12 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - 🏷️ DeepSeek-V3: la fuente de su dato de inferencia pasa a «estimación proporcional» (antes decía «verificado»)
 - 🌍 i18n: enlace «Saltar al contenido», mensaje de validación, nota del método de ROI y etiquetas accesibles traducidos a los 14 idiomas (272 claves por idioma; traducciones nuevas pendientes de revisión por hablantes nativos); `aria-expanded` del menú de idioma sincronizado al elegir un idioma o hacer clic fuera
 
+### ✅ **Completado — v1.3.4 · Noviembre 2026**
+- 📚 Datos: LLaMA 3 8B/70B (390 y 1.900 tCO₂eq, fichas de Meta), LLaMA 2 70B (291,4 t, ficha de Meta), GPT-3 (552 t, Patterson et al. 2021), T5 (46,7 t, Patterson et al.) y Stable Diffusion (11.250 kg, ficha del modelo) ahora usan la cifra publicada; antes diferían entre 4× y 50×
+- 🏷️ «Verificado» solo se muestra en esos 6 modelos; los demás pasan a «Estimado» hasta contrastarlos con una fuente publicada
+- 📊 Tendencias: «más eficiente» pasa a «menor CO₂ promedio/absoluto» (no normaliza por tamaño de modelo)
+- ♿ Escape cierra el menú de idioma; las barras informativas son regiones etiquetadas (axe: 0 violaciones propias de la página)
+
 ### ✅ **Completado — v1.3.3 · Noviembre 2026**
 - 📱 Móvil: las pestañas se desplazan horizontalmente sin desbordar la página (probado a 390 px), con áreas táctiles de 44 px
 - 🏷️ Interfaz: eliminado el icono duplicado en las pestañas Entrenamiento/Inferencia/ROI Verde y en el botón «Exportar PDF»
