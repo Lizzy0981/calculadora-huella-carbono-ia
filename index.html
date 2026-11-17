@@ -2084,6 +2084,7 @@ function saveEMKey(){
   if(!val||val.includes('●')){ toast(t('em.toast.invalidkey'),'error'); return; }
   EM_KEY = val; localStorage.setItem('em_api_key',val);
   closeEM(); updateEMBtn(true);
+  fetch('https://api.electricitymap.org/v3/carbon-intensity/latest?zone=DE',{headers:{'auth-token':val}}).then(function(r){ if(r.status===401){ EM_KEY=''; localStorage.removeItem('em_api_key'); updateEMBtn(false); toast(t('em.toast.invalidkey'),'error'); } }).catch(function(){});
   fetchLiveCarbon();
   toast(t('em.toast.connected'),'success',3000);
 }
@@ -2107,7 +2108,7 @@ async function fetchEM(zone){
       {headers:{'auth-token':EM_KEY}}),
     new Promise((_,r)=>setTimeout(r,5000))
   ]);
-  if(res.status===401||res.status===403){ EM_KEY=''; localStorage.removeItem('em_api_key'); updateEMBtn(false); toast(t('em.toast.invalidkey'),'error'); }
+  if(res.status===401){ EM_KEY=''; localStorage.removeItem('em_api_key'); updateEMBtn(false); toast(t('em.toast.invalidkey'),'error'); }
   if(!res.ok) throw new Error('EM '+res.status);
   return (await res.json()).carbonIntensity;
 }
