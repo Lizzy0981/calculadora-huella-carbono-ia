@@ -2784,6 +2784,8 @@ function calculate(){
   }
   if(gpuCount<1||gpuCount>100000){ toast(t('err.gpu-range'),'error'); return; }
   if(hours<0.1||hours>20000){ toast(t('err.hours-range'),'error'); return; }
+  if(pue<1||pue>3){ toast(t('val.pue'),'error'); return; }
+  if(!isNaN(energyCost)&&energyCost<0){ toast(t('val.cost'),'error'); return; }
 
   // ── CORE CALCULATIONS ──
   const energyKWh = gpuCount * gpuPower * hours * pue;
@@ -6780,6 +6782,24 @@ const A11Y_I18N = {
   id:{'a11y.skip':"Lewati ke konten",'a11y.lang':"Bahasa",'a11y.qinvalid':"⚠ Jumlah kueri per hari harus lebih besar dari 0",'a11y.roi_infer':"Metode: energi inferensi per kueri (Wh, data dari tab Inferensi; beberapa model adalah estimasi proporsional).",'a11y.roi_proxy':"Metode: perkiraan dari energi pelatihan (hanya acuan; kurang akurat dibanding Wh terukur per kueri).",'a11y.emtoken':"Token ElectricityMaps"}
 };
 Object.keys(A11Y_I18N).forEach(function(l){ if(T[l]) Object.assign(T[l], A11Y_I18N[l]); });
+/* Validación Entrenamiento (v1.3.4): PUE y costo (14 idiomas; revisar por hablantes nativos) */
+const VAL_I18N = {
+  es:{'val.pue':"⚠ PUE debe estar entre 1.0 y 3.0",'val.cost':"⚠ El costo de energía no puede ser negativo"},
+  en:{'val.pue':"⚠ PUE must be between 1.0 and 3.0",'val.cost':"⚠ Energy cost cannot be negative"},
+  fr:{'val.pue':"⚠ Le PUE doit être compris entre 1,0 et 3,0",'val.cost':"⚠ Le coût de l'énergie ne peut pas être négatif"},
+  pt:{'val.pue':"⚠ O PUE deve estar entre 1,0 e 3,0",'val.cost':"⚠ O custo de energia não pode ser negativo"},
+  tr:{'val.pue':"⚠ PUE değeri 1,0 ile 3,0 arasında olmalıdır",'val.cost':"⚠ Enerji maliyeti negatif olamaz"},
+  de:{'val.pue':"⚠ Der PUE muss zwischen 1,0 und 3,0 liegen",'val.cost':"⚠ Die Energiekosten dürfen nicht negativ sein"},
+  it:{'val.pue':"⚠ Il PUE deve essere compreso tra 1,0 e 3,0",'val.cost':"⚠ Il costo dell'energia non può essere negativo"},
+  id:{'val.pue':"⚠ PUE harus antara 1,0 dan 3,0",'val.cost':"⚠ Biaya energi tidak boleh negatif"},
+  ru:{'val.pue':"⚠ PUE должен быть от 1,0 до 3,0",'val.cost':"⚠ Стоимость энергии не может быть отрицательной"},
+  zh:{'val.pue':"⚠ PUE 必须介于 1.0 和 3.0 之间",'val.cost':"⚠ 能源成本不能为负数"},
+  ja:{'val.pue':"⚠ PUE は 1.0 から 3.0 の間で指定してください",'val.cost':"⚠ エネルギーコストは負の値にできません"},
+  ko:{'val.pue':"⚠ PUE는 1.0에서 3.0 사이여야 합니다",'val.cost':"⚠ 에너지 비용은 음수일 수 없습니다"},
+  ar:{'val.pue':"⚠ يجب أن تكون قيمة PUE بين 1.0 و 3.0",'val.cost':"⚠ لا يمكن أن تكون تكلفة الطاقة سالبة"},
+  he:{'val.pue':"⚠ ערך ה-PUE חייב להיות בין 1.0 ל-3.0",'val.cost':"⚠ עלות האנרגיה לא יכולה להיות שלילית"}
+};
+Object.keys(VAL_I18N).forEach(function(l){ if(T[l]) Object.assign(T[l], VAL_I18N[l]); });
 function t(key){ return (T[currentLang] && T[currentLang][key]) || (T['es'][key]) || key; }
 
 function applyLang(code){
