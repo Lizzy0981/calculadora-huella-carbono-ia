@@ -6800,6 +6800,24 @@ const VAL_I18N = {
   he:{'val.pue':"⚠ ערך ה-PUE חייב להיות בין 1.0 ל-3.0",'val.cost':"⚠ עלות האנרגיה לא יכולה להיות שלילית"}
 };
 Object.keys(VAL_I18N).forEach(function(l){ if(T[l]) Object.assign(T[l], VAL_I18N[l]); });
+/* Tendencias (v1.3.4): etiquetas honestas — CO₂ absoluto, no eficiencia (14 idiomas; revisar por hablantes nativos) */
+const TREND_I18N = {
+  es:{'trends.kpi.bestyear':"Año con menor CO₂ promedio",'trends.kpi.bestcompany':"Empresa con menor CO₂ promedio",'trends.table.best.title':"Top 10 modelos con menor CO₂ (absoluto)"},
+  en:{'trends.kpi.bestyear':"Year with lowest avg. CO₂",'trends.kpi.bestcompany':"Company with lowest avg. CO₂",'trends.table.best.title':"Top 10 models by lowest absolute CO₂"},
+  fr:{'trends.kpi.bestyear':"Année au CO₂ moyen le plus bas",'trends.kpi.bestcompany':"Entreprise au CO₂ moyen le plus bas",'trends.table.best.title':"Top 10 des modèles au CO₂ absolu le plus bas"},
+  pt:{'trends.kpi.bestyear':"Ano com menor CO₂ médio",'trends.kpi.bestcompany':"Empresa com menor CO₂ médio",'trends.table.best.title':"Top 10 modelos com menor CO₂ (absoluto)"},
+  tr:{'trends.kpi.bestyear':"En düşük ort. CO₂'li yıl",'trends.kpi.bestcompany':"En düşük ort. CO₂'li şirket",'trends.table.best.title':"Mutlak CO₂'si en düşük 10 model"},
+  de:{'trends.kpi.bestyear':"Jahr mit niedrigstem Ø-CO₂",'trends.kpi.bestcompany':"Unternehmen mit niedrigstem Ø-CO₂",'trends.table.best.title':"Top 10 Modelle mit niedrigstem absolutem CO₂"},
+  it:{'trends.kpi.bestyear':"Anno con CO₂ medio più basso",'trends.kpi.bestcompany':"Azienda con CO₂ medio più basso",'trends.table.best.title':"Top 10 modelli con CO₂ assoluto più basso"},
+  id:{'trends.kpi.bestyear':"Tahun dengan rata-rata CO₂ terendah",'trends.kpi.bestcompany':"Perusahaan dengan rata-rata CO₂ terendah",'trends.table.best.title':"10 model teratas dengan CO₂ absolut terendah"},
+  ru:{'trends.kpi.bestyear':"Год с наименьшим средним CO₂",'trends.kpi.bestcompany':"Компания с наименьшим средним CO₂",'trends.table.best.title':"Топ-10 моделей с наименьшим абсолютным CO₂"},
+  zh:{'trends.kpi.bestyear':"平均 CO₂ 最低的年份",'trends.kpi.bestcompany':"平均 CO₂ 最低的公司",'trends.table.best.title':"绝对 CO₂ 最低的 10 个模型"},
+  ja:{'trends.kpi.bestyear':"平均 CO₂ が最も低い年",'trends.kpi.bestcompany':"平均 CO₂ が最も低い企業",'trends.table.best.title':"絶対 CO₂ が最も低いモデル トップ10"},
+  ko:{'trends.kpi.bestyear':"평균 CO₂가 가장 낮은 연도",'trends.kpi.bestcompany':"평균 CO₂가 가장 낮은 기업",'trends.table.best.title':"절대 CO₂가 가장 낮은 모델 상위 10"},
+  ar:{'trends.kpi.bestyear':"العام ذو أقل متوسط CO₂",'trends.kpi.bestcompany':"الشركة ذات أقل متوسط CO₂",'trends.table.best.title':"أفضل 10 نماذج بأقل CO₂ مطلق"},
+  he:{'trends.kpi.bestyear':"השנה עם ממוצע ה-CO₂ הנמוך ביותר",'trends.kpi.bestcompany':"החברה עם ממוצע ה-CO₂ הנמוך ביותר",'trends.table.best.title':"10 המודלים עם ה-CO₂ המוחלט הנמוך ביותר"}
+};
+Object.keys(TREND_I18N).forEach(function(l){ if(T[l]) Object.assign(T[l], TREND_I18N[l]); });
 function t(key){ return (T[currentLang] && T[currentLang][key]) || (T['es'][key]) || key; }
 
 function applyLang(code){
