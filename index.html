@@ -2220,7 +2220,7 @@ function exportPDF(){
 }
 async function shareResult(){
   const model=document.getElementById('rhModelName')?.textContent||'AI Model';
-  const co2=(document.getElementById('rCo2')||{}).textContent||'—';
+  const co2=(STATE.currentResults&&isFinite(STATE.currentResults.co2Kg))?Math.round(STATE.currentResults.co2Kg).toLocaleString(currentLang):'—';
   const text=_tfill('share.training.template',{model:model,co2:co2});
   const url=window.location.href;
   if(navigator.share){ try{await navigator.share({title:'AI Carbon Footprint',text,url});return;}catch(e){} }
