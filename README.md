@@ -129,7 +129,7 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 - ⚡ **Cambio instantáneo** sin recargar la página
 
 ### 🚀 **Tecnología de Vanguardia**
-- 📡 **Modo Offline** — *(en desarrollo: requiere `sw.js` y `manifest.json` propios; aún no activo)*
+- 📡 **Modo Offline** — con caché inteligente (`sw.js`): app, Chart.js y fuentes quedan disponibles sin conexión
 - 🌱 **Modo Eco** — pausa APIs, reduce animaciones, ahorra energía
 - 📱 **Responsive design** — Mobile, Tablet, Desktop, 4K
 - 🎨 **Diseño moderno 2026** — título con gradiente animado, cards con barra de color por dimensión
@@ -272,7 +272,7 @@ Ajuste Instruct = 1.15   (RLHF / instruction-tuned)
 🇬🇧 National Grid UK API # Carbono UK tiempo real (sin key requerida)
 🌍 ipapi.co              # Geolocalización automática del usuario (gratuita)
 📲 Web Share API         # Compartir nativo en móvil con fallback portapapeles
-📡 Service Worker        # En desarrollo (aún no activo)
+📡 Service Worker        # Caché offline con `sw.js` (red primero para la app, respaldo en caché)
 ```
 
 ### 🔬 **Motores Científicos**
@@ -373,6 +373,8 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 ├── 📄 .gitignore                     # 🚫 API keys y archivos temp excluidos
 ├── 📄 vercel.json                    # ▲ Config Vercel + headers seguridad
 ├── 📄 netlify.toml                   # 🟢 Config Netlify + redirects + cache
+├── 📄 sw.js                    # 📡 Service Worker (offline)
+├── 📄 manifest.json            # 📱 Manifiesto PWA
 │
 ├── 📂 .github/
 │   └── 📂 workflows/
@@ -396,7 +398,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 ♿ Accessibility:    95/100   // mejoras de accesibilidad en curso (ARIA y etiquetas pendientes)
 🔍 SEO:              93/100   // Meta tags optimizados
 💡 Best Practices:   98/100   // HTML5 semántico moderno
-📱 PWA:              91/100   // Service Worker en desarrollo
+📱 PWA:              91/100   // Service Worker + manifest PWA
 🌐 i18n:             100%     // 14 idiomas · 261/261 claves por idioma
 ```
 
@@ -435,7 +437,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - [x] 🏷️ Sistema de confianza (Verificado / Estimado / Personalizado)
 - [x] 🎨 Diseño modernizado 2026 — título animado · cards con barra de color
 - [x] 🚀 Auto-deploy GitHub Actions + Vercel + Netlify
-- [x] 📱 PWA con Service Worker y modo offline *(pendiente de activar)*
+- [x] 📱 PWA con Service Worker y modo offline (v1.3.1)
 
 ### ✅ **Completado — v1.3.1 · Noviembre 2026**
 - 🐛 Inferencia: corregido error de escala ×1000 en gCO₂ y ml de agua por consulta, y en los totales diario/mensual/anual
@@ -444,6 +446,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - 🐛 smartEstimate(): detecta arquitecturas AxB (p. ej. Mixtral 8x7B) como MoE con parámetros totales
 - ✅ Validación de consultas/día (> 0) en Inferencia y ROI
 - 📝 README: fórmulas de inferencia, atribución del dato de video (MIT Technology Review, 2025) y notas de privacidad/offline corregidas
+- 📡 Service Worker real (`sw.js`) + `manifest.json` + íconos 192/512 px: modo offline y app instalable (PWA). El SW no cachea ipapi.co ni ElectricityMaps
 
 ### ✅ **Completado — v1.3 · Agosto 2026**
 - [x] 📊 **Dashboard de Tendencias** — nueva pestaña con evolución del CO₂ por año (gráfica de burbujas logarítmica), huella promedio por empresa, filtros por categoría/empresa y rankings Top 10
@@ -468,7 +471,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 🚫 Sin cookies de tracking    // Cero seguimiento de usuarios
 ✅ HTTPS automático           // GitHub Pages + Vercel + Netlify
 🛡️ Security headers           // CSP + X-Frame + XSS-Protection
-📡 Service Worker             // En desarrollo (aún no activo)
+📡 Service Worker             // Caché offline con `sw.js` (red primero para la app, respaldo en caché)
 📄 PDF generado localmente    // window.print() — sin servidor externo
 ```
 
