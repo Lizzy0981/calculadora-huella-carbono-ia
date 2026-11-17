@@ -123,7 +123,7 @@ Basada en la metodología científica original **Díaz Familia (2026)** con corr
 
 ### 🌍 **Sistema Multiidioma Profesional — 100% Completo**
 - 🌐 **14 idiomas completos** — ES, EN, FR, PT, RU, ZH, JA, KO, AR, HE, TR, DE, IT, ID
-- ✅ **272/272 claves traducidas** en cada idioma, incluyendo las 5 pestañas (Entrenamiento, Inferencia, ROI Verde, Tendencias, Planificador Verde) y el modal ElectricityMaps
+- ✅ **274/274 claves traducidas** en cada idioma, incluyendo las 5 pestañas (Entrenamiento, Inferencia, ROI Verde, Tendencias, Planificador Verde) y el modal ElectricityMaps
 - ↔️ **RTL/LTR automático** — árabe y hebreo con dirección correcta
 - 💾 **Persistencia automática** en localStorage
 - ⚡ **Cambio instantáneo** sin recargar la página
@@ -260,7 +260,7 @@ Ajuste Instruct = 1.15   (RLHF / instruction-tuned)
 ```javascript
 ⚡ HTML5 + CSS3 + JS ES6+    // Sin frameworks — máximo rendimiento y control
 📊 Chart.js 4.4.0           // Gráficas comparativas + dual-axis ROI
-🌐 i18n propio (data-i18n)  // 14 idiomas · 272 claves · RTL + CJK completo
+🌐 i18n propio (data-i18n)  // 14 idiomas · 274 claves · RTL + CJK completo
 📱 Mobile-First Responsive  // 320px → 4K soportado
 📄 CSS @media print         // Exportación PDF optimizada con nombre de archivo
 🎨 CSS Custom Properties    // Design tokens · gradiente animado · cards con color
@@ -386,7 +386,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
     └── 📄 screenshot-graficos.*     # 📊 Vista módulo ROI comparativo
 ```
 
-> 💡 **Archivo único autocontenido** — Todo el motor científico, 5 módulos, 14 idiomas (272 claves cada uno, auditadas al 100%), 65+ modelos, APIs y sistema de PDF/Share en un solo `index.html`. Sin build steps, sin node_modules, sin compilación.
+> 💡 **Archivo único autocontenido** — Todo el motor científico, 5 módulos, 14 idiomas (274 claves cada uno, auditadas al 100%), 65+ modelos, APIs y sistema de PDF/Share en un solo `index.html`. Sin build steps, sin node_modules, sin compilación.
 
 ---
 
@@ -399,7 +399,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 🔍 SEO:              93/100   // Meta tags optimizados
 💡 Best Practices:   98/100   // HTML5 semántico moderno
 📱 PWA:              91/100   // Service Worker + manifest PWA
-🌐 i18n:             100%     // 14 idiomas · 272/272 claves por idioma
+🌐 i18n:             100%     // 14 idiomas · 274/274 claves por idioma
 ```
 
 ### 📈 **Métricas Técnicas**
@@ -458,6 +458,9 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - 🏷️ «Verificado» solo se muestra en esos 6 modelos; los demás pasan a «Estimado» hasta contrastarlos con una fuente publicada
 - 📊 Tendencias: «más eficiente» pasa a «menor CO₂ promedio/absoluto» (no normaliza por tamaño de modelo)
 - ♿ Escape cierra el menú de idioma; las barras informativas son regiones etiquetadas (axe: 0 violaciones propias de la página)
+- 🔗 Compartir: el mensaje de Entrenamiento ahora incluye el valor de CO₂ (antes mostraba «—»); el de ROI ya no repite la unidad
+- ⚡ ElectricityMaps: la clave se valida al guardarla (si la API responde 401 se descarta y se avisa); antes mostraba «Live ✓» con cualquier clave
+- 🌍 i18n: 274 claves por idioma (se añadieron avisos de validación); revisión automática de estructura sin faltantes ni marcadores rotos, pero sin revisión de hablantes nativos
 
 ### ✅ **Completado — v1.3.3 · Noviembre 2026**
 - 📱 Móvil: las pestañas se desplazan horizontalmente sin desbordar la página (probado a 390 px), con áreas táctiles de 44 px
@@ -470,7 +473,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 - [x] 🗓️ **Campo `year`** añadido a los 65+ modelos de `MODELS_DB` (año de lanzamiento aproximado) para habilitar el análisis temporal
 - [x] 🌤️ **Carbon-Aware Scheduler** — nueva pestaña con ranking de 16 regiones por intensidad de carbono, overlay de datos en vivo (ElectricityMaps) y calculadora de ahorro potencial por migración de carga de trabajo
 - [x] 🌍 **3 idiomas nuevos** — Alemán (DE), Italiano (IT) e Indonesio (ID), sumando 14 idiomas completos
-- [x] ✅ **272/272 claves traducidas** en cada uno de los 14 idiomas, incluyendo las 5 pestañas
+- [x] ✅ **274/274 claves traducidas** en cada uno de los 14 idiomas, incluyendo las 5 pestañas
 - [x] 🛡️ **Robustez ante fallos de Chart.js** — si la CDN de gráficas no carga, el Dashboard de Tendencias sigue mostrando KPIs y tablas en vez de romperse por completo
 
 ### 🔜 **Próximas Versiones**
@@ -524,7 +527,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 💰 Financial Risk AI       # Modelos de riesgo, predicciones financieras, ROI
 ☁️ Cloud Computing         # OCI (certificada), APIs, deployment automático
 📝 Scientific Research     # Papers científicos, metodología validada, R²=0.89
-🌍 Multilingual Systems    # 14 idiomas, RTL/LTR, CJK, 272 claves i18n
+🌍 Multilingual Systems    # 14 idiomas, RTL/LTR, CJK, 274 claves i18n
 ```
 
 ---
@@ -580,7 +583,7 @@ vercel --prod   # vercel.json configura headers + cache automáticamente
 ⚡ │              🔬 SCIENTIFICALLY VALIDATED — R²=0.89 🔬            │ ⚡
 🧠 │         🌫️ TRAINING · ⚡ INFERENCE · 💰 ROI · 📊 TRENDS · 🌤️ SCHEDULER — 5 MODULES   │ 🧠
 📄 │              📄 PDF EXPORT · 🔗 SHARE · 📲 FLOATING BAR          │ 📄
-📊 │           🌍 GLOBALLY ACCESSIBLE — 14 LANGUAGES · 272 KEYS       │ 📊
+📊 │           🌍 GLOBALLY ACCESSIBLE — 14 LANGUAGES · 274 KEYS       │ 📊
 🌱 │        ⚡ REAL-TIME DATA — ELECTRICITYMAPS API · 60+ COUNTRIES    │ 🌱
 💧 │     🤖 UNIVERSAL ESTIMATION — ANY AI MODEL — smartEstimate()     │ 💧
 🔮 │  🚀 AUTO-DEPLOY — GITHUB PAGES · VERCEL · NETLIFY — ~30 SECONDS  │ 🔮
